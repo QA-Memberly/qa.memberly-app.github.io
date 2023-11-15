@@ -1,5 +1,5 @@
 $(window).on('load', function () {
-	showLoader('hide');
+	showLoader('show');
 });
 
 $(document).ready(function () {
