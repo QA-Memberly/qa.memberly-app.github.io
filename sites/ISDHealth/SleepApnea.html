@@ -1,12 +1,11 @@
-
-    <html>
-    <head>
-       <meta charset="utf-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-       <meta name="description" content="">
-       <meta name="generator" content="Jekyll v4.1.1">
-       <title>Sleep Apnea</title>
-      <link href="../assets/dist/css/selectize/normalize.css" rel="stylesheet">
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="generator" content="Jekyll v4.1.1">
+    <title>Patient Info</title>
+    <link href="../assets/dist/css/selectize/normalize.css" rel="stylesheet">
     <link href="../assets/dist/css/selectize/selectize.default.css" rel="stylesheet">
     <link href="../assets/dist/css/custom-formio/theme.less.css" rel="stylesheet">
     <link href="../assets/dist/css/font-awesome.min.css" rel="stylesheet">
@@ -22,160 +21,109 @@
     <script src='../assets/dist/js/pooper/popper.min.js'></script>
     <script src='../assets/dist/js/investigate/formio.full.min.js'></script>
     <script src='../assets/dist/js/main.js'></script>
-       <style>
-		.bd-placeholder-img {
-		  font-size: 1.125rem;
-		  text-anchor: middle;
-		  -webkit-user-select: none;
-		  -moz-user-select: none;
-		  -ms-user-select: none;
-		  user-select: none;
-		}
-
-		.select2-selection {
-		  overflow: hidden;
-		}
-
-
-        select:disabled {
-    background-color: #e9ecef !important;
-    opacity: 1 !important;
-    cursor: not-allowed !important;
+    <style>
+      table, th, td {
+border: 0px solid #d8cccc;
+font-size: 14px;
+padding: 6px;
+font-size: 13.5px;
 }
-		.select2-selection__rendered {
-		  white-space: normal;
-		  word-break: break-all;
-		}
 
-		@media (min-width: 768px) {
-		  .bd-placeholder-img-lg {
-			font-size: 3.5rem;
-		  }
-		}
+#patientHeader {
+color: black;
+padding: 5px;
+text-align: center;
+}
 
-		.invalid-feedback {
-		  display: block;
-		  color: #dc3545 !important;
-		}
-
-		.alert {
-		  display: none;
-		}
-
-		.form-control.is-invalid {
-		  border-color: #dc3545 !important;
-		}
-
-		.formio-component {
-		  background-color: transparent !important;
-		}
-
-		.formio-error-wrapper,
-		.formio-warning-wrapper {
-		  padding: 0em;
-		}
-
-		.disable {
-		  background-color: #e9ecef !important;
-		  opacity: 1;
-		  cursor: not-allowed !important;
-		}
-
-		.field-required:after {
-		  content: " *" !important;
-		  color: transparent !important;
-		}
-		.form-control.is-invalid, .was-validated .form-control:invalid {
-		  background-position: right calc(.375em + 0.5875rem) center !important;
-		}
-       </style>
-       <script>
-		var globalForm = null;
-		var flutterPlatformReady = false;
-		 var clientId;
+td {
+border-bottom-width: 5px!important;
+border-bottom-color: #dde0e02e;
+margin-bottom: 100px!important;
+padding: 6px;
+font-size: 13.5px;
+}
+    </style>
+    <script>
+      var globalForm = null;
+      var flutterPlatformReady = false;
+      var clientId;
+      
+      function getUrlVars() {
+      	var vars = {};
+      	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+      		vars[key] = decodeURI(value);
+      	});
+      	return vars;
+      }
+      
+      $(document).ready(function () {
+      	
+      	var docvars = getUrlVars();
+      	var formDefinitionDept = docvars.departmentName;
+      	window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
+      		flutterPlatformReady = true;
+      	});
+      	var formObj = null;
 		
-		function getUrlVars() {
-			var vars = {};
-			var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
-				vars[key] = decodeURI(value);
-			});
-			return vars;
-		}
-
-		$(document).ready(function () {
-			
-			
-			var docvars = getUrlVars();
-			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
-				flutterPlatformReady = true;
-			});
-			
-			var formDefinitionDept = "US-Embassy-Usersignup";
-			var formObj = null;
-			var isUser = true;
-			var userUrl = "https://qa.servicedx.com/admin/departments/formio/"+docvars.departmentName+"/users/"+docvars.userName;
-			var formid = "238fbde3-9fdb-4301-b84d-1e24ee739544";
-			var userData = getUserData("https://qa.servicedx.com/filing/campaignData/departmentName/"+docvars.departmentName+"/userName/"+docvars.userName+"/emailId/"+docvars.emailId);
-			
-			console.log(userData);
-			
-			
-			var formDefinition = getFormComp("https://qa.servicedx.com/filing/form/{id}?id=" +formid);
-			
-			
-      	var basicInfo = {};
-      	if(userData[0].formJson!=null){
-      		basicInfo['data'] =  userData[0].formJson;
-			console.log("AAAAAAAAA");
-      		console.log(basicInfo);
+      	var isUser = true;
+      	var formid = '238fbde3-9fdb-4301-b84d-1e24ee739544';
+      	var formDefinition = getFormComp("https://qa.servicedx.com/filing/form/{id}?id=" +formid);
+      	//var userData = getUserData("https://qa.servicedx.com/filing/formInfo/{id}?id="+docvars.id);
+      	var userData = getUserData("https://qa.servicedx.com/filing/formData/userName/"+docvars.userName+"/department/"+docvars.departmentName);
+      	
+      	var doctorObj = {};
+      	if(userData.adminFormJson!=null){
+      		doctorObj['data'] =  userData.adminFormJson;
+      		console.log(doctorObj);
       	}else{
-		var basicInfo=null;
+		var doctorObj=null;
 		}
       	
-      			
-				Formio.createForm(document.getElementById('builder'), formDefinition)
+      	var id = userData.id;
+      	populateTable(JSON.parse(userData.formJson));
+      	
+      	Formio.createForm(document.getElementById('builder'), formDefinition)
       		.then(function (form) {
-      			//console.log(doctorObj,isUser);
+      			console.log(doctorObj,isUser);
       			var userObj={};
       			var userObj;
-				//userObj["role"] = docvars.role;
-				userObj["role"] = "nonEdit";
-      			if(basicInfo != null){
-      				userObj = editObject(basicInfo); 
-					//console.log(userObj);
+      			if(doctorObj != null){
+      				userObj = editObject(doctorObj);
       			}
-				userObj["role"] = "nonEdit";
       
       			form.submission = { data: userObj };
-				console.log(form.submission);
-      			console.log("CMING HER");
       			
+      			console.log(userObj);
       			globalForm = form;
       			//form.setPristine(false);
       			form.nosubmit = true;
       			form.on('submit', function (submission) {
-      				$('#formSubmit').attr('disabled','disabled'); 
+      				$('#formSubmit').attr('disabled','disabled');
       				
       				var userObject = submission.data;
       				console.log("B4 : userObject : " + JSON.stringify(userObject));		 
       
       				delete userObject["submit"];
-      				userObject["source"] = "MOBILE";
+      				
       				//userObject["roleName"] = "User";
       				userObject["user"] = docvars.userName;
       				userObject["departmentName"] = docvars.departmentName;
-      				userObject["formJson"] =  JSON.stringify(userObject);
+      				userObject["adminFormJson"] =  JSON.stringify(userObject);
       				userObject["formid"] = formid;
       				userObject["active"] = true;
       				console.log("AF : userObject : " + JSON.stringify(userObject))
       				
       					showLoader('show');
-      					fetchAPI("https://qa.servicedx.com/filing/FormData/", options(JSON.stringify(userObject), false)).then(response => {
+      					fetchAPI("https://qa.servicedx.com/filing/CampaignFormData/update/"+id, options(JSON.stringify(userObject), true)).then(response => {
       						showLoader('hide');
       						if(!response.hasOwnProperty('errorCode')){
+      							if(userData.adminFormJson==null){
       								form.emit('submitDone', 'FeedBack sumbitted successfully')
       								$('#formSubmit').attr('disabled','disabled');
-      								
+      								}else{
+      								form.emit('submitDone', 'FeedBack Updated successfully')
+      								$('#formSubmit').attr('disabled','disabled');
+      							}
       						}else{
       							form.emit('submitError', response.message)
       						}
@@ -189,95 +137,153 @@
       			});
       		});
       	
-				
-				
-				
-				
-				
-				
-				
-			
-				
-				
-				
-				
-				
-		});
-		
-		function editObject(obj){
-		console.log("EDIT OBJECT");
-		var json = JSON.parse(obj.data);
-		json["doYouCurrentlySufferAnyOfTheFollowingConditions"] = null ;
-		json["doYouHaveAPaceMaker"] = null ;
-		json["doYouHaveTroubleStayingAsleep"] = null ;
-		json["doYouHaveTroubleStayingAwake"] = null ;
-		json["survey"] = null ;
-	    json["anyOtherSymptoms"] = null ;
-	    json["submit"] = false;
-		json["howLongDoYouSleepInADay"] = null ;
-		var how =json["howLongDoYouSleepInADay"] ;
-		//disable(how);
-
-		return json;
-			
-		}
-		
-		 function disable(id) {
-          	document.getElementById(id).disabled = true;
-		
-      	        $('#'+id).addClass('disable');
-		$('#'+id).attr('disabled', 'disabled');
-		//$("#selectId").prop('disabled', 'disabled');
-                }
-		
-		
-		function isValidJSON(str) {
-			try {
-					JSON.parse(str);
-				} catch (e) {
-					console.log("JSON Parsing error ["+str+"]\n"+e);
-					return false;
-				}
-			return true;
-		}
-		
-		function getFormObj(URL){
-			var formObj = {};
-			var Success;
-			$.ajax({
-				  url: URL,
-				  type : "GET",
-				  async : false,
-				  success: function(result){
-					  formObj['data'] =  JSON.stringify(result);
-				  },
-				  error: function (textStatus) {
-					  console.log(textStatus);
-					  if(textStatus.status == 0){
-						alert("Network error");
-					  }
-					  
-					  formObj['data'] =  textStatus.responseJSON;
-				  }
-			});
-			return formObj;
-		}
-
-		function getFormComp(URL){
-			var formDefinition = null;
-			$.ajax({
-				  url: URL,
-				  type : "GET",
-				  async : false,
-				  success: function(result){
-				  formDefinition =  JSON.parse(result.form)
-				  //console.log("formDefinition "+JSON.stringify(formDefinition));
-			}});
-			return formDefinition;
-		}
-		
-
-		 function options(formdata, isUser){
+      });
+      
+      $(window).on('load', function () {
+      	showLoader('hide');
+      });
+      
+      function editObject(obj){
+      	var json = JSON.parse(obj.data);
+      	console.log(json);
+      	return json;
+      }
+      
+      function isValidJSON(str) {
+      	try {
+      			JSON.parse(str);
+      		} catch (e) {
+      			console.log("JSON Parsing error ["+str+"]\n"+e);
+      			return false;
+      		}
+      	return true;
+      }
+      
+      function getFormObj(URL){
+      	var formObj = {};
+      	var Success;
+      	$.ajax({
+      		  url: URL,
+      		  type : "GET",
+      		  async : false,
+      		  success: function(result){
+      			  formObj['data'] =  JSON.stringify(result);
+      		  },
+      		  beforeSend: function(request){
+      			request.setRequestHeader("clientid", clientId);
+      			showLoader('show');
+      		  },
+      		  complete: function(){
+      			showLoader('hide');
+      		  },
+      		  error: function (textStatus) {
+      			  console.log(textStatus);
+      			  if(textStatus.status == 0){
+      				alert("Network error");
+      			  }
+      			  
+      			  formObj['data'] =  textStatus.responseJSON;
+      		  }
+      	});
+      	return formObj;
+      }
+      
+      function getFormComp(URL){
+      	var formDefinition = null;
+      	$.ajax({
+      		  url: URL,
+      		  type : "GET",
+      		  async : false,
+      		  success: function(result){
+      		  formDefinition =  JSON.parse(result.adminFormDefinition);
+      		  console.log("formDefinition "+JSON.stringify(formDefinition));
+      	      },
+      		  beforeSend: function(request){
+      			request.setRequestHeader("clientid", clientId);
+      			showLoader('show');
+      		  },
+      		  complete: function(){
+      			showLoader('hide');
+      		  }});
+      	return formDefinition;
+      }
+      
+      function getCountries(alphaCode) {
+      	var callingCode = '';
+      	var url = "https://qa-memberly.github.io/qa/sites/assets/dist/countries.json";
+      	var options = { method: 'GET' };
+      	var xmlHttp = new XMLHttpRequest();
+      		xmlHttp.open( "GET", url, false );
+      		xmlHttp.send( null );
+      		var code = JSON.parse(xmlHttp.responseText);
+      		for(var i in code){
+      		  if(code[i].alphaCode == alphaCode){
+      			 callingCode = code[i].callingCode;
+      		  }
+      		}
+      	return callingCode;
+      }
+      
+      function getUserData(URL){
+      	var userData = null;
+      	$.ajax({
+      		  url: URL,
+      		  type : "GET",
+      		  async : false,
+      		  success: function(result){
+      		 // userData =  JSON.parse(result.formJson);
+      			 userData =  result;
+      			  
+      		  },
+      		  beforeSend: function(request){
+      			showLoader('show');
+      		  },
+      		  complete: function(){
+      			showLoader('hide');
+      		  }});
+      	return userData;
+      }
+      
+      function populateTable(userData){
+		  document.getElementById("userName").innerHTML =  userData.userName;
+		  document.getElementById("firstName").innerHTML =  userData.firstname;
+		  document.getElementById("lastName").innerHTML =  userData.lastName;
+		  document.getElementById("email").innerHTML =  userData.email;
+		  document.getElementById("address").innerHTML =  userData.address;
+		  document.getElementById("phone").innerHTML =  userData.cellNumber;
+		  document.getElementById("city").innerHTML =  userData.cityTown;
+		  document.getElementById("country").innerHTML =  userData.country1;
+		  document.getElementById("insurance").innerHTML =  userData.healthInsurance1;
+		  document.getElementById("insuranceName").innerHTML =  userData.policyNumber;
+		  document.getElementById("height").innerHTML =  userData.height;
+		  document.getElementById("weight").innerHTML =  userData.weight;
+		  document.getElementById("age").innerHTML =  userData.age;
+		  
+		  document.getElementById("sittingAndReading").innerHTML =  userData.survey.sittingAndReading;
+		  document.getElementById("WatchingTv").innerHTML =  userData.survey.watchingTv;
+		  document.getElementById("sittingInPublic").innerHTML =  userData.survey.sittingInactiveInAPublicPlace;
+		  document.getElementById("inTraffic").innerHTML =  userData.survey.whileStoppedForAFewMinutesInTheTraffic;
+		  document.getElementById("passengerInCar").innerHTML =  userData.survey.asAPassengerInACarForAnHour;
+		  document.getElementById("restInAfternoon").innerHTML =  userData.survey.lyingDownToRestInTheAfternoon;
+		  document.getElementById("takingToSomeone").innerHTML =  userData.survey.sittingAndTalkingToSomeone;
+		  document.getElementById("afterLunch").innerHTML =  userData.survey.sittingAfterALunchWithoutAlcohol;
+		  
+		  document.getElementById("havePacemaker").innerHTML =  userData.doYouHaveAPaceMaker;
+		  document.getElementById("troubleStayingAwake").innerHTML =  userData.doYouHaveTroubleStayingAwake;
+		  document.getElementById("troubleStayingAsleep").innerHTML =  userData.doYouHaveTroubleStayingAsleep;
+		  document.getElementById("sleepDuration").innerHTML =  userData.howLongDoYouSleepInADay;
+		   document.getElementById("anyOtherSymptoms").innerHTML =  userData.anyOtherSymptoms;
+      
+        var symptoms = [];
+         for (var p in userData.doYouCurrentlySufferAnyOfTheFollowingConditions) {
+          if(userData.doYouCurrentlySufferAnyOfTheFollowingConditions[p]== true){
+               symptoms.push(p);
+      	}
+        }  
+      	document.getElementById("symptoms").innerHTML = symptoms;
+      }
+      
+      function options(formdata, isUser){
       	var restMethod;
       	if(isUser){
       		restMethod = 'PUT';
@@ -289,37 +295,38 @@
       	return options;
       }
       
-
-		var fetchAPI = async function (url, requestOptions) {
-			let response = await fetch(url, requestOptions)
-			console.log('response', JSON.stringify(response));
-			if (response.ok) {
-				let json = await response.json();
-				console.log('response body', json);
-				try {
-					if(flutterPlatformReady){
-						window.flutter_inappwebview.callHandler('HandlerQuestionnaireWithArgs', response.status, json);
-					}
-				} catch (e) {
-					console.log("flutter_inappwebview error");
-				}
-				return json;
-			} else {
-				let json = await response.json();
-				console.log('error', json.message, json.errorCode);
-				try {
-					if(flutterPlatformReady){
-						window.flutter_inappwebview.callHandler('HandlerQuestionnaireWithArgs', response.status, json);
-					}
-				} catch (e) {
-					console.log("flutter_inappwebview error");
-				}
-				return json;
-			}
-		}
-		
-		
-	
+      var fetchAPI = async function (url, requestOptions) {
+      	let response = await fetch(url, requestOptions)
+      	console.log('response', JSON.stringify(response));
+      	if (response.ok) {
+      		let json = await response.json();
+      		console.log('response body', json);
+      		try {
+      			if(flutterPlatformReady){
+      				window.flutter_inappwebview.callHandler('DoctorFeedBackHandler', response.status, json);
+      			}
+      		} catch (e) {
+      			console.log("flutter_inappwebview error");
+      		}
+      		return json;
+      	} else {
+      		let json = await response.json();
+      		console.log('error', json.message, json.errorCode);
+      		try {
+      			if(flutterPlatformReady){
+      				window.flutter_inappwebview.callHandler('DoctorFeedBackHandler', response.status, json);
+      			}
+      		} catch (e) {
+      			console.log("flutter_inappwebview error");
+      		}
+      		return json;
+      	}
+      }
+      
+      function disable(id) {
+      	document.getElementById(id).disabled = true;
+      	$('#'+id).addClass('disable');
+      }
       
       function enable(id) {
       	document.addEventListener("DOMContentLoaded", function(event) {
@@ -327,31 +334,8 @@
       	  $('#'+id).removeClass('disable');
       	});
       }
-		
-		 function getUserData(URL){
-      	var userData = null;
-      	$.ajax({
-      		  url: URL,
-      		  type : "GET",
-      		  async : false,
-      		  success: function(result){
-      		 // userData =  JSON.parse(result.formJson);
-      			 userData =  result;
-				 
-      			  
-      		  },
-      		  beforeSend: function(request){
-      			//showLoader('show');
-      		  },
-      		  complete: function(){
-      			//showLoader('hide');
-      		  }});
-      	return userData;
-      }
-		
-		
-		
-		function showLoader(loader){
+      
+      function showLoader(loader){
       	if(loader == 'show'){
       		$(".loader").show();
 			$(".patientInfo").hide();
@@ -362,168 +346,159 @@
       		$("#builder").removeClass('hide');
       	}
       }
-		
-       </script>
-       <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
-       <style>body { font-family:'Poppins', sans-serif!important; overflow-x: hidden!important; }
-          .card-header {
-          padding: 5px;
-          margin-bottom: 0;
-          background-color: rgba(0,0,0,.03);
-          border-bottom: 1px solid rgba(0,0,0,.125);
-          }
-          .formio-component,.form-control,.select2-selection__rendered {
-          font-size:15px!important;
-          }
-          .select2-selection__rendered, .select2-selection--multiple{
-          background-color: #e8f0fa!important;
-          }
-          .select2-selection--multiple{
-          padding-left: 4px!important;
-          }
-          .select2-container--bootstrap4 .select2-selection {
-          border: 1px solid #d3dae8!important;
-          } 
-          .card-body {
-          padding: 5px 10px!important;
-          }
-          .select2-selection__choice__remove{
-          border:none;background:transparent;color:#fff!important;
-          }
-          .select2-search__field {
-          background:transparent;
-          }
-          .select2-selection__choice__display{
-          font-size:13px!important;
-          color:#fff!important;
-          }
-          .head{
-			margin-top: 15px;
-          }
-       </style>
-    </head>
-    <body style="padding:10px;background-color: #dde0e0;">
-       <div id="wrapper">
-          <div id="loader" class="hidden">
-             <div id="loaderCircle"></div>
-          </div>
-          <div id="initScreen" style="display: block;">
-             <div class="section" id="a67a329f1c344dfd887b3efc8a413ed3">
-                <div class="screen" id="survey-screen-1" style="background-color: rgb(245, 249, 250);">
-                   <div class="main-container">
-                      <div id="survey-section" class="">
-                         <div class="survey-sub-screen multiplechoice-question-component" id="survey-sub-screen-half-n-half">
-                            <div class="head">
-                            </div>
-                            <div class="question-answer-row" id="section" style="padding-left:10px;padding-right:10px;">
-                               <div class="question-answer-cell">
-                                  <div id='builder'></div>
-                               </div>
-                            </div>
-                            <div class="question-answer-row" style="display:none;">
-                               <div class="question-answer-cell">
-                                  <div class="question-section-row">
-                                     <div id="question-section" class="">How old are you?</div>
-                                  </div>
-                                  <div class="table" id="options-section" style="color: rgb(63, 127, 241);">
-                                     <div class="table-row options-title-row">
-                                        <div class="options-title">Select One</div>
-                                     </div>
-                                     <div class="table-row"  style="display:none;">
-                                        <div class="options-content-container">
-                                           <div class="options-content">
-                                              <div class="question-695d225da68f4a42acc389c83e165f29 invisible-scrollbar" style="width: 100%; max-height: 100%;">
-                                                 <style>.icon-selection { color: #3f7ff1 !important } .icon-selected { color: #3f7ff1 !important } .icon-unselected { color: #3f7ff1 !important } .submit-button-container .submit-button.active { background-color: #3f7ff1 }</style>
-                                                 <div class="options-list-container">
-                                                    <style>.multiple-choice-option.selected { color: #3f7ff1; border-color: #3f7ff1 } .submit-button-container .submit-button.active { background-color: #3f7ff1 }</style>
-                                                    <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="27741a5d005a478f98b5fcaeda723526">
-                                                       <div class="icon-checkbox icon-check" data-option-id="27741a5d005a478f98b5fcaeda723526" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                       <div class="text-content" data-option-id="27741a5d005a478f98b5fcaeda723526" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">&lt; 14</div>
-                                                    </div>
-                                                    <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="6c37f5c3044442c2b94791e8423d8c04">
-                                                       <div class="icon-checkbox icon-check" data-option-id="6c37f5c3044442c2b94791e8423d8c04" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                       <div class="text-content" data-option-id="6c37f5c3044442c2b94791e8423d8c04" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">14-17</div>
-                                                    </div>
-                                                    <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="aa95d0d30f20423393d639a0f38b3e16">
-                                                       <div class="icon-checkbox icon-check" data-option-id="aa95d0d30f20423393d639a0f38b3e16" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                       <div class="text-content" data-option-id="aa95d0d30f20423393d639a0f38b3e16" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">18-24</div>
-                                                    </div>
-                                                    <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="e95fb4d3173a4d04b727e62437166b27">
-                                                       <div class="icon-checkbox icon-check" data-option-id="e95fb4d3173a4d04b727e62437166b27" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                       <div class="text-content" data-option-id="e95fb4d3173a4d04b727e62437166b27" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">25-34</div>
-                                                    </div>
-                                                    <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="e2b8a669ec034ef4a317379bad2e2f8d">
-                                                       <div class="icon-checkbox icon-check" data-option-id="e2b8a669ec034ef4a317379bad2e2f8d" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                       <div class="text-content" data-option-id="e2b8a669ec034ef4a317379bad2e2f8d" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">35-44</div>
-                                                    </div>
-                                                    <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="f40ba0f5d9944009af2f3b4c30f6afbb">
-                                                       <div class="icon-checkbox icon-check" data-option-id="f40ba0f5d9944009af2f3b4c30f6afbb" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                       <div class="text-content" data-option-id="f40ba0f5d9944009af2f3b4c30f6afbb" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">45-54</div>
-                                                    </div>
-                                                    <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="b657f78427fc4caebc35c18363e0459b">
-                                                       <div class="icon-checkbox icon-check" data-option-id="b657f78427fc4caebc35c18363e0459b" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                       <div class="text-content" data-option-id="b657f78427fc4caebc35c18363e0459b" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">55+</div>
-                                                    </div>
-                                                 </div>
-                                              </div>
-                                           </div>
-                                           <div class="more-options-below hidden" data-action="scroll-to-bottom">
-                                              More options &nbsp;
-                                              <span class="icon-down-arrow" data-action="scroll-to-bottom">c</span>
-                                           </div>
-                                        </div>
-                                     </div>
-                                  </div>
-                               </div>
-                            </div>
-                            <div class="privacy-policy-row" style="display:none">
-                               <div class="privacy-policy-container">
-                                  <div id="privacy-policy-text" class="privacy-policy-text">By clicking the button above, you agree to our
-                                     <span id="privacy-policy-button" class="" style="color: unset; background-color: unset;">Privacy Policy</span>
-                                  </div>
-                               </div>
-                            </div>
-                         </div>
-                      </div>
-                      <div class="footer-row">
-                         <div class="footer hide-submit">
-                            <div id="logo-container">
-                               <img style="width:50px;height:40px;" id="logo" src="https://static.wixstatic.com/media/eaa914_9cf3646c1306425db2dc5191490521f2~mv2.png/v1/crop/x_0,y_21,w_340,h_274/fill/w_121,h_96,al_c,q_85,usm_0.66_1.00_0.01/logo_edited.webp" alt="Logo" class="">
-                            </div>
-                         </div>
-                      </div>
-                   </div>
+      
+           
+    </script>
+    <link href="../assets/dist/css/poopins/poopins.css" rel="stylesheet">
+  </head>
+  <body style="padding:10px;background-color: #dde0e0;">
+    <div id="wrapper">
+      <div id="initScreen" style="display: block;">
+        <div class="section" id="a67a329f1c344dfd887b3efc8a413ed3">
+          <span class="loader"></span>
+          <div class="screen" id="survey-screen-1" style="background-color: rgb(245, 249, 250);">
+            <div class="main-container">
+              <div id="survey-section" class="">
+                <div class="survey-sub-screen multiplechoice-question-component" id="survey-sub-screen-half-n-half">
+                  <div class="head">
+                  </div>
+                  <div class="question-answer-row" id="section" style="padding-left:10px;padding-right:10px;">
+					<div class="patientInfo" style="display: none;">
+						<div id="patientHeader">Patient Information</div>
+						<div style="overflow-x:auto;">
+						  <table>
+							<tr>
+							  <th colspan="2">User Name</th>
+							</tr>
+							<tr>
+							  <td colspan="2" id = "userName"></td>
+							</tr>
+							<tr>
+							  <th>First Name</th>
+							  <th>Last Name</th>
+							</tr>
+							<tr>
+							  <td id="firstName"></td>
+							  <td id="lastName"></td>
+							</tr>
+							<tr>
+							  <th>Email</th>
+							  <th>Age</th>
+							</tr>
+							<tr>
+							  <td id="email"></td>
+							  <td id="age"></td>
+							</tr>
+							<tr>
+							  <th>Weight</th>
+							  <th>Height</th>
+							</tr>
+							<tr>
+							  <td id="weight"></td>
+							  <td id="height"></td>
+							</tr>
+							<tr>
+							  <th>Address</th>
+							  <th>country</th>
+							</tr>
+							<tr>
+							  <td id="address"></td>
+							  <td id="country"></td>
+							</tr>
+							<tr>
+							  <th>City</th>
+							  <th>Cell Phone</th>
+							</tr>
+							<tr>
+							  <td id="city"></td>
+							  <td id="phone"></td>
+							</tr>
+							<tr>
+							  <th>Health insurance</th>
+							  <th>Health insurance Name</th>
+							</tr>
+							<tr>
+							  <td id="insurance"></td>
+							  <td id="insuranceName"></td>
+							</tr>
+							<tr>
+							  <th>Sitting and reading</th>
+							  <th>Watching TV</th>
+							</tr>
+							<tr>
+							  <td id="sittingAndReading"></td>
+							  <td id="WatchingTv"></td>
+							</tr>
+							<tr>
+							  <th>Sitting, inactive in a public place</th>
+							  <th>While stopped for a few minutes in the traffic</th>
+							</tr>
+							<tr>
+							  <td id="sittingInPublic"></td>
+							  <td id="inTraffic"></td>
+							</tr>
+							<tr>
+							  <th>As a passenger in a car for an hour</th>
+							  <th>Lying down to rest in the afternoon</th>
+							</tr>
+							<tr>
+							  <td id="passengerInCar"></td>
+							  <td id="restInAfternoon"></td>
+							</tr>
+							<tr>
+							  <th>Sitting And Talking To Someone</th>
+							  <th>Sitting After A Lunch Without Alcohol</th>
+							</tr>
+							<tr>
+							  <td id="takingToSomeone"></td>
+							  <td id="afterLunch"></td>
+							</tr>
+							<tr>
+							  <th>Do You Have Pace Maker?</th>
+							  <th>Do You Have Trouble staying awake?</th>
+							</tr>
+							<tr>
+							  <td id="havePacemaker"></td>
+							  <td id="troubleStayingAwake"></td>
+							</tr>
+							<tr>
+							  <th>Do You Have Trouble staying asleep?</th>
+							  <th>How long do you sleep in a day?</th>
+							</tr>
+							<tr>
+							  <td id="troubleStayingAsleep"></td>
+							  <td id="sleepDuration"></td>
+							</tr>
+							<tr>
+							  <th colspan="5">other symptoms</th>
+							</tr>
+							<tr>
+							  <td colspan="5" id = "symptoms"> </td>
+							</tr>
+									<tr>
+							  <th colspan="5">Any other symptoms</th>
+							</tr>
+							<tr>
+							  <td colspan="5" id = "anyOtherSymptoms"> </td>
+							</tr>
+						  </table>
+						</div>
+					</div>
+					 <p style="height:20px!important">
+                    <div class="question-answer-cell">
+                     
+                    </div>
+                  </div>
                 </div>
-             </div>
+              </div>
+            </div>
           </div>
-          <div id="main-error-container" class="hidden">
-             <div id="error-message">Something went wrong. Please retry.</div>
-             <div id="retry-button">Retry</div>
-          </div>
-          <div id="privacy-policy-modal" class="hidden">
-             <div class="title-row table-row">
-                <div class="table-cell title-container">
-                   <div class="title">Privacy Policy</div>
-                   <div id="privacy-policy-close"><button type="button" class="close" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                      </button>
-                   </div>
-                </div>
-             </div>
-             <div class="table-row">
-                <div class="table-cell content-container">
-                   <div class="content"><strong>HOW WE USE INFORMATION WE COLLECT</strong><br>
-                      How we use the information we collect depends in part on which Services you use, how you use them, and any preferences you have communicated to us. Below are the specific purposes for which we use the information we collect about you.
-                      <br>We collect and use your information only where:
-                      <br>â€¢	We need it to provide you the Services, including to operate the Services, provide customer support and personalized features and to protect the safety and security of the Services;
-                      <br>â€¢	It satisfies a legitimate interest (which is not overridden by your data protection interests), such as for research and development, to market and promote the Services and to protect our legal rights and interests;
-                      <br>â€¢	You give us consent to do so for a specific purpose; or
-                      <br>â€¢	We need to process your data to comply with a legal obligation.
-                      <br>â€¢	If you have consented to our use of information about you for a specific purpose, you have the right to change your mind at any time, but this will not affect any processing that has already taken place. Where we are using your information because we or a third party (e.g. your employer) have a legitimate interest to do so, you have the right to object to that use though, in some cases, this may mean no longer using the Services.
-                   </div>
-                </div>
-             </div>
-          </div>
-       </div>
-    </body>
- </html>
+        </div>
+      </div>
+      <div id="main-error-container" class="hidden">
+        <div id="error-message">Something went wrong. Please retry.</div>
+        <div id="retry-button">Retry</div>
+      </div>
+    </div>
+  </body>
+</html>
