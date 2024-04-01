@@ -1,0 +1,15 @@
+{
+   "name":"general_checkup_sjm_hospital",
+   "language":"en_US",
+   "components":[
+      {
+         "type":"body",
+         "parameters":[
+            {
+               "type":"text",
+               "text":"33422388"
+            }
+         ]
+      }
+   ]
+}
