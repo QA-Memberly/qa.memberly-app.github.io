@@ -93,10 +93,13 @@
                         var handlerName = "campaignHandler";
                         fetch("https://qa.servicedx.com/filing/FormData/", requestOptions, handlerName)
                             .then((response) => {
+                                console.log("Response");
+                                console.log("Response 1 ", response);
                                 if (!response.hasOwnProperty("errorCode")) {
                                     form.emit("submitDone", "Create Success");
                                     try {
                                         if (flutterPlatformReady) {
+                                            console.log("inside flutter platform");
                                             window.flutter_inappwebview.callHandler(handlerName, response.status);
                                         }
                                     } catch (e) {
