@@ -90,6 +90,8 @@
 				    	  redirect: 'follow'
 				    	};
 						fetch("https://qa.servicedx.com/filing/FormData/", requestOptions).then(response => {
+							console.log("Response");
+							console.log("Response 1 ", response);
 								if(!response.hasOwnProperty('errorCode')){
 									form.emit('submitDone', 'Create Success')
 								}else{
