@@ -45793,10 +45793,6 @@ ctx._source.PV1_3_4 = params.editPlans != null ? params.editPlans : ctx._source.
 ctx._source.primary_benefitPlanDescription_merged = params.benefitPlans != null ? params.benefitPlans : ctx._source.primary_benefitPlanDescription_merged;
 ctx._source.composite_Key = params.composite_Key != null ? params.composite_Key : ctx._source.composite_Key;
 
-if (params.editlastNamePriority != null) {
-    ctx._source.PID_5_1 = params.editlastNamePriority;
-}
-
         `,
         "lang": "painless",
         "params": {
@@ -45812,7 +45808,6 @@ if (params.editlastNamePriority != null) {
             "TermDate": TermDate,
             "EffDate": EffDate,
             "ReindexDate": ReindexDate,
-            "editlastNamePriority": 'I',
 
             "MemberId": MemberId,
             "PID_5_2": editfirstNamePriority,
@@ -45918,9 +45913,6 @@ ctx._source.PV1_3_4 = params.editPlans != null ? params.editPlans : ctx._source.
 ctx._source.primary_benefitPlanDescription_merged = params.benefitPlans != null ? params.benefitPlans : ctx._source.primary_benefitPlanDescription_merged;
 ctx._source.composite_Key = params.composite_Key != null ? params.composite_Key : ctx._source.composite_Key;
 
-if (params.editlastNamePriority != null) {
-    ctx._source.PID_5_1 = params.editlastNamePriority;
-}
 
         `,
         "lang": "painless",
@@ -45937,7 +45929,6 @@ if (params.editlastNamePriority != null) {
             "TermDate": TermDate,
             "EffDate": EffDate,
             "ReindexDate": ReindexDate,
-            "editlastNamePriority": 'I',
 
             "MemberId": MemberId,
             "PID_5_2": editfirstNamePriority,
