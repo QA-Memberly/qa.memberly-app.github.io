@@ -1,7 +1,5 @@
 <html>
 
-
-	
 <head>
 
 	
@@ -45778,12 +45776,11 @@ if(assignDate!=null){
              ctx._source.los = params.los != null ? params.los : ctx._source.los;
 ctx._source.dataSource = params.dataSource != null ? params.dataSource : ctx._source.dataSource;
 ctx._source.PV1_45_asDate = params.dateofDischargePriority != null ? params.dateofDischargePriority : ctx._source.PV1_45_asDate;
-ctx._source.PID_7_asDate = params.dateofDOBPriority != null ? params.dateofDOBPriority : ctx._source.PID_7_asDate;
+ctx._source.PID_7_asDate = params.PID_7_asDate != null ? params.PID_7_asDate : ctx._source.PID_7_asDate;
 ctx._source.MSH_7_asDate = params.messageDate != null ? params.messageDate : ctx._source.MSH_7_asDate;
 ctx._source.comments = params.comments != null ? params.comments : ctx._source.comments;
 
 ctx._source.PV1_44_asDate = params.dateofAdmissionPriority != null ? params.dateofAdmissionPriority : ctx._source.PV1_44_asDate;
-ctx._source.primary_healthPlanID_merged = params.HealthPlanId != null ? params.HealthPlanId : ctx._source.primary_healthPlanID_merged;
 ctx._source.primary_termDate_merged = params.TermDate != null ? params.TermDate : ctx._source.primary_termDate_merged;
 ctx._source.primary_effDate_merged = params.EffDate != null ? params.EffDate : ctx._source.primary_effDate_merged;
 ctx._source.reindexDate = params.ReindexDate != null ? params.ReindexDate : ctx._source.reindexDate;
@@ -45794,9 +45791,12 @@ ctx._source.PID_5_2 = params.PID_5_2 != null ? params.PID_5_2 : ctx._source.PID_
 ctx._source.PV1_3_4 = params.editPlans != null ? params.editPlans : ctx._source.PV1_3_4;
 ctx._source.primary_benefitPlanDescription_merged = params.benefitPlans != null ? params.benefitPlans : ctx._source.primary_benefitPlanDescription_merged;
 ctx._source.composite_Key = params.composite_Key != null ? params.composite_Key : ctx._source.composite_Key;
-
 if (params.editlastNamePriority != null) {
     ctx._source.PID_5_1 = params.editlastNamePriority;
+}
+if (params.HealthPlanId != null) {
+    ctx._source.primary_healthPlanID_merged = params.HealthPlanId;
+
 }
 
         `,
@@ -45902,12 +45902,11 @@ let historyquery = {
              ctx._source.los = params.los != null ? params.los : ctx._source.los;
 ctx._source.dataSource = params.dataSource != null ? params.dataSource : ctx._source.dataSource;
 ctx._source.PV1_45_asDate = params.dateofDischargePriority != null ? params.dateofDischargePriority : ctx._source.PV1_45_asDate;
-ctx._source.PID_7_asDate = params.dateofDOBPriority != null ? params.dateofDOBPriority : ctx._source.PID_7_asDate;
+ctx._source.PID_7_asDate = params.PID_7_asDate != null ? params.PID_7_asDate : ctx._source.PID_7_asDate;
 ctx._source.MSH_7_asDate = params.messageDate != null ? params.messageDate : ctx._source.MSH_7_asDate;
 ctx._source.comments = params.comments != null ? params.comments : ctx._source.comments;
 
 ctx._source.PV1_44_asDate = params.dateofAdmissionPriority != null ? params.dateofAdmissionPriority : ctx._source.PV1_44_asDate;
-ctx._source.primary_healthPlanID_merged = params.HealthPlanId != null ? params.HealthPlanId : ctx._source.primary_healthPlanID_merged;
 ctx._source.primary_termDate_merged = params.TermDate != null ? params.TermDate : ctx._source.primary_termDate_merged;
 ctx._source.primary_effDate_merged = params.EffDate != null ? params.EffDate : ctx._source.primary_effDate_merged;
 ctx._source.reindexDate = params.ReindexDate != null ? params.ReindexDate : ctx._source.reindexDate;
@@ -45918,7 +45917,10 @@ ctx._source.PID_5_2 = params.PID_5_2 != null ? params.PID_5_2 : ctx._source.PID_
 ctx._source.PV1_3_4 = params.editPlans != null ? params.editPlans : ctx._source.PV1_3_4;
 ctx._source.primary_benefitPlanDescription_merged = params.benefitPlans != null ? params.benefitPlans : ctx._source.primary_benefitPlanDescription_merged;
 ctx._source.composite_Key = params.composite_Key != null ? params.composite_Key : ctx._source.composite_Key;
+if (params.HealthPlanId != null) {
+    ctx._source.primary_healthPlanID_merged = params.HealthPlanId;
 
+}
 if (params.editlastNamePriority != null) {
     ctx._source.PID_5_1 = params.editlastNamePriority;
 }
