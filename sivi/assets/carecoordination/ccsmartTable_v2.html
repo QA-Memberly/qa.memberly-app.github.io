@@ -45742,7 +45742,6 @@
 						}
                      }
 
-                     console.log("HealthPlanId",HealthPlanId)
                     var updatedDataPriority = {
                         primary_benefitPlanDescription_merged: benefitPlans,
                         facility_name: editPlans,
@@ -45763,7 +45762,7 @@
                         MSH_7_asDate: messageDate,
 						comments:comments,
                     };
-                    console.log(assignDate,"assignDate")
+                   
 if(assignDate!=null){
     if (isValid) {
         let query = {
@@ -45864,6 +45863,9 @@ let oldQry = {
                             }
 
                         });
+                        setTimeout(function() {
+                          
+                        }, 2000);
                         $.ajax({
                             headers: {"Authorization":"Basic ZWxhc3RpYzpmN1ZVNEZjT3ZzbnJZcjRwb2o5SDRMRzA="},
                             url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_qa_cc_adt_trial_history/_doc/"+olddata[0].composite_Key,
@@ -45877,6 +45879,9 @@ let oldQry = {
                             }
 
                         });
+                        setTimeout(function() {
+                          
+                        }, 2000);
                         $.ajax({
                             headers: ccData.hdr,
                             url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_qa_cc_adt_trial_history/_doc/"+
@@ -45892,6 +45897,9 @@ let oldQry = {
                             }
 
                         });
+                        setTimeout(function() {
+                          
+                        }, 2000);
 let historyquery = {
     "query": {
         "bool": {
@@ -45968,8 +45976,7 @@ if (params.editlastNamePriority != null) {
                             contentType: 'application/json',
                             success: function (response) {
                                 setTimeout(function() {
-        console.log("After 2 seconds");
-    }, 2000);
+                                }, 2000);
                               
                             },
                             error: function (error) {
@@ -45977,8 +45984,7 @@ if (params.editlastNamePriority != null) {
                             }
                         });
                         setTimeout(function() {
-        console.log("After 2 seconds");
-    }, 2000);
+                        }, 2000);
                         $.ajax({
                             headers: ccData.hdr,
                            
@@ -45990,6 +45996,8 @@ if (params.editlastNamePriority != null) {
                             contentType: 'application/json',
                             success: function (response) {
                                 toastr.success('CC-Member Created Successfully');
+                                setTimeout(function() {
+                                }, 2000);
                                 location.reload();
                             },
                             error: function (error) {
