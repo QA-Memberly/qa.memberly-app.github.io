@@ -45795,7 +45795,7 @@ ctx._source.composite_Key = params.composite_Key != null ? params.composite_Key 
 if (params.editlastNamePriority != null) {
     ctx._source.PID_5_1 = params.editlastNamePriority;
 }
-if (params.HealthPlanId != null) {
+if (params.HealthPlanId != null || params.HealthPlanId!="") {
     ctx._source.primary_healthPlanID_merged = params.HealthPlanId;
 
 }
@@ -45918,10 +45918,11 @@ ctx._source.PID_5_2 = params.PID_5_2 != null ? params.PID_5_2 : ctx._source.PID_
 ctx._source.PV1_3_4 = params.editPlans != null ? params.editPlans : ctx._source.PV1_3_4;
 ctx._source.primary_benefitPlanDescription_merged = params.benefitPlans != null ? params.benefitPlans : ctx._source.primary_benefitPlanDescription_merged;
 ctx._source.composite_Key = params.composite_Key != null ? params.composite_Key : ctx._source.composite_Key;
-if (params.HealthPlanId != null) {
+if (params.HealthPlanId != null || params.HealthPlanId!="") {
     ctx._source.primary_healthPlanID_merged = params.HealthPlanId;
 
 }
+
 if (params.editlastNamePriority != null) {
     ctx._source.PID_5_1 = params.editlastNamePriority;
 }
