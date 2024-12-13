@@ -45970,7 +45970,16 @@ if (params.editlastNamePriority != null) {
                                 setTimeout(function() {
         console.log("After 2 seconds");
     }, 2000);
-                                $.ajax({
+                              
+                            },
+                            error: function (error) {
+                                toastr.error('CC-Member Creation Failed');
+                            }
+                        });
+                        setTimeout(function() {
+        console.log("After 2 seconds");
+    }, 2000);
+                        $.ajax({
                             headers: ccData.hdr,
                            
                                 url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_qa_cc_adt_trial_history/_update_by_query",
@@ -45987,13 +45996,6 @@ if (params.editlastNamePriority != null) {
                                 toastr.error('CC-Member Creation Failed');
                             }
                         });
-                            },
-                            error: function (error) {
-                                toastr.error('CC-Member Creation Failed');
-                            }
-                        });
-						
-						
                     }
 }
 else{
