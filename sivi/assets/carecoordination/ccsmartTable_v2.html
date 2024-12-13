@@ -1,3 +1,4 @@
+
 <html>
 
 <head>
@@ -45743,7 +45744,7 @@
                      console.log("HealthPlanId",HealthPlanId)
                     var updatedDataPriority = {
                         primary_benefitPlanDescription_merged: benefitPlans,
-                        PV1_3_4: editPlans,
+                        facility_name: editPlans,
                         PID_5_2: editfirstNamePriority,
                         memberID_merged: MemberId,
                         composite_Key: composite_Key,
@@ -45792,13 +45793,13 @@ ctx._source.PV1_2 = params.PV1_2;
 
 ctx._source.memberID_merged = params.MemberId != null ? params.MemberId : ctx._source.memberID_merged;
 ctx._source.PID_5_2 = params.PID_5_2 != null ? params.PID_5_2 : ctx._source.PID_5_2;
-ctx._source.PV1_3_4 = params.editPlans != null ? params.editPlans : ctx._source.PV1_3_4;
+ctx._source.facility_name = params.editPlans != null ? params.editPlans : ctx._source.facility_name;
 ctx._source.primary_benefitPlanDescription_merged = params.benefitPlans != null ? params.benefitPlans : ctx._source.primary_benefitPlanDescription_merged;
 ctx._source.composite_Key = params.composite_Key != null ? params.composite_Key : ctx._source.composite_Key;
 if (params.editlastNamePriority != null) {
     ctx._source.PID_5_1 = params.editlastNamePriority;
 }
-if (params.HealthPlanId != null || params.HealthPlanId!="") {
+if (params.HealthPlanId != null) {
     ctx._source.primary_healthPlanID_merged = params.HealthPlanId;
 
 }
@@ -45918,10 +45919,10 @@ ctx._source.PV1_2 = params.PV1_2;
 
 ctx._source.memberID_merged = params.MemberId != null ? params.MemberId : ctx._source.memberID_merged;
 ctx._source.PID_5_2 = params.PID_5_2 != null ? params.PID_5_2 : ctx._source.PID_5_2;
-ctx._source.PV1_3_4 = params.editPlans != null ? params.editPlans : ctx._source.PV1_3_4;
+ctx._source.facility_name = params.editPlans != null ? params.editPlans : ctx._source.facility_name;
 ctx._source.primary_benefitPlanDescription_merged = params.benefitPlans != null ? params.benefitPlans : ctx._source.primary_benefitPlanDescription_merged;
 ctx._source.composite_Key = params.composite_Key != null ? params.composite_Key : ctx._source.composite_Key;
-if (params.HealthPlanId != null || params.HealthPlanId!="") {
+if (params.HealthPlanId != null) {
     ctx._source.primary_healthPlanID_merged = params.HealthPlanId;
 
 }
