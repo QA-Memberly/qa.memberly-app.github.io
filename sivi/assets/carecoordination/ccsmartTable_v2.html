@@ -51754,6 +51754,9 @@ else{
 				if(EffDate == ""){
 					EffDate =null;
 				}
+                if(HealthPlanId == ""){
+					HealthPlanId =null;
+				}
                 var editAdmission = $('#AdmissionInfo').val();
                 var dateofAdmission = new Date(editAdmission).getTime();
                 var editDischarge = $('#DischargeInfo').val();
@@ -52077,7 +52080,9 @@ else{
 				if(EffDate == ""){
 					EffDate =null;
 				}
-				
+				if(HealthPlanId== ""){
+                HealthPlanId=null;
+                }
                 var los = 0;
                     if (editDischargeDate != "" && editDischargeDate != null &&
                         editAdmissionDate != null && editAdmissionDate != "") {
