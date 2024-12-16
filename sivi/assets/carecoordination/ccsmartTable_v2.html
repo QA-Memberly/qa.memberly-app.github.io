@@ -45902,8 +45902,8 @@ console.log(olddata[0].composite_Key,"olddata[0].composite_Key")
                             }
 
                         });
-                      
-let historyquery = {
+let historyquery={}         
+ historyquery = {
     "query": {
         "bool": {
             "must": [{
@@ -45966,25 +45966,7 @@ ctx._source.PID_5_1 = params.editlastNamePriority != null && params.editlastName
         }
     }
 }
-                        $.ajax({
-                            headers: ccData.hdr,
-                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_cc_adt_trial/_update_by_query",
-                            async: false,
-                            type: 'POST',
-                            data: JSON.stringify(query),
-                            dataType: 'json',
-                            contentType: 'application/json',
-                            success: function (response) {
-                                setTimeout(function() {
-                                }, 3000);
-                              
-                            },
-                            error: function (error) {
-                                toastr.error('CC-Member Creation Failed');
-                            }
-                        });
-                        
-                        $.ajax({
+$.ajax({
                             headers: ccData.hdr,
                            
                                 url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_qa_cc_adt_trial_history/_update_by_query",
@@ -46006,6 +45988,25 @@ ctx._source.PID_5_1 = params.editlastNamePriority != null && params.editlastName
                                 toastr.error('CC-Member Creation Failed');
                             }
                         });
+                        $.ajax({
+                            headers: ccData.hdr,
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_cc_adt_trial/_update_by_query",
+                            async: false,
+                            type: 'POST',
+                            data: JSON.stringify(query),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                setTimeout(function() {
+                                }, 3000);
+                              
+                            },
+                            error: function (error) {
+                                toastr.error('CC-Member Creation Failed');
+                            }
+                        });
+                        
+                      
                     }
 }
 else{
