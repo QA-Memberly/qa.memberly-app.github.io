@@ -1,3 +1,4 @@
+                       
 <html> 
 
 <head>
@@ -2795,21 +2796,56 @@
                             }
 
                         });
-                    
+                        let assignDate
 						if(olddata.length >0){
-						if(olddata[0].Status == 'Pending' || olddata[0].Status == 'Assigned'  || olddata[0].Status == '' || olddata[0].Status == null){
+						if(olddata[0].Status == 'Pending' || olddata[0].Status == 'Assigned'){
+							 console.log("test12")
 							displayToastrError('Data Available for this Member, Proceed with Edit for any Update');
 						isValid = false;
 						return;
-						}else if(olddata[0].Status == 'Done'){
-						if(!isNaN(dateofAdmissionPriority) && !_.isUndefined(olddata[0].PV1_44_asDate)){
-						if(dateofAdmissionPriority > olddata[0].PV1_44_asDate){
-						}else{
-						console.log("::::error");
-						displayToastrError('Member Data Already Exist with Latest Admission Date');
-                        isValid = false;
-						return;
-						}}
+						}
+                        else if (olddata[0].Status == '' || olddata[0].Status == null) {
+                      if (!_.isUndefined(olddata[0].PV1_44_asDate)){
+                       
+                          var currentDate = new Date();
+                    var year = currentDate.getUTCFullYear();
+                    let day
+                    let month = currentDate.getUTCMonth() + 1
+                    day = currentDate.getUTCDate();
+                    let date;
+                    var hours = String(currentDate.getHours()).padStart(2, '0');
+                    var minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                    var seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                    if (month < 10 && day < 10) {
+                        date = year + "-" + "0" + month + "-" + "0" + day + "T" + hours + ":" +
+                            minutes + ":" + seconds;
+                    } else if (month < 10 && day >= 10) {
+                        date = year + "-" + "0" + month + "-" + day + "T" + hours + ":" + minutes +
+                            ":" + seconds;
+                    } else if (day < 10 && month >= 10) {
+                        date = year + "-" + month + "-" + "0" + day + "T" + hours + ":" + minutes +
+                            ":" + seconds;
+                    } else {
+                      
+                        date = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" +
+                            seconds;
+                    }
+                    assignDate = date;
+                    console.log("olddata[0]",JSON.stringify(olddata[0]))
+                    if (olddata[0].PV1_44_asDate>assignDate) {
+                      console.log("test")
+                    }
+                      }
+                    } else if (olddata[0].Status == 'Done') {
+                      if (!isNaN(dateofAdmissionPriority) && !_.isUndefined(olddata[0].PV1_44_asDate)) {
+                        if (dateofAdmissionPriority > olddata[0].PV1_44_asDate) {
+                        } else {
+                          console.log("::::error");
+                          displayToastrError('Member Data Already Exist with Latest Admission Date');
+                          isValid = false;
+                          return;
+                        }
+                      }
 						if(!isNaN(dateofDischargePriority) && !_.isUndefined(olddata[0].PV1_45_asDate)){
 						if(dateofDischargePriority > olddata[0].PV1_45_asDate){
 						}else{
@@ -2817,7 +2853,8 @@
                         isValid = false;
 						return;
 						}}
-						}}else if(HealthPlanId != ""){
+						}}
+                        else if(HealthPlanId != ""){
 						
 						let HQry = {
                             query: {
@@ -2859,12 +2896,11 @@
                         isValid = false;
 						return;
 						}
-                     }
-                  
-                     
+                    }
+
                     var updatedDataPriority = {
                         primary_benefitPlanDescription_merged: benefitPlans,
-                        PV1_3_4: editPlans,
+                        facility_name: editPlans,
                         PID_5_2: editfirstNamePriority,
                         memberID_merged: MemberId,
                         composite_Key: composite_Key,
@@ -2882,10 +2918,252 @@
                         MSH_7_asDate: messageDate,
 						comments:comments,
                     };
+                   
+if(assignDate!=null){
+    if (isValid) {
+        console.log( olddata[0].composite_Key," olddata[0].composite_Key")
+        let oldQry = {
+                            query: {
+                                bool: {
+                                    must: [
+									{
+									  term: {
+										composite_Key: olddata[0].composite_Key
+									  }
+									}
+								]
+                                }
+                            }
 
-                    console.log("updatedDataPriority:", JSON.stringify(updatedDataPriority));
+                        };
+					
+					   
+                        $.ajax({
+                            headers: ccData.hdr,
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_adt_trial_history/_search?size=1",
+                            async: false,
+                            type: 'POST',
+                            data: JSON.stringify(oldQry),
+                            crossDomain: true,
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                newdata = _.map(response["hits"]["hits"],
+                                    hit => {
+                                        return hit._source
+                                    });
+                            }
 
-                       if (isValid) {
+                        });
+        let query = {
+    "query": {
+        "bool": {
+            "must": [{
+                "term": {
+                    "memberID_merged": MemberId
+                }
+            }]
+        }
+    },
+    "script": {
+
+        "source": `
+             ctx._source.los = params.los != null ? params.los : ctx._source.los;
+ctx._source.dataSource = params.dataSource != null ? params.dataSource : ctx._source.dataSource;
+ctx._source.PV1_45_asDate = params.dateofDischargePriority != null ? params.dateofDischargePriority : ctx._source.PV1_45_asDate;
+ctx._source.PID_7_asDate = params.PID_7_asDate != null ? params.PID_7_asDate : ctx._source.PID_7_asDate;
+ctx._source.MSH_7_asDate = params.messageDate != null ? params.messageDate : ctx._source.MSH_7_asDate;
+ctx._source.comments = params.comments != null ? params.comments : ctx._source.comments;
+
+ctx._source.PV1_44_asDate = params.dateofAdmissionPriority != null ? params.dateofAdmissionPriority : ctx._source.PV1_44_asDate;
+ctx._source.primary_termDate_merged = params.TermDate != null ? params.TermDate : ctx._source.primary_termDate_merged;
+ctx._source.primary_effDate_merged = params.EffDate != null ? params.EffDate : ctx._source.primary_effDate_merged;
+ctx._source.reindexDate = params.ReindexDate != null ? params.ReindexDate : ctx._source.reindexDate;
+ctx._source.PV1_2 = params.PV1_2;
+
+ctx._source.memberID_merged = params.MemberId != null ? params.MemberId : ctx._source.memberID_merged;
+ctx._source.PID_5_2 = params.PID_5_2 != null ? params.PID_5_2 : ctx._source.PID_5_2;
+ctx._source.facility_name = params.facility_name != null ? params.facility_name : ctx._source.facility_name;
+ctx._source.primary_benefitPlanDescription_merged = params.benefitPlans != null ? params.benefitPlans : ctx._source.primary_benefitPlanDescription_merged;
+ctx._source.composite_Key = params.composite_Key != null ? params.composite_Key : ctx._source.composite_Key;
+if (params.editlastNamePriority != null) {
+    ctx._source.PID_5_1 = params.editlastNamePriority;
+}
+if (params.HealthPlanId != null) {
+    ctx._source.primary_healthPlanID_merged = params.HealthPlanId;
+
+}
+
+        `,
+        "lang": "painless",
+        "params": {
+            "los": los,
+            "dataSource": 'CareManager',
+            "dateofDischargePriority": dateofDischargePriority,
+            "PID_7_asDate": dateofDOBPriority,
+            "messageDate": messageDate,
+            "comments": comments,
+            "PV1_2": 'I',
+            "dateofAdmissionPriority": dateofAdmissionPriority,
+            "HealthPlanId": HealthPlanId,
+            "TermDate": TermDate,
+            "EffDate": EffDate,
+            "ReindexDate": ReindexDate,
+
+            "MemberId": MemberId,
+            "PID_5_2": editfirstNamePriority,
+            "facility_name": editPlans,
+            "benefitPlans": benefitPlans,
+            "composite_Key": composite_Key,
+            "editlastNamePriority": editlastNamePriority,
+        }
+    }
+}
+console.log(olddata[0].composite_Key,"olddata[0].composite_Key")
+                       
+                        setTimeout(function() {
+                          
+                        }, 2000);
+                        $.ajax({
+                            headers: {"Authorization":"Basic ZWxhc3RpYzpmN1ZVNEZjT3ZzbnJZcjRwb2o5SDRMRzA="},
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_adt_trial_history/_doc/"+olddata[0].composite_Key,
+                            async: false,
+                            type: 'DELETE',
+                          
+                            crossDomain: true,
+                            
+                            success: function (response) {
+				     setTimeout(function() {
+                          
+                        }, 2000);
+                                console.log('Document deleted successfully:', response);
+                            }
+
+                        });
+                     
+                        $.ajax({
+                            headers: ccData.hdr,
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_adt_trial_history/_doc/"+
+                            composite_Key,
+                            async: false,
+                            type: 'POST',
+                            data: JSON.stringify(newdata[0]),
+                            crossDomain: true,
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                  setTimeout(function() {
+                          
+                        }, 2000); 
+                            }
+
+                        });
+                      
+let historyquery = {
+    "query": {
+        "bool": {
+            "must": [{
+                "term": {
+                    "composite_Key": olddata[0].composite_Key
+                }
+            }]
+        }
+    },
+    "script": {
+
+        "source": `
+             ctx._source.los = params.los != null ? params.los : ctx._source.los;
+      ctx._source.dataSource = params.dataSource != null ? params.dataSource : ctx._source.dataSource;
+      ctx._source.PV1_45_asDate = params.dateofDischargePriority != null ? params.dateofDischargePriority : ctx._source.PV1_45_asDate;
+      ctx._source.PID_7_asDate = params.PID_7_asDate != null ? params.PID_7_asDate : ctx._source.PID_7_asDate;
+      ctx._source.MSH_7_asDate = params.messageDate != null ? params.messageDate : ctx._source.MSH_7_asDate;
+      ctx._source.comments = params.comments != null && params.comments != "" ? params.comments : ctx._source.comments;
+
+      ctx._source.PV1_44_asDate = params.dateofAdmissionPriority != null ? params.dateofAdmissionPriority : ctx._source.PV1_44_asDate;
+      ctx._source.primary_termDate_merged = params.TermDate != null && params.TermDate != "" ? params.TermDate : ctx._source.primary_termDate_merged;
+      ctx._source.primary_effDate_merged = params.EffDate != null && params.EffDate != "" ? params.EffDate : ctx._source.primary_effDate_merged;
+      ctx._source.reindexDate = params.ReindexDate != null && params.ReindexDate != "" ? params.ReindexDate : ctx._source.reindexDate;
+      ctx._source.PV1_2 = params.PV1_2 != null && params.PV1_2 != "" ? params.PV1_2 : ctx._source.PV1_2;
+
+      ctx._source.memberID_merged = params.MemberId != null && params.MemberId != "" ? params.MemberId : ctx._source.memberID_merged;
+      ctx._source.PID_5_2 = params.PID_5_2 != null && params.PID_5_2 != "" ? params.PID_5_2 : ctx._source.PID_5_2;
+      ctx._source.facility_name = params.facility_name != null && params.facility_name != "" ? params.facility_name : ctx._source.facility_name;
+      ctx._source.primary_benefitPlanDescription_merged = params.benefitPlans != null && params.benefitPlans != "" ? params.benefitPlans : ctx._source.primary_benefitPlanDescription_merged;
+      ctx._source.composite_Key = params.composite_Key != null && params.composite_Key != "" ? params.composite_Key : ctx._source.composite_Key;
+
+ctx._source.primary_healthPlanID_merged = params.HealthPlanId != null && params.HealthPlanId != "" ? params.HealthPlanId : ctx._source.primary_healthPlanID_merged;
+ctx._source.PID_5_1 = params.editlastNamePriority != null && params.editlastNamePriority != "" ? params.editlastNamePriority : ctx._source.PID_5_1;
+
+
+
+        `,
+        "lang": "painless",
+        "params": {
+            "los": los,
+            "dataSource": 'CareManager',
+            "dateofDischargePriority": dateofDischargePriority,
+            "PID_7_asDate": dateofDOBPriority,
+            "messageDate": messageDate,
+            "comments": comments,
+
+            "dateofAdmissionPriority": dateofAdmissionPriority,
+            "HealthPlanId": HealthPlanId,
+            "TermDate": TermDate,
+            "EffDate": EffDate,
+            "ReindexDate": ReindexDate,
+            "PV1_2": 'I',
+
+            "MemberId": MemberId,
+            "PID_5_2": editfirstNamePriority,
+            "facility_name": editPlans,
+            "benefitPlans": benefitPlans,
+            "composite_Key": composite_Key,
+            "editlastNamePriority": editlastNamePriority,
+        }
+    }
+}
+                        $.ajax({
+                            headers: ccData.hdr,
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_adt_trial/_update_by_query",
+                            async: false,
+                            type: 'POST',
+                            data: JSON.stringify(query),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                setTimeout(function() {
+                                }, 3000);
+                              
+                            },
+                            error: function (error) {
+                                toastr.error('CC-Member Creation Failed');
+                            }
+                        });
+                        
+                        $.ajax({
+                            headers: ccData.hdr,
+                           
+                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_adt_trial_history/_update_by_query",
+                                async: false,
+                            type: 'POST',
+                            data: JSON.stringify(historyquery),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                              
+                                setTimeout(function() {
+                                }, 2000);
+				     toastr.success('CC-Member Created Successfully');
+                                location.reload();
+                            },
+                            error: function (error) {
+                                toastr.error('CC-Member Creation Failed');
+                            }
+                        });
+                    }
+}
+else{
+    if (isValid) {
                         $.ajax({
                             headers: ccData.hdr,
                             url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_adt_trial/_doc/" +
@@ -2918,7 +3196,10 @@
                                 toastr.error('CC-Member Creation Failed');
                             }
                         });
+						
+						
                     }
+}
 
                 });
 
