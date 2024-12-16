@@ -45995,10 +45995,12 @@ ctx._source.PID_5_1 = params.editlastNamePriority != null && params.editlastName
                             contentType: 'application/json',
                             success: function (response) {
                               
-                                setTimeout(function() {
-                                }, 2000);
-				     toastr.success('CC-Member Created Successfully');
-                                location.reload();
+                                if (response && response.updated > 0) {
+            toastr.success('CC-Member Created Successfully');
+            location.reload();
+        } else {
+            toastr.error('No documents were updated.');
+        }
                             },
                             error: function (error) {
                                 toastr.error('CC-Member Creation Failed');
