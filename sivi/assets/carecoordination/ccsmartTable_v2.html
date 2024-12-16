@@ -45765,6 +45765,40 @@
                    
 if(assignDate!=null){
     if (isValid) {
+        console.log( olddata[0].composite_Key," olddata[0].composite_Key")
+        let oldQry = {
+                            query: {
+                                bool: {
+                                    must: [
+									{
+									  term: {
+										composite_Key: olddata[0].composite_Key
+									  }
+									}
+								]
+                                }
+                            }
+
+                        };
+					
+					   
+                        $.ajax({
+                            headers: ccData.hdr,
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_qa_cc_adt_trial_history/_search?size=1",
+                            async: false,
+                            type: 'POST',
+                            data: JSON.stringify(oldQry),
+                            crossDomain: true,
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                newdata = _.map(response["hits"]["hits"],
+                                    hit => {
+                                        return hit._source
+                                    });
+                            }
+
+                        });
         let query = {
     "query": {
         "bool": {
@@ -45830,39 +45864,7 @@ if (params.HealthPlanId != null) {
     }
 }
 console.log(olddata[0].composite_Key,"olddata[0].composite_Key")
-let oldQry = {
-                            query: {
-                                bool: {
-                                    must: [
-									{
-									  term: {
-										composite_Key: olddata[0].composite_Key
-									  }
-									}
-								]
-                                }
-                            }
-
-                        };
-					
-					   
-                        $.ajax({
-                            headers: ccData.hdr,
-                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_qa_cc_adt_trial_history/_search?size=1",
-                            async: false,
-                            type: 'POST',
-                            data: JSON.stringify(oldQry),
-                            crossDomain: true,
-                            dataType: 'json',
-                            contentType: 'application/json',
-                            success: function (response) {
-                                newdata = _.map(response["hits"]["hits"],
-                                    hit => {
-                                        return hit._source
-                                    });
-                            }
-
-                        });
+                       
                         setTimeout(function() {
                           
                         }, 2000);
@@ -45915,31 +45917,28 @@ let historyquery = {
 
         "source": `
              ctx._source.los = params.los != null ? params.los : ctx._source.los;
-ctx._source.dataSource = params.dataSource != null ? params.dataSource : ctx._source.dataSource;
-ctx._source.PV1_45_asDate = params.dateofDischargePriority != null ? params.dateofDischargePriority : ctx._source.PV1_45_asDate;
-ctx._source.PID_7_asDate = params.PID_7_asDate != null ? params.PID_7_asDate : ctx._source.PID_7_asDate;
-ctx._source.MSH_7_asDate = params.messageDate != null ? params.messageDate : ctx._source.MSH_7_asDate;
-ctx._source.comments = params.comments != null ? params.comments : ctx._source.comments;
+      ctx._source.dataSource = params.dataSource != null ? params.dataSource : ctx._source.dataSource;
+      ctx._source.PV1_45_asDate = params.dateofDischargePriority != null ? params.dateofDischargePriority : ctx._source.PV1_45_asDate;
+      ctx._source.PID_7_asDate = params.PID_7_asDate != null ? params.PID_7_asDate : ctx._source.PID_7_asDate;
+      ctx._source.MSH_7_asDate = params.messageDate != null ? params.messageDate : ctx._source.MSH_7_asDate;
+      ctx._source.comments = params.comments != null && params.comments != "" ? params.comments : ctx._source.comments;
 
-ctx._source.PV1_44_asDate = params.dateofAdmissionPriority != null ? params.dateofAdmissionPriority : ctx._source.PV1_44_asDate;
-ctx._source.primary_termDate_merged = params.TermDate != null ? params.TermDate : ctx._source.primary_termDate_merged;
-ctx._source.primary_effDate_merged = params.EffDate != null ? params.EffDate : ctx._source.primary_effDate_merged;
-ctx._source.reindexDate = params.ReindexDate != null ? params.ReindexDate : ctx._source.reindexDate;
-ctx._source.PV1_2 = params.PV1_2;
+      ctx._source.PV1_44_asDate = params.dateofAdmissionPriority != null ? params.dateofAdmissionPriority : ctx._source.PV1_44_asDate;
+      ctx._source.primary_termDate_merged = params.TermDate != null && params.TermDate != "" ? params.TermDate : ctx._source.primary_termDate_merged;
+      ctx._source.primary_effDate_merged = params.EffDate != null && params.EffDate != "" ? params.EffDate : ctx._source.primary_effDate_merged;
+      ctx._source.reindexDate = params.ReindexDate != null && params.ReindexDate != "" ? params.ReindexDate : ctx._source.reindexDate;
+      ctx._source.PV1_2 = params.PV1_2 != null && params.PV1_2 != "" ? params.PV1_2 : ctx._source.PV1_2;
 
-ctx._source.memberID_merged = params.MemberId != null ? params.MemberId : ctx._source.memberID_merged;
-ctx._source.PID_5_2 = params.PID_5_2 != null ? params.PID_5_2 : ctx._source.PID_5_2;
-ctx._source.facility_name = params.facility_name != null ? params.facility_name : ctx._source.facility_name;
-ctx._source.primary_benefitPlanDescription_merged = params.benefitPlans != null ? params.benefitPlans : ctx._source.primary_benefitPlanDescription_merged;
-ctx._source.composite_Key = params.composite_Key != null ? params.composite_Key : ctx._source.composite_Key;
-if (params.HealthPlanId != null) {
-    ctx._source.primary_healthPlanID_merged = params.HealthPlanId;
+      ctx._source.memberID_merged = params.MemberId != null && params.MemberId != "" ? params.MemberId : ctx._source.memberID_merged;
+      ctx._source.PID_5_2 = params.PID_5_2 != null && params.PID_5_2 != "" ? params.PID_5_2 : ctx._source.PID_5_2;
+      ctx._source.facility_name = params.facility_name != null && params.facility_name != "" ? params.facility_name : ctx._source.facility_name;
+      ctx._source.primary_benefitPlanDescription_merged = params.benefitPlans != null && params.benefitPlans != "" ? params.benefitPlans : ctx._source.primary_benefitPlanDescription_merged;
+      ctx._source.composite_Key = params.composite_Key != null && params.composite_Key != "" ? params.composite_Key : ctx._source.composite_Key;
 
-}
+ctx._source.primary_healthPlanID_merged = params.HealthPlanId != null && params.HealthPlanId != "" ? params.HealthPlanId : ctx._source.primary_healthPlanID_merged;
+ctx._source.PID_5_1 = params.editlastNamePriority != null && params.editlastNamePriority != "" ? params.editlastNamePriority : ctx._source.PID_5_1;
 
-if (params.editlastNamePriority != null) {
-    ctx._source.PID_5_1 = params.editlastNamePriority;
-}
+
 
         `,
         "lang": "painless",
