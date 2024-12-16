@@ -45875,13 +45875,14 @@ let oldQry = {
                             crossDomain: true,
                             
                             success: function (response) {
+				     setTimeout(function() {
+                          
+                        }, 2000);
                                 console.log('Document deleted successfully:', response);
                             }
 
                         });
-                        setTimeout(function() {
-                          
-                        }, 2000);
+                     
                         $.ajax({
                             headers: ccData.hdr,
                             url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_qa_cc_adt_trial_history/_doc/"+
@@ -45893,13 +45894,13 @@ let oldQry = {
                             dataType: 'json',
                             contentType: 'application/json',
                             success: function (response) {
-                                
+                                  setTimeout(function() {
+                          
+                        }, 2000); 
                             }
 
                         });
-                        setTimeout(function() {
-                          
-                        }, 2000);
+                      
 let historyquery = {
     "query": {
         "bool": {
@@ -45976,15 +45977,14 @@ if (params.editlastNamePriority != null) {
                             contentType: 'application/json',
                             success: function (response) {
                                 setTimeout(function() {
-                                }, 2000);
+                                }, 3000);
                               
                             },
                             error: function (error) {
                                 toastr.error('CC-Member Creation Failed');
                             }
                         });
-                        setTimeout(function() {
-                        }, 2000);
+                        
                         $.ajax({
                             headers: ccData.hdr,
                            
@@ -45995,9 +45995,10 @@ if (params.editlastNamePriority != null) {
                             dataType: 'json',
                             contentType: 'application/json',
                             success: function (response) {
-                                toastr.success('CC-Member Created Successfully');
+                              
                                 setTimeout(function() {
                                 }, 2000);
+				     toastr.success('CC-Member Created Successfully');
                                 location.reload();
                             },
                             error: function (error) {
