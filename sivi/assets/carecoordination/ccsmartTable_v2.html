@@ -45937,12 +45937,10 @@ if (editlastNamePriority != null && editlastNamePriority !== '') updateDoc.PID_5
                             contentType: 'application/json',
                             success: function (response) {
                               
-                                if (response && response.updated > 0) {
+                               
                                    toastr.success('CC-Member Created Successfully');
                                    location.reload();
-                                } else {
-                                   toastr.error('No documents were updated.');
-                                }
+                                
                             },
                             error: function (error) {
                                 toastr.error('CC-Member Creation Failed');
