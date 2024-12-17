@@ -45676,7 +45676,6 @@
                             seconds;
                     }
                     assignDate = date;
-                    console.log("olddata[0]",JSON.stringify(olddata[0]))
                     if (olddata[0].PV1_44_asDate>assignDate) {
                       console.log("test")
                     }
@@ -45765,7 +45764,6 @@
                    
 if(assignDate!=null){
     if (isValid) {
-        console.log( olddata[0].composite_Key," olddata[0].composite_Key")
         let oldQry = {
                             query: {
                                 bool: {
@@ -45861,10 +45859,8 @@ if (params.HealthPlanId != null) {
             "composite_Key": composite_Key,
             "editlastNamePriority": editlastNamePriority,
         }
-    },
-		 "retry_on_conflict": 3
+    }
 }
-console.log(olddata[0].composite_Key,"olddata[0].composite_Key")
                        
                         setTimeout(function() {
                           
@@ -45904,90 +45900,49 @@ console.log(olddata[0].composite_Key,"olddata[0].composite_Key")
 
                         });
 let historyquery={}         
- historyquery = {
-    "query": {
-        "bool": {
-            "must": [{
-                "term": {
-                    "composite_Key": olddata[0].composite_Key
-                }
-            }]
-        }
-    },
-    "script": {
+ 
+ // Initialize the object dynamically, filtering out null or empty fields
+let updateDoc = {};
 
-        "source": `
-             ctx._source.los = params.los != null ? params.los : ctx._source.los;
-      ctx._source.dataSource = params.dataSource != null ? params.dataSource : ctx._source.dataSource;
-      ctx._source.PV1_45_asDate = params.dateofDischargePriority != null ? params.dateofDischargePriority : ctx._source.PV1_45_asDate;
-      ctx._source.PID_7_asDate = params.PID_7_asDate != null ? params.PID_7_asDate : ctx._source.PID_7_asDate;
-      ctx._source.MSH_7_asDate = params.messageDate != null ? params.messageDate : ctx._source.MSH_7_asDate;
-      ctx._source.comments = params.comments != null && params.comments != "" ? params.comments : ctx._source.comments;
+if (benefitPlans != null && benefitPlans !== '') updateDoc.primary_benefitPlanDescription_merged = benefitPlans;
+if (composite_Key != null && composite_Key !== '') updateDoc.composite_Key = composite_Key;
+if (los != null && los !== '') updateDoc.los = los;
+if (dateofDischargePriority != null && dateofDischargePriority !== '') updateDoc.PV1_45_asDate = dateofDischargePriority;
+if (dateofDOBPriority != null && dateofDOBPriority !== '') updateDoc.PID_7_asDate = dateofDOBPriority;
+if (messageDate != null && messageDate !== '') updateDoc.messageDate = messageDate;
+if (comments != null && comments !== '') updateDoc.comments = comments;
+if (dateofAdmissionPriority != null && dateofAdmissionPriority !== '') updateDoc.PV1_44_asDate= dateofAdmissionPriority;
+if (HealthPlanId != null && HealthPlanId !== '') updateDoc.primary_healthPlanID_merged = HealthPlanId;
+if (TermDate != null && TermDate !== '') updateDoc.primary_termDate_merged = TermDate;
+if (EffDate != null && EffDate !== '') updateDoc.primary_effDate_merged = EffDate;
+if (ReindexDate != null && ReindexDate !== '') updateDoc.ReindexDate = ReindexDate;
+updateDoc.PV1_2 = 'I'; // This is always set as 'I'
 
-      ctx._source.PV1_44_asDate = params.dateofAdmissionPriority != null ? params.dateofAdmissionPriority : ctx._source.PV1_44_asDate;
-      ctx._source.primary_termDate_merged = params.TermDate != null && params.TermDate != "" ? params.TermDate : ctx._source.primary_termDate_merged;
-      ctx._source.primary_effDate_merged = params.EffDate != null && params.EffDate != "" ? params.EffDate : ctx._source.primary_effDate_merged;
-      ctx._source.reindexDate = params.ReindexDate != null && params.ReindexDate != "" ? params.ReindexDate : ctx._source.reindexDate;
-      ctx._source.PV1_2 = params.PV1_2 != null && params.PV1_2 != "" ? params.PV1_2 : ctx._source.PV1_2;
+if (MemberId != null && MemberId !== '') updateDoc.memberID_merged = MemberId;
+if (editfirstNamePriority != null && editfirstNamePriority !== '') updateDoc.PID_5_2 = editfirstNamePriority;
+if (editPlans != null && editPlans !== '') updateDoc.facility_name = editPlans;
+if (editlastNamePriority != null && editlastNamePriority !== '') updateDoc.PID_5_1 = editlastNamePriority;
 
-      ctx._source.memberID_merged = params.MemberId != null && params.MemberId != "" ? params.MemberId : ctx._source.memberID_merged;
-      ctx._source.PID_5_2 = params.PID_5_2 != null && params.PID_5_2 != "" ? params.PID_5_2 : ctx._source.PID_5_2;
-      ctx._source.facility_name = params.facility_name != null && params.facility_name != "" ? params.facility_name : ctx._source.facility_name;
-      ctx._source.primary_benefitPlanDescription_merged = params.benefitPlans != null && params.benefitPlans != "" ? params.benefitPlans : ctx._source.primary_benefitPlanDescription_merged;
-      ctx._source.composite_Key = params.composite_Key != null && params.composite_Key != "" ? params.composite_Key : ctx._source.composite_Key;
-
-ctx._source.primary_healthPlanID_merged = params.HealthPlanId != null && params.HealthPlanId != "" ? params.HealthPlanId : ctx._source.primary_healthPlanID_merged;
-ctx._source.PID_5_1 = params.editlastNamePriority != null && params.editlastNamePriority != "" ? params.editlastNamePriority : ctx._source.PID_5_1;
-
-
-
-        `,
-        "lang": "painless",
-        "params": {
-            "los": los,
-            "dataSource": 'CareManager',
-            "dateofDischargePriority": dateofDischargePriority,
-            "PID_7_asDate": dateofDOBPriority,
-            "messageDate": messageDate,
-            "comments": comments,
-
-            "dateofAdmissionPriority": dateofAdmissionPriority,
-            "HealthPlanId": HealthPlanId,
-            "TermDate": TermDate,
-            "EffDate": EffDate,
-            "ReindexDate": ReindexDate,
-            "PV1_2": 'I',
-
-            "MemberId": MemberId,
-            "PID_5_2": editfirstNamePriority,
-            "facility_name": editPlans,
-            "benefitPlans": benefitPlans,
-            "composite_Key": composite_Key,
-            "editlastNamePriority": editlastNamePriority,
-        }
-    },
-	 "retry_on_conflict": 3
-}
 	       setTimeout(function() {
                                 }, 3000);
                               
-$.ajax({
+                          $.ajax({
                             headers: ccData.hdr,
                            
-                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_qa_cc_adt_trial_history/_update_by_query",
+                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_qa_cc_adt_trial_history/_update/"+composite_Key,
                                 async: false,
                             type: 'POST',
-                            data: JSON.stringify(historyquery),
+                            data: JSON.stringify({doc: updateDoc }),
                             dataType: 'json',
                             contentType: 'application/json',
                             success: function (response) {
                               
                                 if (response && response.updated > 0) {
-            toastr.success('CC-Member Created Successfully');
-            location.reload();
-        } else {
-            toastr.error('No documents were updated.');
-        }
+                                   toastr.success('CC-Member Created Successfully');
+                                   location.reload();
+                                } else {
+                                   toastr.error('No documents were updated.');
+                                }
                             },
                             error: function (error) {
                                 toastr.error('CC-Member Creation Failed');
