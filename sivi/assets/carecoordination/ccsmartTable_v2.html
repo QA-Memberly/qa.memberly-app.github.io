@@ -1,5 +1,6 @@
 
 
+
 <html>
 
 <head>
@@ -45676,8 +45677,11 @@
                             seconds;
                     }
                     assignDate = date;
+                    
 			      console.log(assignDate,"assignDate")
-                    if (olddata[0].PV1_44_asDate>assignDate) {
+                  const epochDate = new Date(olddata[0].PV1_44_asDate);
+                  console.log(epochDate,"olddata[0].PV1_44_asDate")
+                    if (epochDate>assignDate) {
                       console.log("test")
                     } else {
                         displayToastrError('Member Data Already Exist with Latest Admission Date');
