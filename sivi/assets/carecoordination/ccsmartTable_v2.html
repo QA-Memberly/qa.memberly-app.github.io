@@ -45678,6 +45678,10 @@
                     assignDate = date;
                     if (olddata[0].PV1_44_asDate>assignDate) {
                       console.log("test")
+                    } else {
+                        displayToastrError('Member Data Already Exist with Latest Admission Date');
+                        isValid = false;
+						return;
                     }
                       }
                     } else if (olddata[0].Status == 'Done') {
