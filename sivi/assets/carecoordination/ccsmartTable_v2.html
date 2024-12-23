@@ -45680,8 +45680,15 @@
                     
 			      console.log(assignDate,"assignDate")
                   const epochDate = new Date(olddata[0].PV1_44_asDate);
-                  console.log(epochDate,"olddata[0].PV1_44_asDate")
-                    if (epochDate>assignDate) {
+                  const day1 = String(epochDate.getDate()).padStart(2, '0'); // Ensure day is two digits
+const month1 = String(epochDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed (0 = January)
+const year1 = epochDate.getFullYear();
+
+// Format as DD-MM-YYYY
+const formattedDate = `${day1}-${month1}-${year1}`;
+
+console.log(formattedDate);
+                    if (formattedDate>assignDate) {
                       console.log("test")
                     } else {
                         displayToastrError('Member Data Already Exist with Latest Admission Date');
