@@ -1104,6 +1104,9 @@
         let lookupTarget = [];
         let downlodDetails;
         let selColumns = [
+            "MemberDWID", "BenefitPlanCode", "BenefitPlanDescription", "City", "ClaimID", "ClaimLineID", "Gender",
+            "ProcCode", "RevCode",
+            "Zip", "Quantity", "AllowedAmount", "@timestamp", "DOB", "SvcFromDate", "SvcToDate"
         ];
         let selSearchColumns = [];
         let numberTypes = ["integer", "long", "double", "float"];
@@ -1950,7 +1953,18 @@
             triggerDataTable(configMap);
         }
 
-       
+        function getReassignData() {
+            window.parent.postMessage({
+                dataFromReassign: true
+            }, '*');
+        }
+
+        function getResponseData() {
+            window.parent.postMessage({
+                dataFromResponse: true
+            }, '*');
+        }
+
         function retrieveIndexMappers(configMap) {
             setTimeout(function () {
                 $("#sdt_wrapper_loader_message").html("Initializing table characteristics")
@@ -2406,12 +2420,511 @@
             $(document).on("click", "#ccButton", function () {
                 var data = myTable.rows('.selected').data().toArray()
                 var myData = data.length;
-                let modalcc = $("#ccModel");
-                
                 $('#mySpan').text(myData);
                 $('#ccmySpan').text(myData);
                 $("#ccModel").modal("show");
             });
+			
+			$(document).on("click", "#assignbackDialogButton", function () {
+                var data = myTable.rows('.selected').data().toArray()
+                var myData = data.length;
+
+                $('#AssignCount').text(myData);
+                $("#assignbackDialog").modal("show");
+            });
+            $(document).on("click", "#reassignButtton", function () {
+                var data = myTable.rows('.selected').data().toArray()
+                var myData = data.length;
+                $('#mySpan').text(myData);
+                $('#ccmySpan').text(myData);
+                $("#reassignModel").modal("show");
+            });
+			
+			 $(document).on("click", "#createButton", function () {
+                $("#ccCreateModel").dialog({
+                    autoOpen: false,
+                    modal: true,
+                    width: 900,
+					open: function(event, ui) {
+						$('#firstName').removeClass('error-input');
+						$('#lastName').removeClass('error-input');
+						$('#MemberId').removeClass('error-input');
+						$('#BirthDate').removeClass('error-input');
+						$('#myDropdownPriorityForCreate').removeClass('error-input');
+						$('#facilityDropdownPriorityForCreate').removeClass('error-input');
+						$('#firstName').val('');
+						$('#lastName').val('');
+						$('#EffDate').val('');
+						$('#HealthPlanId').val('');
+						$('#MemberId').val('');
+						$('#AdmissionDate').val('');
+						$('#TermDate').val('');
+						$('#myDropdownPriorityForCreate').val('');
+						$('#facilityDropdownPriorityForCreate').val('');
+						$('#myDropdown').val('');
+						$('#facilityDropdown').val('');
+						$('#myDropdownPriority').val('');
+						$('#facilityDropdownPriority').val('');
+						$('#comments').val('');
+						$('#MemberId').val('');
+						$('#DischargeDate').val('');
+						$('#EffDate').val('');
+						$('#BirthDate').val('');
+					}
+                 });
+                      let pQry = {
+                            query: {
+                                bool: {
+                                    must: [
+									{
+									  term: {
+										cc_flag: 'yes'
+									  }
+									}
+								]
+                                }
+                            }
+
+                        };
+
+                        let dataset = 'hcutils_facility_description';
+                        $.ajax({
+                            headers: {
+                                Authorization: hcUtilsAUTH
+                            },
+                            url: hcUtilsESURL + "/" + dataset +
+                                "/_search?size=1000",
+                            async: false,
+                            type: 'POST',
+                            data: JSON.stringify(pQry),
+                            crossDomain: true,
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                facilitylist = _.map(response["hits"]["hits"],
+                                    hit => {
+                                        return hit._source
+                                    });
+                            }
+
+                        });
+
+						
+						let BQry = {
+                            query: {
+                                bool: {
+                                    must: []
+                                }
+                            }
+
+                        };
+
+                        let datasetBenefit = 'hcutils_benefitplandesc_name';
+                        $.ajax({
+                            headers: {
+                                Authorization: hcUtilsAUTH
+                            },
+                            url: hcUtilsESURL + "/" + datasetBenefit +
+                                "/_search?size=1000",
+                            async: false,
+                            type: 'POST',
+                            data: JSON.stringify(BQry),
+                            crossDomain: true,
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                benefitplanDesclist = _.map(response["hits"]["hits"],
+                                    hit => {
+                                        return hit._source
+                                    });
+                            }
+
+                        });
+                      function populateDropdownsForcreate(benefitplanDesclist, facilitylist) {
+                            console.log("::::facilitylist", facilitylist);
+							benefitplanDesclist.sort(function(a, b) {
+								return a.benefit_name.localeCompare(b.benefit_name);
+							});
+							
+							facilitylist.sort(function(a, b) {
+								return a.facility_name.localeCompare(b.facility_name);
+							});
+                            var myDropdownPriorityForCreate = $(
+                                '#myDropdownPriorityForCreate');
+								myDropdownPriorityForCreate.empty();
+								myDropdownPriorityForCreate.append($('<option disabled selected value="">Select an option</option>'));
+                            $.each(benefitplanDesclist, function (index, objs) {
+                                myDropdownPriorityForCreate.append($(
+                                    '<option></option>').attr('value', objs
+                                        .benefit_name).text(
+                                            objs.benefit_name));
+                            });
+                            var facilityDropdownPriorityForCreate = $(
+                                '#facilityDropdownPriorityForCreate');
+								facilityDropdownPriorityForCreate.append($('<option disabled selected value="">Select an option</option>'));
+                            $.each(facilitylist, function (index, objs) {
+                                facilityDropdownPriorityForCreate.append($(
+                                    '<option></option>').attr('value', objs
+                                        .PV1_3_4).text(objs.facility_name));
+                            });
+
+
+                            //myDropdownProgramNameForCreate
+                        }
+
+
+
+                        // Populate dropdown on document ready
+                        populateDropdownsForcreate(benefitplanDesclist, facilitylist);
+
+                    
+                $("#ccCreateModel").dialog("open");
+				function displayToastrError(message) {
+					// Check if the message is already in the queue
+					if (toastrErrorQueue.includes(message)) {
+					return; // Exit if the message is already being displayed
+					}
+					// Add the new error message to the queue
+					toastrErrorQueue.push(message);
+					// Display the error message
+					toastr.options = {
+							"closeButton": true,   // Enable the close button
+							"timeOut": 3000   
+					};
+
+					var error = toastr.error(message);
+
+					// If more than 3 errors are in the queue, remove and clear the oldest one
+					if (toastrErrorQueue.length > 3) {
+					var oldestMessage = toastrErrorQueue.shift();
+					toastr.clear(oldestMessage);
+					}
+					// Clear the error message from the queue after the timeout
+					setTimeout(function () {
+					var index = toastrErrorQueue.indexOf(message);
+					if (index !== -1) {
+					toastrErrorQueue.splice(index, 1);
+					}}, 3000);
+				}
+                $(document).on("click", "#ccCreateValueButton", function () {
+                    $('.error').remove();
+                    $('.error-input').removeClass('error-input');
+                    var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/? 0-9]+/;
+					var formatForMemid = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/? a-zA-Z]+/;
+					var formatForheplId = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+                    var isValid = true;
+
+                    var firstName = $('#firstName').val().trim();
+                    var lastName = $('#lastName').val().trim();
+                    var EffDate = $('#EffDate').val().trim();
+                    var HealthPlanId = $('#HealthPlanId').val().trim();
+                    var BirthDate = $('#BirthDate').val().trim();
+                    var MemberId = $('#MemberId').val().trim();
+					MemberId = MemberId.replace(/\s/g, "");
+                    var AdmissionDte = $('#AdmissionDate').val().trim();
+                    var TermDate = $('#TermDate').val().trim();
+                    var benefitPln = $('#myDropdownPriorityForCreate').val();
+                    
+                    if (firstName === '') {
+                        $('#firstName').addClass('error-input');
+                        isValid = false;
+                    } else {
+                        if (format.test(firstName)) {
+                            $('#firstName').addClass('error-input');
+                            isValid = false;
+                        } else {
+                            $('#firstName').removeClass('error-input');
+                        }
+                    }
+
+                    if (lastName === '') {
+                        $('#lastName').addClass('error-input');
+                        isValid = false;
+                    } else {
+                        if (format.test(lastName)) {
+                            $('#lastName').addClass('error-input');
+                            isValid = false;
+                        } else {
+                            $('#lastName').removeClass('error-input');
+                        }
+                    }
+					
+					if (HealthPlanId != '') {
+                        if (formatForheplId.test(HealthPlanId)) {
+                            $('#HealthPlanId').addClass('error-input');
+                            isValid = false;
+                        } else {
+                            $('#HealthPlanId').removeClass('error-input');
+                        }
+                    }
+
+
+                    if (benefitPln == null) {
+                        $('#myDropdownPriorityForCreate').addClass('error-input');
+                        isValid = false;
+                    } else {
+                        $('#myDropdownPriorityForCreate').removeClass(
+                            'error-input'); // Remove error class if valid
+                    }
+
+                   
+
+                     if (BirthDate === '') {
+                        $('#BirthDate').addClass('error-input');
+                        isValid = false;
+                    } else {
+					   var birthmoment= moment(BirthDate, 'MM-DD-YYYY',true).isValid();
+					   if(birthmoment){
+                        $('#BirthDate').removeClass(
+                            'error-input'); // Remove error class if valid
+						}else{
+						$('#BirthDate').addClass('error-input');
+                        isValid = false;
+						}
+                    }
+
+
+
+                    if (MemberId === '') {
+                        $('#MemberId').addClass('error-input');
+                        isValid = false;
+                    } else {
+                        if (formatForMemid.test(MemberId)) {
+                            $('#MemberId').addClass('error-input');
+                            isValid = false;
+                        } else {
+                            $('#MemberId').removeClass('error-input');
+                        }
+                    }
+
+
+                    var benefitPlans = $('#myDropdownPriorityForCreate').val();
+                    var editPlans = $('#facilityDropdownPriorityForCreate').val();
+                    var editfirstNamePriority = $('#firstName').val();
+                    var editlastNamePriority = $('#lastName').val();
+                    var editAdmissionDate = $('#AdmissionDate').val();
+                    var editDischargeDate = $('#DischargeDate').val();
+                    var HealthPlanId = $('#HealthPlanId').val();
+					var comments =$('#comments').val();
+                    var EffDate = $('#EffDate').val();
+                    var TermDate = $('#TermDate').val();
+					if(TermDate == ""){
+					TermDate =null;
+					}
+					if(EffDate == ""){
+					EffDate =null;
+					}
+                    var date = new Date();
+                    var ReindexDate = date;
+                    var composite_Key;
+                    let AdmissionDate = Number(editAdmissionDate.slice(0, 10).split('-').join(
+                        ''));
+                    let DischargeDate = Number(editDischargeDate.slice(0, 10).split('-').join(
+                        ''));
+                    if (editAdmissionDate != "") {
+                        composite_Key = AdmissionDate + MemberId;
+                    } else if (editDischargeDate != "") {
+                        composite_Key = DischargeDate + '_D_' + MemberId;
+                    } else {
+							displayToastrError('Select Admission Date or Discharge Date to proceed');          
+						isValid = false;
+						return;
+                    }
+                    var dateofAdmissionPriority = new Date(editAdmissionDate).getTime();
+                    var dateofDischargePriority = new Date(editDischargeDate).getTime();
+                    var messageDate = new Date(ReindexDate).getTime();
+                    var editBirthDatePriority = $('#BirthDate').val();
+                    var dateofDOBPriority = new Date(editBirthDatePriority).getTime();
+                    var prioritybuttonValue = $(this).siblings('button.btn-outline-primary');
+					console.log(":::::::::::::edit",prioritybuttonValue);
+                    var los = 0;
+                    if (editDischargeDate != "" && editDischargeDate != null &&
+                        editAdmissionDate != null && editAdmissionDate != "") {
+                        var diff = dateofDischargePriority - dateofAdmissionPriority;
+                        los = diff / 1000 / 86400
+                    } else if (editDischargeDate == "" || editDischargeDate == null &&
+                        editAdmissionDate != null && editAdmissionDate != "") {
+                        var currentEpoch = new Date().getTime();
+                        var diff = currentEpoch - dateofAdmissionPriority;
+                        los = diff / 1000 / 86400;
+                    } else{
+					    los = 9999;
+					}
+					
+                    los = Math.round(los);
+                    compositeKeyPriorityValue = composite_Key;
+
+					let Qry = {
+							sort: [
+								{
+								  reindexDate: {
+									order: 'desc'
+								  }
+								}
+							  ],
+                            query: {
+                                bool: {
+                                    must: [
+									{
+									  term: {
+										memberID_merged: MemberId
+									  }
+									}
+								]
+                                }
+                            }
+
+                        };
+					
+					let dataset = 'dhmp_prod_cc_adt_trial';
+                        $.ajax({
+                            headers: ccData.hdr,
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/" + dataset +
+                                "/_search?size=1000",
+                            async: false,
+                            type: 'POST',
+                            data: JSON.stringify(Qry),
+                            crossDomain: true,
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                olddata = _.map(response["hits"]["hits"],
+                                    hit => {
+                                        return hit._source
+                                    });
+                            }
+
+                        });
+                    
+						if(olddata.length >0){
+						if(olddata[0].Status == 'Pending' || olddata[0].Status == 'Assigned'  || olddata[0].Status == '' || olddata[0].Status == null){
+							displayToastrError('Data Available for this Member, Proceed with Edit for any Update');
+						isValid = false;
+						return;
+						}else if(olddata[0].Status == 'Done'){
+						if(!isNaN(dateofAdmissionPriority) && !_.isUndefined(olddata[0].PV1_44_asDate)){
+						if(dateofAdmissionPriority > olddata[0].PV1_44_asDate){
+						}else{
+						console.log("::::error");
+						displayToastrError('Member Data Already Exist with Latest Admission Date');
+                        isValid = false;
+						return;
+						}}
+						if(!isNaN(dateofDischargePriority) && !_.isUndefined(olddata[0].PV1_45_asDate)){
+						if(dateofDischargePriority > olddata[0].PV1_45_asDate){
+						}else{
+						displayToastrError('Member Data Already Exist with Latest Discharge Date');
+                        isValid = false;
+						return;
+						}}
+						}}else if(HealthPlanId != ""){
+						
+						let HQry = {
+                            query: {
+                                bool: {
+                                    must: [
+									{
+									  term: {
+										primary_healthPlanID_merged: HealthPlanId
+									  }
+									}
+								]
+                                }
+                            }
+
+                        };
+					
+					   
+                        $.ajax({
+                            headers: ccData.hdr,
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/" + dataset +
+                                "/_search?size=1000",
+                            async: false,
+                            type: 'POST',
+                            data: JSON.stringify(HQry),
+                            crossDomain: true,
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                healthPlandata = _.map(response["hits"]["hits"],
+                                    hit => {
+                                        return hit._source
+                                    });
+                            }
+
+                        });
+						
+						if(healthPlandata.length >0){
+						displayToastrError('HealthPlanId Already Exist,Please Proceed with Unique HealthPlanId');
+                        isValid = false;
+						return;
+						}
+                     }
+                  
+                     
+                    var updatedDataPriority = {
+                        primary_benefitPlanDescription_merged: benefitPlans,
+                        PV1_3_4: editPlans,
+                        PID_5_2: editfirstNamePriority,
+                        memberID_merged: MemberId,
+                        composite_Key: composite_Key,
+                        PID_5_1: editlastNamePriority,
+                        PV1_44_asDate: dateofAdmissionPriority,
+                        primary_healthPlanID_merged: HealthPlanId,
+                        primary_termDate_merged: TermDate,
+                        primary_effDate_merged: EffDate,
+                        reindexDate: ReindexDate,
+                        PV1_2: 'I',
+                        los: los,
+                        dataSource: 'CareManager',
+                        PV1_45_asDate: dateofDischargePriority,
+                        PID_7_asDate: dateofDOBPriority,
+                        MSH_7_asDate: messageDate,
+						comments:comments,
+                    };
+
+                    console.log("updatedDataPriority:", JSON.stringify(updatedDataPriority));
+
+                       if (isValid) {
+                        $.ajax({
+                            headers: ccData.hdr,
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_adt_trial/_doc/" +
+                                MemberId,
+                            async: false,
+                            type: 'POST',
+                            data: JSON.stringify(updatedDataPriority),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                $.ajax({
+                            headers: ccData.hdr,
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_adt_trial_history/_doc/" +
+                                compositeKeyPriorityValue,
+                            async: false,
+                            type: 'POST',
+                            data: JSON.stringify(updatedDataPriority),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                toastr.success('CC-Member Created Successfully');
+                                location.reload();
+                            },
+                            error: function (error) {
+                                toastr.error('CC-Member Creation Failed');
+                            }
+                        });
+                            },
+                            error: function (error) {
+                                toastr.error('CC-Member Creation Failed');
+                            }
+                        });
+                    }
+
+                });
+
+            });
+
+			
             $(document).on("click", "#apply-selected-columns", function () {
                 let applySelCols = [];
                 $('input[data-role="cb-col-selector"]:checked').each(function () {
@@ -3599,10 +4112,56 @@
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").show();
+					$("#createButton").show();
+                    var myButton1 = $('#reassignButtton');
+                    myButton1.hide();
+                    $('#updateStatus').hide();
+                    $('#navigateCCResponse').hide();
+                    $('#navigateCCReassign').hide();
+                    $('#assignbackDialogButton').hide();
                 }
 				
-			
-              
+			   if (ccData.dupListRow) {
+				   $('#assignbackDialogButton').hide();
+				   $("#createButton").hide();
+                }
+                // if (ccData.selectRowReaasign) {
+                //     console.log(ccData.selectRowReaasign, "selectRowReaasign")
+                //     let assignButon = true
+                //     var $myButton = $('#ccButton');
+                //     // $myButton.show().prop("disabled", false);
+                //     $("#ccButton").hide();
+                //     var myButton1 = $('#reassignButtton');
+                //     $('#reassignButtton').show();
+                //     $('#updateStatus').hide();
+                //     $('#navigateCCResponse').show();
+                //     $('#navigateCCReassign').hide();
+                // }
+                if (ccData.selectedResponse) {
+                    let assignButon = true
+                    $('#updateStatus').show();
+                    var $myButton = $('#ccButton');
+                    // $myButton.show().prop("disabled", false);
+                    $("#ccButton").hide();
+					$("#createButton").hide();
+                    var myButton1 = $('#reassignButtton');
+                    myButton1.show();
+                    $('#navigateCCResponse').hide();
+                    $('#navigateCCReassign').hide();
+                    $('#assignbackDialogButton').hide();
+                }
+                if (ccData.selectedDoneRow) {
+                    $('#updateStatus').hide();
+                    var $myButton = $('#ccButton');
+                    // $myButton.show().prop("disabled", false);
+                    $("#ccButton").hide();
+					$("#createButton").hide();
+                    var myButton1 = $('#reassignButtton');
+                    myButton1.hide();
+                    $('#navigateCCResponse').hide();
+                    $('#navigateCCReassign').hide();
+                    $('#assignbackDialogButton').show();
+                }
                 let dept = configMap.departmentName;
                 let adminUrl = configMap.downloadData.environmentAdminUrl
                 $.ajax({
@@ -4059,7 +4618,18 @@
             //selColumns = selColumns.concat(runtimeColumns);
             //}	
             console.log("Incoming Config JSON MAP " + JSON.stringify(configMap, null, 1));
-           
+            // if (configMap.selectRowReaasign == true) {
+            //     $('#updateStatus').hide();
+            //     $('#reassignButtton').show();
+            //     $('#navigateCCResponse').show();
+            //     $('#navigateCCReassign').hide();
+            // }
+            // if (configMap.selectedResponse == true) {
+            //     $('#updateStatus').show();
+            //     $('#reassignButtton').hide();
+            //     $('#navigateCCResponse').hide();
+            //     $('#navigateCCReassign').show();
+            // }
             if (configMap.rowSelection == true) {
                 console.log(configMap.rowSelection, "ccData")
                 let assignButon = true
@@ -4603,7 +5173,7 @@
             // Attach event listener to the input text field
             //   $("#date").on("change", setDateFieldValue(uniqueIdentifier));
 
-          
+            console.log(ccData, "ccData")
             $('#example tbody').on('click', 'td:first-child, input[type="checkbox"]', function () {
                 var checkbox = $(this).closest('tr').find('input[type="checkbox"]');
                 var row = $(this).closest('tr');
@@ -4619,7 +5189,218 @@
                 console.log("selectedRow: " + selectedRow);
 				var getData=myTable.rows('.selected').data().toArray();
 
+				if(getData[0].assigned_date){
+				console.log("selectedRow: " + getData[0].assigned_date);
+				 assignedValue=getData[0].assigned_date;
+
+				}				
+				if(getData[0].TOC_Program_Current_Status){
+				console.log("selectedRow: " + getData[0].TOC_Program_Current_Status);
+				 assignedStatus=getData[0].TOC_Program_Current_Status;
+				}	
             });
+
+            function CCassign() {
+                $("#CCcolumns").modal("show");
+
+                $("#setCCcolumns").selectize({
+                    plugins: ['restore_on_backspace', 'remove_button', 'optgroup_columns'],
+                    onChange: function (value) {
+                        Search()
+                    },
+                    options: [{
+                            id: "keyword",
+                            values: "keyword",
+                            label: "Keyword",
+                            optgrp: "Data-Types"
+                        },
+                        {
+                            id: "number",
+                            values: "integer,long,double,float",
+                            label: "Numerical",
+                            optgrp: "Data-Types"
+                        },
+                        {
+                            id: "date",
+                            values: "date",
+                            label: "Date",
+                            optgrp: "Data-Types"
+                        },
+                        {
+                            id: "text",
+                            values: "text",
+                            label: "Text",
+                            optgrp: "Data-Types"
+                        },
+                        {
+                            id: "labels",
+                            values: "labelled",
+                            label: "Has Label",
+                            optgrp: "Miscellaneous"
+                        },
+                    ],
+
+                    labelField: "label",
+                    valueField: "values",
+                    optgroupField: "optgrp",
+                    optgroupLabelField: "grpname",
+                    optgroupValueField: "grpid",
+
+                    searchField: ["id", "values"],
+                });
+
+
+                var selectElement = document.getElementById('setCCcolumns');
+            }
+
+            function checkCCData(buttonElement, modalId) {
+                var modalBody = buttonElement.closest(".modal-content").find(".modal-body");
+                showLoader(modalBody);
+
+                var selectElement = document.getElementById('setCCcolumns');
+                $("#setCCcolumns").selectize({
+                    plugins: ['restore_on_backspace', 'remove_button', 'optgroup_columns'],
+                    onChange: function (value) {
+                        Search()
+                    },
+                    options: [{
+                            id: "keyword",
+                            values: "keyword",
+                            label: "Keyword",
+                            optgrp: "Data-Types"
+                        },
+                        {
+                            id: "number",
+                            values: "integer,long,double,float",
+                            label: "Numerical",
+                            optgrp: "Data-Types"
+                        },
+                        {
+                            id: "date",
+                            values: "date",
+                            label: "Date",
+                            optgrp: "Data-Types"
+                        },
+                        {
+                            id: "text",
+                            values: "text",
+                            label: "Text",
+                            optgrp: "Data-Types"
+                        },
+                        {
+                            id: "labels",
+                            values: "labelled",
+                            label: "Has Label",
+                            optgrp: "Miscellaneous"
+                        },
+                    ],
+
+                    labelField: "label",
+                    valueField: "values",
+                    optgroupField: "optgrp",
+                    optgroupLabelField: "grpname",
+                    optgroupValueField: "grpid",
+
+                    searchField: ["id", "values"],
+                });
+
+                console.log("While searching, check the types dt[" + typeof $("#setCCcolumns").val() +
+                    "] ::: " +
+                    $(
+                        "#setCCcolumns").val());
+                console.log("CCcolumns" + $("CCcolumns").val() + "] ::: ");
+                var selectElement = document.getElementById('setCCcolumns');
+                console.log('Selected Value:', selectElement);
+                // var selectedValue = selectElement.value;
+                var selectElements = document.getElementById('CCcolumns');
+                // Log or use the selected value
+                console.log('Selected Value:', selectElements);
+                // console.log("data",tt)
+                console.log("data")
+            }
+
+            function checkConditionsAndDownload() {
+                let maxRecord;
+                // Get the total number of records in the whole DataTable
+                let indexDetails = {
+                    "index_name": downlodDetails.ds
+                }
+                let dataset = indexDetails.index_name
+		     console.log("testtt")
+                $.ajax({
+                    headers: downlodDetails.hdr,
+                    url: downlodDetails.url.replace("/_msearch", "") + "/_settings",
+                    async: false,
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (response) {
+
+                        if (dataset != undefined || dataset != "") {
+                            if (response[dataset].settings.index.max_result_window) {
+                                maxRecord = response[indexDetails.index_name].settings.index
+                                    .max_result_window;
+                            }
+                        }
+                    }
+                });
+                var totalRecordsCount = myTable.page.info().recordsTotal;
+                // var totalRecordsCount = 1000;
+                if (searchFilterQuery != null || popupFilter != null) {
+                    totalRecordsCount = myTable.page.info().recordsTotal;
+                    if (selColumns.length >= 14 && selColumns.length <= 17 && totalRecord > 7000 || selColumns
+                        .length >= 18 && selColumns.length <= 25 && totalRecord > 5000 || selColumns.length >=
+                        26 &&
+                        selColumns.length <= 30 && totalRecord > 4000 || selColumns.length >= 31 && selColumns
+                        .length <= 36 && totalRecord > 1500) {
+                        document.getElementById('limitColumns').style.display = 'block';
+                        document.getElementById('limit37Columns').style.display = 'none';
+                    }
+                    if (totalRecord > 10000 && totalRecord != 0 && selColumns.length >= 14 && selColumns
+                        .length <=
+                        36) {
+                        $("#myModal").modal("show");
+                    } else if (totalRecord == 0 || totalRecord < 10000 && selColumns.length < 14 ||
+                        totalRecord <
+                        4000 && selColumns.length >= 26 && selColumns.length <= 32 || totalRecord < 5000 &&
+                        selColumns
+                        .length >= 18 && selColumns.length <= 25 || selColumns.length >= 14 && selColumns
+                        .length <=
+                        17 && totalRecord < 7000 || totalRecord < 2000 && selColumns.length >= 31 && selColumns
+                        .length <= 36 || selColumns.length >= 37) {
+                        $("#DownloadNoModel").modal("show");
+                    } else if (totalRecord > 10000 && totalRecord != 0 && selColumns.length < 14) {
+                        $("#DownloadFilterModel").modal("show");
+                    }
+
+                } else {
+                    totalRecordsCount = myTable.page.info().recordsTotal;
+                    if (selColumns.length >= 14 && selColumns.length <= 17 && totalRecord > 7000 || selColumns
+                        .length >= 18 && selColumns.length <= 25 && totalRecord > 5000 || selColumns.length >=
+                        26 &&
+                        selColumns.length <= 30 && totalRecord > 4000 || selColumns.length >= 31 && selColumns
+                        .length <= 36 && totalRecord > 1500) {
+                        document.getElementById('limitColumns').style.display = 'block';
+                        document.getElementById('limit37Columns').style.display = 'none';
+                    }
+                    if (totalRecord > 10000 && totalRecord != 0 && selColumns.length >= 14 && selColumns
+                        .length <=
+                        36) {
+                        $("#myModal").modal("show");
+                    } else if (totalRecord == 0 || totalRecord < 10000 && selColumns.length < 14 ||
+                        totalRecord <
+                        4000 && selColumns.length >= 26 && selColumns.length <= 30 || totalRecord < 5000 &&
+                        selColumns
+                        .length >= 18 && selColumns.length <= 25 || selColumns.length >= 14 && selColumns
+                        .length <=
+                        17 && totalRecord < 7000 || totalRecord < 2000 && selColumns.length >= 31 && selColumns
+                        .length <= 36 || selColumns.length > 36) {
+                        $("#DownloadNoModel").modal("show");
+                    } else if (totalRecord > 10000 && totalRecord != 0 && selColumns.length < 14) {
+                        $("#DownloadModel").modal("show");
+                    }
+                }
+            }
 
             function checkConditionsCSVAndDownload(buttonElement, modalId) {
                 // Get the total number of records in the whole DataTable
@@ -4855,7 +5636,18 @@
             $("#closePopupButton").on("click", function () {
                 $("#myModal").modal("hide");
             });
-         
+            $("#closeccModelButton").on("click", function () {
+                $("#ccModel").modal("hide");
+            });
+
+			$("#closeAssignBackButton").on("click", function () {
+                $("#assignbackDialog").modal("hide");
+            }); 
+			
+            $("#closeReassignModelButton").on("click", function () {
+                $("#reassignModel").modal("hide");
+            });
+
             $("#closeFilterButton").on("click", function () {
                 $("#DownloadFilterModel").modal("hide");
             });
@@ -4863,112 +5655,33 @@
             $("#closeDownloadButton").on("click", function () {
                 $("#DownloadModel").modal("hide");
             });
-          
+            $("#closeNODownloadButton").on("click", function () {
+                $("#DownloadNoModel").modal("hide");
+            });
+
             $("#downloadButton").on("click", function () {
                 // document.getElementById('limitColumns').style.display = 'none';
                 // document.getElementById('limitColumnsandrows').style.display = 'none';
                 checkConditionsAndDownload();
             });
-            
-            function checkConditionsAndDownload() {
-                let maxRecord;
-                // Get the total number of records in the whole DataTable
-                let indexDetails = {
-                    "index_name": downlodDetails.ds
-                }
-                let dataset = indexDetails.index_name
-                $.ajax({
-                    headers: downlodDetails.hdr,
-                    url: downlodDetails.url.replace("/_msearch", "") + "/_settings",
-                    async: false,
-                    type: 'GET',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    success: function (response) {
+            $("#addCC").on("click", function () {
 
-                        if (dataset != undefined || dataset != "") {
-                            if (response[dataset].settings.index.max_result_window) {
-                                maxRecord = response[indexDetails.index_name].settings.index
-                                    .max_result_window;
-                            }
-                        }
-                    }
-                });
-                var totalRecordsCount = myTable.page.info().recordsTotal;
-                // var totalRecordsCount = 1000;
-                if (searchFilterQuery != null || popupFilter != null) {
-                    totalRecordsCount = myTable.page.info().recordsTotal;
-                    if (selColumns.length >= 14 && selColumns.length <= 17 && totalRecord > 7000 || selColumns
-                        .length >= 18 && selColumns.length <= 25 && totalRecord > 5000 || selColumns.length >=
-                        26 &&
-                        selColumns.length <= 30 && totalRecord > 4000 || selColumns.length >= 31 && selColumns
-                        .length <= 36 && totalRecord > 1500) {
-                        document.getElementById('limitColumns').style.display = 'block';
-                        document.getElementById('limit37Columns').style.display = 'none';
-                    }
-                    if (totalRecord > 10000 && totalRecord != 0 && selColumns.length >= 14 && selColumns
-                        .length <=
-                        36) {
-                        $("#myModal").modal("show");
-                    } else if (totalRecord == 0 || totalRecord < 10000 && selColumns.length < 14 ||
-                        totalRecord <
-                        4000 && selColumns.length >= 26 && selColumns.length <= 30 || totalRecord < 5000 &&
-                        selColumns
-                        .length >= 18 && selColumns.length <= 25 || selColumns.length >= 14 && selColumns
-                        .length <=
-                        17 && totalRecord < 7000 || totalRecord < 2000 && selColumns.length >= 31 && selColumns
-                        .length <= 36 || selColumns.length >= 37) {
-                        $("#DownloadNoModel").modal("show");
-                    } else if (totalRecord > 10000 && totalRecord != 0 && selColumns.length < 14) {
-                        $("#DownloadFilterModel").modal("show");
-                    }
-
-                } else {
-                    totalRecordsCount = myTable.page.info().recordsTotal;
-                    if (selColumns.length >= 14 && selColumns.length <= 17 && totalRecord > 7000 || selColumns
-                        .length >= 18 && selColumns.length <= 25 && totalRecord > 5000 || selColumns.length >=
-                        26 &&
-                        selColumns.length <= 30 && totalRecord > 4000 || selColumns.length >= 31 && selColumns
-                        .length <= 36 && totalRecord > 1500) {
-                        document.getElementById('limitColumns').style.display = 'block';
-                        document.getElementById('limit37Columns').style.display = 'none';
-                    }
-                    if (totalRecord > 10000 && totalRecord != 0 && selColumns.length >= 14 && selColumns
-                        .length <=
-                        36) {
-                        $("#myModal").modal("show");
-                    } else if (totalRecord == 0 || totalRecord < 10000 && selColumns.length < 14 ||
-                        totalRecord <
-                        4000 && selColumns.length >= 26 && selColumns.length <= 30 || totalRecord < 5000 &&
-                        selColumns
-                        .length >= 18 && selColumns.length <= 25 || selColumns.length >= 14 && selColumns
-                        .length <=
-                        17 && totalRecord < 7000 || totalRecord < 2000 && selColumns.length >= 31 && selColumns
-                        .length <= 36 || selColumns.length > 36) {
-                        $("#DownloadNoModel").modal("show");
-                    } else if (totalRecord > 10000 && totalRecord != 0 && selColumns.length < 14) {
-                        $("#DownloadModel").modal("show");
-                    }
-                }
-            }
-
-            $(document).on("click", "#downloadJSONRecords", function () {
-                if (selColumns.length >= 37) {
-                    document.getElementById('limit37Columns').style.display = 'block';
-                } else {
-                    document.getElementById('limit37Columns').style.display = 'none';
-                    var modalBody = $(this).closest(".modal-content").find(".modal-body");
-                    var modalId = "#DownloadNoModel";
-                    var originalContent = showLoader(modalBody);
-                    setTimeout(function () {
-                        checkConditionsJSONAndDownload(modalBody, modalId);
-                        modalBody.html(originalContent);
-                        $(modalId).modal("hide");
-                    }, 100);
-                }
+                checkCCData();
             });
- 
-            $(document).on("click", "#downloadCSVRecords", function () {
+
+            $(document).on("click", "#downloadCSV", function () {
+                var modalBody = $(this).closest(".modal-content").find(".modal-body");
+                var modalId = "#myModal";
+                var originalContent = showLoader(modalBody);
+                setTimeout(function () {
+                    checkConditionsCSVAndDownload(modalBody, modalId);
+                    modalBody.html(originalContent);
+                    $(modalId).modal("hide");
+                }, 100);
+
+            });
+
+            $(document).on("click", "#downloadNOCSVRecords", function () {
                 console.log(selColumns.length, "selColumns.length")
                 if (selColumns.length >= 37) {
                     document.getElementById('limit37Columns').style.display = 'block';
@@ -4985,8 +5698,8 @@
                     }, 100);
                 }
             });
-
-            $(document).on("click", "#saveCC", function () {
+           
+             $(document).on("click", "#saveCC", function () {
                 var modalBody = $(this).closest(".modal-content").find(".modal-body");
                 var modalId = "#ccModel";
                 var originalContent = showLoader(modalBody);
@@ -4997,8 +5710,24 @@
                 }, 100);
             });
 
-           
-          
+               $(document).on("click", "#downloadNOJSONRecords", function () {
+                if (selColumns.length >= 37) {
+                    document.getElementById('limit37Columns').style.display = 'block';
+                } else {
+                    document.getElementById('limit37Columns').style.display = 'none';
+                    var modalBody = $(this).closest(".modal-content").find(".modal-body");
+                    var modalId = "#DownloadNoModel";
+                    var originalContent = showLoader(modalBody);
+                    setTimeout(function () {
+                        checkConditionsJSONAndDownload(modalBody, modalId);
+                        modalBody.html(originalContent);
+                        $(modalId).modal("hide");
+                    }, 100);
+                }
+            });
+
+      
+
         });
 
         function setDateFieldValue(uniqueIdentifier) {
@@ -5065,7 +5794,7 @@
             $("#reassignModel").modal("hide");
         }
 
-    
+     
 function assigncarecoordinator(){
 
     let data = (myTable.rows('.selected').data().toArray())
@@ -5157,7 +5886,7 @@ function assigncarecoordinator(){
                         }
                         $.ajax({
                         headers: ccData.hdr,
-                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_cc_adt_trial/_search?size=1",
+                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_adt_trial/_search?size=1",
                         async: false,
                         type: 'POST',
                         data: JSON.stringify(dataQuery),
@@ -5168,16 +5897,83 @@ function assigncarecoordinator(){
                            assignedData = res.hits.hits[0]._source;
                         }
                     });
-                       
+                        let TOC_Status
+                        let Status
+                        if (element.PV1_45_asDate != null && element.PV1_44_asDate != null) {
+                            TOC_Status = "CONFIRMED DC - OUTREACH WITHIN 2 DAYS",
+                                Status = "Pending"
+                        } else if (element.PV1_44_asDate != null && (element.PV1_45_asDate ==
+                                null || element.PV1_45_asDate == '')) {
+                            TOC_Status = "MEMBER IP"
+                            Status = "Pending"
+                        } else if (element.PV1_45_asDate != null && (element.PV1_44_asDate ==
+                                null || element.PV1_44_asDate == '')) {
+                            TOC_Status = "CONFIRMED DC - OUTREACH WITHIN 2 DAYS",
+                                Status = "Pending"
+                        } else {
+                            Status = "Assigned"
+                        }
+                        assignedData["TOC_Program_Current_Status"] = TOC_Status;
+                        assignedData["Status"] = Status;
+                     
                         let uuid = element.composite_Key
-                       
+                        let assignedTo = element.CC;
 
-                    
+                        // Construct assigned history object
+                        let assignedHistoryObj = {
+                            "assignedby": dataNew,
+                            "assignedTo": assignedTo,
+                            "assigneddate": newValue1
+                        };
+
+                        // Update assigned_history array in element
+                       
+                      // Update assigned_history array in element
+                      let history = element.assigned_history || [];
+                        history.push(assignedHistoryObj);
+
+                        let dhmpCcDataPayload = {
+                            ...assignedData,
+                            "assigned_history": history
+                        };
+
+                        let {
+                            assigned_history,
+                            ...dhmpCcAdtTrialPayload
+                        } =assignedData;
+                   
+                        // Update dhmp_prod_cc_data
+                        dhmpCcDataPayload["CC"] = newValue;
+                        dhmpCcDataPayload["assigned_date"] = newValue1;
+			    dhmpCcDataPayload["TOC_Program_Current_Date"] = newValue1;
+                        dhmpCcDataPayload["created_by"] =dataNew;
+			           dhmpCcDataPayload["modified_on"] = newValue1;
+                        $.ajax({
+                            headers: ccData.hdr,
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_data/_doc/" +
+                                uuid,
+                            async: false,
+                            type: 'PUT',
+                            data: JSON.stringify(dhmpCcDataPayload),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                // handle success
+                            }
+                        });
                         if (element.memberID_merged != null  && (element
                                 .PV1_44_asDate != null || element.PV1_45_asDate != null)) {
 
                             let oldData = element
-                           
+                            var newObject = {
+                                ...dhmpCcAdtTrialPayload,
+                                "Status": "Assigned",
+                                [newKey1]: newValue1,
+                                [newKey]: newValue
+
+                            };
+                            var combinedObject = $.extend({}, oldData,
+                                newObject);
                             let responseDatas = element.composite_Key
                             let query = {
                                 "query": {
@@ -5197,7 +5993,7 @@ function assigncarecoordinator(){
                             }
                             $.ajax({
                                 headers: ccData.hdr,
-                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_cc_adt_trial/_update_by_query",
+                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_adt_trial,dhmp_prod_cc_adt_trial_history/_update_by_query",
                                 async: false,
                                 type: 'POST',
                                 data: JSON.stringify(query),
@@ -5226,36 +6022,7 @@ function assigncarecoordinator(){
                 }
 
 }
-        function assignccHideLoader(modalBody,orignialcontent,modelName) {    
-            modalBody.find(".loader").remove();
-            modalBody.find(".csvLoaderMessage").remove();
-            
-            if(modelName=="ccAssign"){
-            $("#ccModel").modal("hide");
-            $("#ccModel .modal-content").html(orignialcontent);
-            $("#closeccModelButton").on("click", function () {
-                $("#ccModel").modal("hide");
-            });
-            $('#getValueButton').on('click', function () {
-                assigncarecoordinator();
-               
-            });
-            }else if(modelName=="ccReassign"){
-               
-            $("#reassignModel").modal("hide");
-            $("#reassignModel .modal-content").html(orignialcontent);
-            $("#closeReassignModelButton").on("click", function () {
-                $("#reassignModel").modal("hide");
-            });
-            $('#getReassignValueButton').on('click', function () {
-                reassignCareCoordinator();
-               
-            });
-
-            }
-           
-        }
-    </script>
+        </script>
 </head>
 
 <body style="position:relative;overflow-x:hidden !important">
@@ -5323,6 +6090,7 @@ function assigncarecoordinator(){
                         CC</button>
 					
                    
+                    
                     <div class="col-sm-3 text-right text-end">
                         <div id="col-selector-panel" class="btn-group mb-2 mr-2 col-selector-panel">
                             <button id="enhanced_columns_trigger" class="btn btn-sm btn-primary mr-1" type="button"
@@ -5415,53 +6183,7 @@ function assigncarecoordinator(){
                         </div>
                     </div>
                     <!-- Model for less than 1 lakhs records-->
-                    <div class="modal" id="DownloadModel" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
-                        aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="modalTitle">Export Data</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true" id="closeDownloadButton">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="mb-3 mt-2">
-                                        Currently, you can only export 10K records by choosing the below option.
-                                    </div>
-                                    <button id="downloadCSVRecords" class="btn btn-sm btn-primary shadow-none 
-																								cursor-pointer" style="height: 35px; padding: 2px 10px">Download as CSV</button>
-                                    <button id="downloadJSONRecords" class="btn btn-sm btn-primary shadow-none 
-																								cursor-pointer" style="height: 35px; padding: 2px 10px">Download as
-                                        Excel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal" id="DownloadFilterModel" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
-                        aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="modalTitle">Export Data</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true" id="closeDownloadButton">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="mb-2">
-                                        Download the filtered datas.
-                                    </div>
-
-                                    <button id="downloadCSVFilter" class="btn btn-sm btn-primary shadow-none 
-																								cursor-pointer" style="height: 35px; padding: 2px 10px">Download as CSV</button>
-                                    <button id="downloadJSONFilter" class="btn btn-sm btn-primary shadow-none 
-																								cursor-pointer" style="height: 35px; padding: 2px 10px">Download as
-                                        Excel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                 
                     <div class="modal" id="DownloadNoModel" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
                         aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -5481,9 +6203,9 @@ function assigncarecoordinator(){
                                     <div class="mb-3 mt-2">
                                         Currently, you can only export 10K records by choosing the below option.
                                     </div>
-                                    <button id="downloadCSVRecords" class="btn btn-sm btn-primary shadow-none 
+                                    <button id="downloadNOCSVRecords" class="btn btn-sm btn-primary shadow-none 
 																							cursor-pointer" style="height: 35px; padding: 2px 10px">Download as CSV</button>
-                                    <button id="downloadJSONRecords" class="btn btn-sm btn-primary shadow-none 
+                                    <button id="downloadNOJSONRecords" class="btn btn-sm btn-primary shadow-none 
 																							cursor-pointer" style="height: 35px; padding: 2px 10px">Download as Excel</button>
                                 </div>
                             </div>
@@ -5629,8 +6351,71 @@ function assigncarecoordinator(){
         </div>
     </div>
 	
-	
+	<div id="assignbackDialog" class="modal" role="dialog" aria-labelledby="careTitle" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="left: 65%; width: 20%;">
+            <div class="modal-content">
+                <div class="modal-header" style="display: block;">
+
+                    <h6 class="modal-title" id="dupTitle">Selected Members will Assign Back:
+                        <span id="AssignCount"></span>
+                    </h6>
+                    <h6 class="modal-title" id="careTitle">Do you want to proceed?</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+
+                        <button id="assignBackcall" class="btn btn-sm btn-primary cursor-pointer" type="button"
+                            style="height: 35px;width:84px;padding: 2px 10px;margin-left: 15px;margin-top: 0px;">Yes</button>
+                        <button id="closeAssignBackButton" class="btn btn-sm btn-primary cursor-pointer" type="button"
+                            style="height: 35px;width:84px;padding: 2px 10px;margin-left: 15px;margin-top: 0px;">No</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
    
+    <div id="reassignModel" class="modal" role="dialog" aria-labelledby="careTitle" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width: 109%;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="careTitle">Number of Members Reassigned to CC Name:<span
+                            id="mySpan"></span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" id="closeReassignModelButton">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <span id="mySpan"></span>
+                        <div id="reassigncolumns" class="col-sm-4 alert alert-primary"
+                            style="height: 35px; width: 330px;padding: 2px 10px;margin:0px 8px;display: inline-flex;">
+
+                            <label style="margin-top:7px;">Reassign CC Name : </label>
+                            <select id="reassignCCcolumnss"
+                                style="border-radius: 0.2rem;padding: 2px 10px;margin: 2px 8px;">
+                                <option value="select">--Select--</option>
+                                <option value="jstockmyer">Jessica Stockmyer</option>
+                                <option value="rstob">Rebecca Stob</option>
+                                <option value="trubin">Tye Rubin</option>
+                                <option value="cgeremaia">Cassie Geremaia</option>
+                                <option value="ahall">Alane Hall</option>
+                                <option value="lrabbitt">Lindsay Rabbitt</option>
+                                <option value="bkeller">Bobbi Keller </option>
+                                <option value="kgeesaman">Kate Geesaman</option>
+                                <option value="lvillalobos">Liz Villalobos</option>
+                            </select>
+                        </div>
+                        <button id="getReassignValueButton" class="btn btn-sm btn-primary cursor-pointer" type="button"
+                            style="height: 35px;width:84px;padding: 2px 10px;margin-left: 15px;margin-top: 0px;">ReAssign</button>
+                    </div>
+                    <div id="success-message" style="display:none;">Members Reassigned to Care Coordinator!</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <div id="viewModel" style="display:none" title="Assignment History">
         <div id="historyDetails" style="display: flex;width: 100%">
             <div class="row">
@@ -5644,7 +6429,151 @@ function assigncarecoordinator(){
         </div>
     </div>
     </div>
-    
+    <!-- <script id="rendered-js"> -->
+    <!-- //  document.getElementById('date').addEventListener('input', function () {
+        //     // Get the date value from the input
+        //     let originalDate = this.value;
+
+        //     // Split the original date into an array [day, month, year]
+        //     let parts = originalDate.split('-');
+
+        //     // Rearrange the parts to get the new format [month, day, year]
+        //     let newDate = `${parts[1]}-${parts[0]}-${parts[2]}`;
+
+        //     // Set the new date format back to the input
+        //     let value = newDate;
+        //     console.log(value,"testggghhhh")
+        // });
+        // $(function () {
+        //     $("#birthday").datepicker({ dateFormat: 'mm-dd-yy' });
+        // }); -->
+        <div id="ccCreateModel" title="Create Member Data" style="display:none">
+        <div style="display: flex;flex-direction: column;row-gap: 15px;margin-left: 15px;margin-top: 15px;">
+
+            <div class="row">
+
+                <div class="col-md-6 row">
+                    <div class="col-md-4">First Name<span class="spnrequired">*</span> :</div>
+                    <div class="col-md-6"
+                        style="color: #333;font-size: 14px;font-style: normal;white-space: normal;max-width: 200px">
+                        <input type="text" id="firstName" style="width: 250px;" maxlength="50">
+                        <div id="error" style="color: red;"></div>
+                    </div>
+                </div>
+                <div class="col-md-6 row">
+                    <div class="col-md-4">Last Name<span class="spnrequired">*</span>:</div>
+                    <div class="col-md-6"
+                        style="color: #333;font-size: 14px;font-style: normal;white-space: normal;max-width: 200px">
+                        <input type="text" id="lastName" style="width: 250px;" maxlength="50">
+                        <div id="errors" style="color: red;"></div>
+
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6 row">
+                    <div class="col-md-4">Member ID<span class="spnrequired">*</span></div>
+                    <div class="col-md-6"
+                        style="color: #333;font-size: 14px;font-style: normal;white-space: normal;max-width: 200px">
+                        <input type="text" id="MemberId" style="width: 250px;" maxlength="15">
+                        <div id="error" style="color: red;"></div>
+
+                    </div>
+                </div>
+                <div class="col-md-6 row">
+                    <div class="col-md-4">Date of Birth<span class="spnrequired">*</span>: </div>
+                    <div class="col-md-6"
+                        style="color: #333;font-size: 14px;font-style: normal;white-space: normal;max-width: 200px">
+                        <input type="text" oninput="formatDate(this)"  onkeydown="handleBackspace(this,event)" id="BirthDate" style="width: 250px;" placeholder = "MM-DD-YYYY">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6 row">
+                    <div class="col-md-4">Health Plan ID: </div>
+                    <div class="col-md-6"
+                        style="color: #333;font-size: 14px;font-style: normal;white-space: normal;max-width: 200px">
+                        <input type="text" id="HealthPlanId" style="width: 250px;" maxlength="50">
+                    </div>
+                </div>
+                <div class="col-md-6 row">
+                    <div class="col-md-4">Benefit Plan<span class="spnrequired">*</span>:</div>
+                    <div class="col-md-6"
+                        style="color: #333;font-size: 14px;font-style: normal;white-space: normal;max-width: 200px">
+                        <select id="myDropdownPriorityForCreate" style="width: 250px;">
+                        </select>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6 row">
+                    <div class="col-md-4">Admission Date:</div>
+                    <div class="col-md-6"
+                        style="color: #333;font-size: 14px;font-style: normal;white-space: normal;max-width: 200px">
+                        <input type="datetime-local" id="AdmissionDate" style="width: 250px;">
+                    </div>
+                </div>
+                <div class="col-md-6 row">
+                    <div class="col-md-4">Discharge Date:</div>
+                    <div class="col-md-6"
+                        style="color: #333;font-size: 14px;font-style: normal;white-space: normal;max-width: 200px">
+                        <input type="datetime-local" id="DischargeDate" style="width: 250px;"
+                            onfocus="disablePastDates()">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6 row">
+                    <div class="col-md-4">Effective Date:</div>
+                    <div class="col-md-6"
+                        style="color: #333;font-size: 14px;font-style: normal;white-space: normal;max-width: 200px">
+                        <input type="datetime-local" id="EffDate" style="width: 250px;">
+                    </div>
+                </div>
+                <div class="col-md-6 row">
+                    <div class="col-md-4">TermDate:</div>
+                    <div class="col-md-6"
+                        style="color: #333;font-size: 14px;font-style: normal;white-space: normal;max-width: 200px">
+                        <input type="datetime-local" id="TermDate" style="width: 250px;">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6 row">
+                    <div class="col-md-4">Facility:</div>
+                    <div class="col-md-6"
+                        style="color: #333;font-size: 14px;font-style: normal;white-space: normal;max-width: 200px">
+                        <select id="facilityDropdownPriorityForCreate" style="width: 250px;">
+                        </select>
+                        <br><br>
+                    </div>
+                </div>
+				<div class="col-md-6 row">
+                    <div class="col-md-4">comments:</div>
+                    <div class="col-md-6"
+                        style="color: #333;font-size: 14px;font-style: normal;white-space: normal;max-width: 200px">
+                        <textarea type="text" id="comments" style="width: 250px;" ></textarea>
+                        <div id="error" style="color: red;"></div>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+
+
+            <button id="ccCreateValueButton" class="btn btn-sm btn-primary cursor-pointer" type="submit"
+                style="height: 35px;width:84px;margin-left: 75%;position: relative; margin-bottom: 15px;">Create</button>
+        </div>
+    </div>
+
+
+
     <script id="rendered-js">
         var $quicksearch = $('#enhanced_col_search_term').keyup(debounce(function () {
             doColumnsSearch();
@@ -5850,8 +6779,552 @@ function assigncarecoordinator(){
                 assigncarecoordinator();
             });
 
-			
-           });
+			  $('#assignBackcall').on('click', function () {
+            let data = (myTable.rows('.selected').data().toArray())
+            if (data.length == 0) {
+                toastr.error(
+                    'Select atleast one Member'
+                );
+            } else {
+
+                var currentDate = new Date();
+                var year = currentDate.getUTCFullYear();
+                let day
+                let month = currentDate.getUTCMonth() + 1
+                day = currentDate.getUTCDate();
+                let date;
+                var hours = String(currentDate.getHours()).padStart(2, '0');
+                var minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                var seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                if (month < 10 && day < 10) {
+                    date = year + "-" + "0" + month + "-" + "0" + day + "T" + hours + ":" +
+                        minutes + ":" + seconds;
+                } else if (month < 10 && day >= 10) {
+                    date = year + "-" + "0" + month + "-" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else if (day < 10 && month >= 10) {
+                    date = year + "-" + month + "-" + "0" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else {
+                    // console.log(month, "mm.length", mm)
+                    date = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" +
+                        seconds;
+                }
+
+                let assignDate = date;
+                let modifiedDate = date;
+                const newKey1 = 'assigned_date';
+                const newValue1 = assignDate
+                if (!Array.isArray(data)) {
+                    data = [data];
+                }
+                let ccValue = ccData.loginContext
+                let dataNew = ccValue.replace(/^\s+|\s+$/g, "")
+                updatedCCArray = data.map(obj => ({
+                    ...obj,
+                    ["Status"]: "Done",
+                    [newKey1]: newValue1,
+                    ["created_by"]: dataNew,
+                    ["modified_on"]: newValue1,
+                }));
+
+                function generateUUID() {
+                    const cryptoObj = window.crypto || window.msCrypto;
+                    const buffer = new Uint8Array(16);
+                    cryptoObj.getRandomValues(buffer);
+                    buffer[6] = (buffer[6] & 0x0f) | 0x40;
+                    buffer[8] = (buffer[8] & 0x3f) | 0x80;
+                    return Array.from(buffer)
+                        .map(byte => byte.toString(16).padStart(2, '0'))
+                        .join('');
+                }
+                updatedCCArray.forEach((element) => {
+                    // let uuid = element.PV1_44_asDate + element.primary_healthPlanID_merged
+                    let TOC_Status
+                    let Status
+					let reassignTocStatus=element.TOC_Program_Current_Status;
+                    if (element.PV1_45_asDate != null && element.PV1_44_asDate != null) {
+                        TOC_Status = "CONFIRMED DC - OUTREACH WITHIN 2 DAYS",
+                            Status = "Pending"
+                    } else if (element.PV1_44_asDate != null && (element.PV1_45_asDate ==
+                            null || element.PV1_45_asDate == '')) {
+                        TOC_Status = "MEMBER IP"
+                        Status = "Pending"
+                    } else if (element.PV1_45_asDate != null && (element.PV1_44_asDate ==
+                            null || element.PV1_44_asDate == '')) {
+                        TOC_Status = "CONFIRMED DC - OUTREACH WITHIN 2 DAYS",
+                            Status = "Pending"
+                    } else {
+                        Status = "Done"
+                    }
+                    element["TOC_Program_Current_Status"] = TOC_Status;
+                    element["Status"] = Status;
+			element["assignBack"]="Yes";
+                    let uuid = element.composite_Key
+                    let assignedTo = element.CC;
+
+                    // Construct assigned history object
+                    let assignedHistoryObj = {
+                        "assignedby": dataNew,
+                        "assignedTo": assignedTo,
+                        "assigneddate": newValue1
+                    };
+
+                    // Update assigned_history array in element
+                    let history = element.assigned_history || [];
+                    history.push(assignedHistoryObj);
+
+                    let dhmpCcDataPayload = {
+                        ...element,
+                        "assigned_history": history
+                    };
+
+                    let {
+                        assigned_history,
+                        ...dhmpCcAdtTrialPayload
+                    } = element;
+
+                    // Update dhmp_prod_cc_data
+                    let revertQuery = {
+                        "query": {
+                            "bool": {
+                                "must": [{
+                                    "term": {
+                                        "composite_Key": element.composite_Key
+                                    }
+                                }]
+                            }
+                        },
+                        "script": {
+                           
+                            "source": `
+        ctx._source.TOC_Program_Current_Status = params.TOC_Program_Current_Status;
+        ctx._source.assigned_history = params.assigned_history;
+        ctx._source.Status = params.Status;
+       ctx._source.assigned_date = params.assigned_date;
+       ctx._source.modified_on = params.modified_on;
+       ctx._source.assignBack = params.assignBack;
+	   ctx._source.assignBackDate = params.assignBackDate;
+       ctx._source.assignBackTOCStatus = params.assignBackTOCStatus;
+       ctx._source.assignBackBy = params.assignBackBy;
+	   
+    `,
+    "lang": "painless",
+    "params": {
+		"assigned_history": history, // Pass the complex object here
+        "TOC_Program_Current_Status":TOC_Status,
+        "Status": Status,
+        "assigned_date": assignedValue,"modified_on": newValue1,"assignBack":"Yes","assignBackDate":newValue1,"assignBackTOCStatus":reassignTocStatus,"assignBackBy":dataNew 
+    }}}
+                $.ajax({
+                    headers: ccData.hdr,
+                    url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_data/_update_by_query",
+                    async: false,
+                    type: 'POST',
+                    data: JSON.stringify(revertQuery),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (response) {
+                        // handle success
+                    }
+                });
+
+                    if (element.memberID_merged != null && (element
+                            .PV1_44_asDate != null || element.PV1_45_asDate != null)) {
+
+                        let oldData = element
+                        var newObject = {
+                            ...dhmpCcAdtTrialPayload,
+                            "Status": "Done",
+                            [newKey1]: newValue1
+
+                        };
+                        var combinedObject = $.extend({}, oldData,
+                            newObject);
+                        let responseDatas = element.composite_Key
+                        let query = {
+                            "query": {
+                                "bool": {
+                                    "must": [{
+                                        "term": {
+                                            "composite_Key": element
+                                                .composite_Key
+                                        }
+                                    }]
+                                }
+                            },
+                            "script": {
+                                "source": "ctx._source.Status = 'Pending'; ctx._source.assigned_date = new Date();",
+                                "lang": "painless"
+                            }
+                        }
+                        $.ajax({
+                            headers: ccData.hdr,
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_adt_trial,dhmp_prod_cc_adt_trial_history/_update_by_query",
+                            async: false,
+                            type: 'POST',
+                            data: JSON.stringify(query),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                setTimeout(function () {
+                                    toastr.success(element.memberID_merged +
+                                        'Assign Back Successfully');
+                                    location
+                                        .reload();
+                                }, 2000);
+                            },
+                            error: function (error) {
+                                toastr.error(element.memberID_merged +
+                                    'Assign Back Failed');
+                                console.log(
+                                    "ERROR happened >>>> ",
+                                    error);
+                                return null;
+                            },
+                            complete: function () {}
+                        })
+
+                    }
+                });
+            }
+        });
+
+            $('#getReassignValueButton').on('click', function () {
+                reassignCareCoordinator();
+            });
+
+            function showSuccessMessage() {
+                $('#success-message').fadeIn().delay(2000).fadeOut();
+            }
+
+            function getvalue(obj) {
+                const decodeObj = decodeURIComponent(obj);
+                const careCordinatorData = JSON.parse(decodeObj);
+                let memberID = careCordinatorData.memberID_merged
+                careCordinatorData.TOC_Program_Current_Status = document.getElementById("status").value;
+                careCordinatorData.TOC_Program_Current_Date = document.getElementById("date").value;
+                careCordinatorData.last_Hospital_Contact = document.getElementById("hospitalcontact").value;
+                // careCordinatorData.assigned_To = document.getElementById("outreachAsigned").value;
+                // careCordinatorData.cm_Assignee = document.gSetElementById("cmTocAssignee").value;
+                console.log('jsonData===>2', careCordinatorData);
+
+                if (careCordinatorData.memberID_merged != null && (careCordinatorData.PV1_44_asDate != null ||
+                        careCordinatorData.PV1_45_asDate != null)
+                ) {
+
+
+                    let responseDatas = careCordinatorData.composite_Key;
+                    let oldData = careCordinatorData
+                    var newObject = {
+                        "Date of Last Hospital Contact": careCordinatorData
+                            .last_Hospital_Contact,
+                        "TOC_Program_Current_Date": careCordinatorData
+                            .TOC_Program_Current_Date,
+                        "TOC_Comments": careCordinatorData
+                            .TOC_Comments
+
+                    };
+
+                    var combinedObject = $.extend({}, oldData, newObject);
+                    $.ajax({
+                        headers: ccData.hdr,
+                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_data/_doc/" +
+                            responseDatas,
+                        async: false,
+                        type: 'PUT',
+                        data: JSON.stringify(combinedObject),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (response) {
+                            location.reload();
+                        }
+                    })
+
+                }
+
+            }
+
+            $(document).ready(function () {
+                $("#setCCcolumnss").change(function () {
+
+                    assignValue = decodeURIComponent($(this).val());
+                    console.log((assignValue, "testassignValue"), "testassignValue")
+                });
+                $("#reassignCCcolumnss").change(function () {
+                    reAssignValue = $(this).val();
+                });
+                $('#updateStatus').on('click', function () {
+                    var selectedRows = [];
+                    console.log('selectedRows')
+                    // $('.select-checkbox class_:checked').each(function () {
+                    console.log('selectedRows', selectedRows)
+                    var rowObj = (myTable.rows('.selected').data().toArray());
+                    // selectedRows.push(rowObj);
+                    console.log('selectedRows', rowObj)
+                    if (rowObj.length === 0) {
+                        toastr.error(
+                            'select atleast one member ID.'
+                        );
+                    } else {
+                        rowObj.forEach(val => {
+                            if (val.memberID_merged != null ) {
+                                let ccSaveQuery = {
+                                    "query": {
+                                        "bool": {
+                                            "must": [{
+                                                    "term": {
+                                                        "memberID_merged": val
+                                                            .memberID_merged
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                };
+
+                                $.ajax({
+                                    headers: ccData.hdr,
+                                    url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_data/_search",
+                                    async: false,
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    crossDomain: true,
+                                    data: JSON.stringify(ccSaveQuery),
+                                    contentType: 'application/json',
+                                    success: function (response) {
+                                        if (response.hits && response.hits
+                                            .hits && response.hits.hits
+                                            .length > 0 &&
+                                            response.hits.hits[0]._source &&
+                                            response.hits.hits[0]._source
+                                            .assigned_history) {
+
+                                            var responseHistorys = response
+                                                .hits.hits[0]._source
+                                                .assigned_history;
+                                            console.log('responseHistorys',
+                                                responseHistorys);
+
+                                            val.assigned_history =
+                                                responseHistorys;
+
+                                            console.log('updated rowObj',
+                                                rowObj);
+
+                                        }
+                                        updateStatus(rowObj);
+                                    },
+                                    error: function (error) {
+                                        console.error('Error:', error);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    // });
+                });
+            });
+
+            function updateStatus(selectedRows) {
+                const allRowsValid = selectedRows.every((row) => {
+                    console.log(row, "row");
+                    // const decodeObj = decodeURIComponent(row);
+                    // console.log(JSON.parse(decodeObj),"decodeObj");
+                    const careCordinatorData = row;
+                    const uniqueIdentifier = careCordinatorData.memberID_merged;
+
+                    const statusId = "status" + uniqueIdentifier;
+                    const hospitalcontactId = "hospitalcontact" + uniqueIdentifier;
+                    // const dateId = "date" + uniqueIdentifier;
+
+                    const statusElement = $("#" + statusId);
+                    const hospitalcontactElement = $("#" + hospitalcontactId);
+                    // const dateElement = $("#" + dateId);
+
+                    var statusValue = statusElement.val();
+                    var hospitalcontactValue = hospitalcontactElement.val();
+                    // var dateValue = dateElement.val();
+                    return statusValue;
+                    return hospitalcontactValue;
+                });
+
+                // If any row is missing values, show an error and exit
+                if (!allRowsValid) {
+                    toastr.error(
+                        'Please Provide TOC_Program_Current_Status for selected rows.'
+                    );
+                    return;
+                }
+
+                for (let i = 0; i < selectedRows.length; i++) {
+                    const decodeObj = decodeURIComponent(selectedRows[i]);
+                    var careCordinatorData = selectedRows[i];
+                    const uniqueIdentifier = careCordinatorData.memberID_merged;
+
+                    var statusId = "status" + uniqueIdentifier;
+                    var hospitalcontactId = "hospitalcontact" + uniqueIdentifier;
+                    var dateId = "dateValue" + uniqueIdentifier;
+
+                    var statusElement = $("#" + statusId);
+                    var hospitalcontactElement = $("#" + hospitalcontactId);
+                    var dateElement = $("#" + dateId);
+
+                    var statusValue = statusElement.val();
+                    var hospitalcontactValue = hospitalcontactElement.val();
+                    var dateValue = dateElement.val();
+
+                    console.log('careCordinatorData.statusValue', statusValue)
+
+                    console.log('careCordinatorData.dateValue', dateValue)
+                    careCordinatorData.TOC_Program_Current_Status = statusValue;
+                    careCordinatorData.TOC_Comments = hospitalcontactValue;
+                    careCordinatorData.TOC_Program_Current_Date = dateValue;
+                    if (careCordinatorData.memberID_merged != null && (careCordinatorData.PV1_44_asDate != null || careCordinatorData.PV1_45_asDate !=
+                            null)) {
+                                
+                        let responseDatas = careCordinatorData.composite_Key;
+                        let oldData = careCordinatorData;
+
+                        let pendingStatusList = [
+                            "CONFIRMED DC - OUTREACH WITHIN 2 DAYS",
+                            "DISPATCH HEALTH",
+                            "DISPATCH HEALTH - OUTREACHED",
+                            "FIRST ATTEMPT COMPLETED, SECOND ATTEMPT PENDING",
+                            "MEMBER IP",
+                            "MEMBER IP - OUTREACHED",
+                            "MEMBER IP IN SNF", "READMITTED (CM TO FOLLOW)",
+                            "MEMBER IP IN SNF - OUTREACHED",
+                            "MEMBER REQUESTED CALL BACK", "READMITTED (CM TO FOLLOW)",
+                            "OBSERVATION STAY - REVIEW AND INITIATE PROGRAM (MCR, COMM, EXCH)",
+                            "REFERRED OUTREACH PENDING", "PLANNED ADMISSION"
+                        ];
+                        if (pendingStatusList.includes(careCordinatorData
+                                .TOC_Program_Current_Status)) {
+                            careCordinatorData.Status = "Pending";
+                        } else {
+                            careCordinatorData.Status = "Done";
+                        }
+			    let querys = {
+                            "query": {
+                                "bool": {
+                                    "must": [{
+                                        "term": {
+                                            "composite_Key": careCordinatorData.composite_Key
+                                        }
+                                    }]
+                                }
+                            },
+                            "script": {
+                                "source": "ctx._source.Status='"+careCordinatorData.Status+"';",
+                                "lang": "painless"
+                            }
+                        }
+                        $.ajax({
+                            headers: ccData.hdr,
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_adt_trial,dhmp_prod_cc_adt_trial_history/_update_by_query",
+                            async: false,
+                                type: 'POST',
+                                data: JSON.stringify(querys),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                // Handle success, if needed
+                                //location.reload();
+                                setTimeout(function () {
+                                           $('#example').DataTable().clearPipeline().draw();
+                                    }, 2000);
+                            }
+                        });
+                        var currentDate = new Date();
+                        var year = currentDate.getUTCFullYear();
+                        let day
+                        let month = currentDate.getUTCMonth() + 1
+                        day = currentDate.getUTCDate();
+                        let date;
+                        var hours = String(currentDate.getHours()).padStart(2, '0');
+                        var minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                        var seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                        if (month < 10 && day < 10) {
+                            date = year + "-" + "0" + month + "-" + "0" + day + "T" +
+                                hours + ":" + minutes + ":" + seconds;
+                        } else if (month < 10 && day >= 10) {
+                            date = year + "-" + "0" + month + "-" + day + "T" + hours +
+                                ":" + minutes + ":" + seconds;
+                        } else if (day < 10 && month >= 10) {
+                            date = year + "-" + month + "-" + "0" + day + "T" + hours +
+                                ":" + minutes + ":" + seconds;
+                        } else {
+                            
+                            date = year + "-" + month + "-" + day + "T" + hours + ":" +
+                                minutes + ":" + seconds;
+                        }
+
+                        let modifiedDate = date;
+                        const newValue1 = date
+                        var recordModifiedDate = moment.utc(new Date()).format(
+                            "yyyy-MM-DDTHH:mm:ss");
+
+                        let formatTocDate = moment.utc(careCordinatorData
+                            .TOC_Program_Current_Date).format(
+                            "YYYY-MM-DD");
+                        let combinedDateTime = `${formatTocDate}T${hours}:${minutes}:${seconds}`;
+                        careCordinatorData.TOC_Program_Current_Date = combinedDateTime;
+
+                        // let newDate = date
+                        // let tocDate = new Date(careCordinatorData
+                        //     .TOC_Program_Current_Date);
+                        // let utcDateToc = tocDate.toISOString();
+                        let ccValue = ccData.loginContext
+                        let dataNew = ccValue.replace(/^\s+|\s+$/g, "")
+                        var newObject = {
+                            "TOC_Program_Current_Date": careCordinatorData.TOC_Program_Current_Date,
+                            "TOC_Program_Current_Status": careCordinatorData
+                                .TOC_Program_Current_Status,
+                            "TOC_Comments": careCordinatorData.TOC_Comments,
+                            "Status": careCordinatorData.Status,
+                            "created_by": dataNew,
+                            "modified_by": dataNew,
+                            "modified_on": modifiedDate
+                        };
+                        let query = {
+                            "query": {
+                                "bool": {
+                                    "must": [{
+                                        "term": {
+                                            "composite_Key": careCordinatorData.composite_Key
+                                        }
+                                    }]
+                                }
+                            },
+                            "script": {
+                                "source": "ctx._source.TOC_Program_Current_Date ='"+careCordinatorData.TOC_Program_Current_Date+"'; ctx._source.TOC_Program_Current_Status ='"+careCordinatorData
+                                .TOC_Program_Current_Status+"';ctx._source.TOC_Comments='"+careCordinatorData.TOC_Comments+"';ctx._source.Status='"+careCordinatorData.Status+"';ctx._source.created_by='"+dataNew+"';ctx._source.modified_by='"+dataNew+"';ctx._source.modified_on='"+modifiedDate+"';",
+                                "lang": "painless"
+                            }
+                        }
+                        var combinedObject = $.extend({}, oldData, newObject);
+                        $.ajax({
+                            headers: ccData.hdr,
+                            url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_data/_update_by_query",
+                            async: false,
+                                type: 'POST',
+                                data: JSON.stringify(query),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (response) {
+                                // Handle success, if needed
+                               // location.reload();
+                                setTimeout(function () {
+                                           $('#example').DataTable().clearPipeline().draw();
+                                    }, 2000);
+                            }
+                        });
+
+                    }
+                }
+            }
+        });
         $(document).ready(function () {
             $(document).on('click', '.fa-copy', function () {
                 var buttonValue = $(this).siblings('button.btn-outline-primary').text().trim();
@@ -5902,7 +7375,7 @@ function assigncarecoordinator(){
                     };
                     $.ajax({
                         headers: ccData.hdr,
-                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_cc_data/_search",
+                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_prod_cc_data/_search",
                         async: false,
                         type: 'POST',
                         dataType: 'json',
