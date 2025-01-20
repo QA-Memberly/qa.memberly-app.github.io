@@ -1596,7 +1596,11 @@
                                 return hit._source
                             });
                             extFieldEngg = _.filter(extFieldEngg, conf => {
-                                return (conf["entity_parent"] === configMap.ds);
+                               if (typeof (conf["entity_parent"]) === 'string') {
+                                    return (conf["entity_parent"] === configMap.ds);
+                                } else {
+                                    return (conf["entity_parent"].includes(configMap.ds));
+                                }
                             });
                         }
                     });
