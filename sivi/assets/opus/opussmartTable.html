@@ -2432,9 +2432,11 @@
             //console.log("Available AGGS KEYS ->"+Object.keys(aggrFiltersContext)+"<-");
             if (!_.isNil(aggrFiltersContext) && !_.isNil(aggrFiltersContext[byField])) {
                 //console.log("FOUND the Aggregation already >>>>>>>>>>>>> \n"+JSON.stringify(aggrFiltersContext[byField]));
+                console.log("valueCount>> ",valueCount);
                 buildAggFilterGUI(byField, dataESType, dataLabel, aggrFiltersContext[byField]);
             } else {
-                //console.log("NOT found at REPO >>>>> ");
+                console.log("valueCount>> ",valueCount);
+                console.log("valueCount>> ",valueCount.query);
                 if (!_.isNil(valueCount) && !_.isNil(valueCount.query)) {
                     let queryName = null;
                     let wsDataRequest = valueCount.query;
