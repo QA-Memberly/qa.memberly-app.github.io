@@ -4594,84 +4594,102 @@
    
     </div>
     <script id="rendered-js">
-        $('#getValueButton').on('click', function () {
+         $('#getValueButton').on('click', function () {
 			var selectedValue = $('#reassignCCcolumns').val();
 			console.log("selectedRow: " + selectedValue);
             var modalBody = $(this).closest(".modal-content").find(".modal-body");
             var assignedLoader = showLoaderCC(modalBody,
                 "Members Assigned to Radiologist!");
             let data = (myTable.rows('.selected').data().toArray())
-            // updatedCCArray.push(updatedCCArray)
+          
             console.log("selectedRow: " + JSON.stringify(data));
             // var selectedValue = $('#reassignCCcolumns').val();
 			
-            // const newKey = 'CC';
-            // const newValue = selectedValue;
+            const newKey = 'CC';
+            const newValue = selectedValue;
 
-            // var currentDate = new Date();
-            // var year = currentDate.getUTCFullYear();
-            // var month = currentDate.getUTCMonth() + 1;
-            // var day = currentDate.getUTCDate();
-            // var date = month + "-" + day + "-" + year;
-            // const newKey1 = 'assigned_date';
+            var currentDate = new Date();
+                var year = currentDate.getUTCFullYear();
+                let day
+                let month = currentDate.getUTCMonth() + 1
+                day = currentDate.getUTCDate();
+                let date;
+                var hours = String(currentDate.getHours()).padStart(2, '0');
+                var minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                var seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                if (month < 10 && day < 10) {
+                    date = year + "-" + "0" + month + "-" + "0" + day + "T" + hours + ":" +
+                        minutes + ":" + seconds;
+                } else if (month < 10 && day >= 10) {
+                    date = year + "-" + "0" + month + "-" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else if (day < 10 && month >= 10) {
+                    date = year + "-" + month + "-" + "0" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else {
+                    // console.log(month, "mm.length", mm)
+                    date = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" +
+                        seconds;
+                }
+
+                let assignDate = date;
+            const newKey1 = 'assigned_date';
             // const newValue1 = date
             if (!Array.isArray(data)) {
                 data = [data];
             }
-            // updatedCCArray = data.map(obj => ({
-            //     ...obj,
-            //     [newKey]: newValue,
-            //     ["Status"]: "Assigned",
-            //     [newKey1]: newValue1,
-            //     ["created_by"]: ccData.loginContext
-            // }));
-			// console.log(selectedValue,newValue," data")
+            updatedCCArray = data.map(obj => ({
+                ...obj,
+                [newKey]: newValue,
+                ["Status"]: "Assigned",
+                [newKey1]: assignDate
+               
+            }));
 			data.forEach((element) => {
               
-                if (element.PatientID != null && element.PatientName != null) {
-                    let ccSaveQuery = {
+                
+                    let query = {
                         "query": {
                             "bool": {
-                                "must": [{
-                                        "term": {
-                                            "PatientID": element.PatientID
-                                        }
-                                    },
-                                  
+                                "must": [
                                     {
-                                        "term": {
-                                            "PatientName": element.PatientName
-                                        }
+                                    "term": {
+                                        "Patient_": element.Patient_
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "Account": element.Account
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "DOS": element.DOS
+                                      }
                                     }
-                                ]
+                            ]
+                            }
+                        },
+                        "script": {
+
+                            "source": `
+                               ctx._source.CC = params.CC;
+                               ctx._source.assigned_date = params.assigned_date;
+	                         `,
+                            "lang": "painless",
+                            "params": {
+                                "CC": newValue,
+                                "assigned_date": assignDate,
+                                "Status":"Assigned to Analyst"
                             }
                         }
                     }
-                    $.ajax({
-                        headers: ccData.hdr,
-                        url: "https://sivies-apsouth.es.ap-south-1.aws.elastic-cloud.com:9243/sarvodaya-poc_imagemetadata/_search?size=10000",
-                        async: false,
-                        type: 'POST',
-                        data: JSON.stringify(ccSaveQuery),
-                        dataType: 'json',
-                        contentType: 'application/json',
-                        success: function (res) {
-                            console.log(res, "responsedata")
-                            let responseDatas = res.hits.hits[0]._id;
-                            let oldData = res.hits.hits[0]._source
-                            var newObject = {
-                               "Status":"Assigned",
-								"RadiologistName":selectedValue
-                            };
-							console.log(newObject,"newObject")
-                            var combinedObject = $.extend({}, oldData, newObject);
-                            $.ajax({
+                      $.ajax({
                                 headers: ccData.hdr,
-                                url: "https://sivies-apsouth.es.ap-south-1.aws.elastic-cloud.com:9243/sarvodaya-poc_imagemetadata/_doc/" +
-                                    responseDatas,
-                                async: false,
-                                type: 'PUT',
-                                data: JSON.stringify(combinedObject),
+                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_update_by_query",
+                            async: false,
+                                type: 'POST',
+                                data: JSON.stringify(query),
                                 dataType: 'json',
                                 contentType: 'application/json',
                                 success: function (response) {
@@ -4689,9 +4707,8 @@
                                     hideLoader(assignedLoader);
                                 }
                             })
-                        }
-                    })
-                }
+                       
+                
             })
         });
 
