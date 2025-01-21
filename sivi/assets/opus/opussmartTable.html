@@ -1,3 +1,4 @@
+       
 <html>
 
 <head>
@@ -2742,6 +2743,7 @@
             }
         }
 
+       
         function prepareFilterData(byField, dataESType, aggrResults, appliedFilters, appliedFiltersUITab) {
             let filterData = {};
             filterData.fieldName = byField;
@@ -2753,8 +2755,8 @@
             filterData.isFieldKeywordType = FieldDataTypeUtil.isKeyword(dataESType);
             filterData.isFieldDateType = FieldDataTypeUtil.isDate(dataESType);
             filterData.isFieldNumberType = FieldDataTypeUtil.isNumber(dataESType);
-            filterData.showCustomFilterTab = filterData.isFieldDateType || filterData.isFieldNumberType;
-
+            filterData.showCustomFilterTab = filterData.isFieldNumberType;
+            filterData.showCustomDateFilterTab = filterData.isFieldDateType
             filterData.custom = {};
             filterData.standard = {};
 
@@ -2833,6 +2835,14 @@
             outCtnt += '<div class="aggr-filter-hdr d-inline-flex gray-1-border col-sm-4 text-dark">Count</div></div>';
             outCtnt += '<div style="min-height:30vh !important;max-height:38vh !important;overflow-y: auto;">';
             outCtnt += '<div class="aggr-filter-holder" data-field="' + byField + '">';
+
+            outCtnt +=
+                '<div class="row g-0 gray-1-border iso-aggr-filter-entry" data-key="SelectAll"><div class="col-sm-8" data-role="filter-selector" data-field="' +
+                byField +
+                '" data-aggrval="SelectAll" data-aggrdisplayval="SelectAll"><i data-role="filter-field-selector" data-field="' +
+                byField +
+                '" data-aggrval="SelectAll" data-aggrdisplayval="SelectAll" class="fa-light fa-square cb_muted mx-1" aria-hidden="true"></i>Select/Deselect All</div></div>';
+
             if (_.size(aggr.buckets) > 0) {
                 _.forEach(aggr.buckets, aggrEnt => {
                     let entKey = getFormattedValue(rowFormatters, byField, aggrEnt.key, aggrEnt.key);
@@ -2840,8 +2850,7 @@
                     let rangeStart = null;
                     let rangeEnd = null;
                     if (!_.isNil(aggrEnt["key_as_string"])) {
-                        entKey = getFormattedValue(rowFormatters, byField, aggrEnt["key_as_string"], aggrEnt[
-                            "key_as_string"]);
+                        entKey = aggrEnt["key_as_string"];
                         aggrvalue = entKey;
                         if (filterData.isFieldDateType && filterData.isAppliedSourceCustomTab) {
                             rangeStart = aggrEnt.key;
