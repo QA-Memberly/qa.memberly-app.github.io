@@ -2605,9 +2605,9 @@
                                                     .aggregations[byField + "_min"];
                                                 aggrFiltersContext[byField].max = response
                                                     .aggregations[byField + "_max"];
-                                                buildAggFilterGUI("CC_Members", dataESType,
+                                                buildAggFilterGUI(byField, dataESType,
                                                     dataLabel,
-                                                    aggrFiltersContext["CC_Members"]);
+                                                    aggrFiltersContext[byField]);
                                             } catch (error) {
                                                 console.log("ERROR while building KWD AGGR [" +
                                                     byField + "] ::::: " + error);
@@ -2707,7 +2707,7 @@
                 filterStandardTabContentId + '" href="#' + filterStandardTabContentId +
                 '" type="button" role="tab" aria-controls="' + filterStandardTabContentId +
                 '" aria-selected="true">Standard</button></div>';
-            if (filterData.showCustomFilterTab) {
+            if (filterData.showCustomFilterTab || filterData.showCustomDateFilterTab) {
                 outCtnt += '<div class="nav-item" role="presentation"><button class="nav-link" id="' +
                     filterCustomTabLinkId +
                     '" data-field="' + byField + '" data-bs-toggle="tab" data-bs-target="#' + filterCustomTabContentId +
@@ -2721,7 +2721,7 @@
             outCtnt += '<div id="' + filterStandardTabContentId +
                 '" name="filter-tabcontent" class="tab-pane fade show active" data-field="' + byField +
                 '" data-tab="standard" role="tabpanel" aria-labelledby="' + filterStandardTabLinkId + '"></div>';
-            if (filterData.showCustomFilterTab) {
+            if (filterData.showCustomFilterTab || filterData.showCustomDateFilterTab) {
                 outCtnt += '<div id="' + filterCustomTabContentId +
                     '" name="filter-tabcontent" class="tab-pane fade" data-field="' + byField +
                     '" data-tab="custom" role="tabpanel" aria-labelledby="' + filterCustomTabLinkId + '"></div>';
@@ -2739,6 +2739,8 @@
             buildAggFilterGUIStandardTabContent(byField, aggr, appliedFilters, filterData);
             if (filterData.showCustomFilterTab) {
                 buildAggFilterGUICustomTabContent(byField, aggr, appliedFilters, filterData);
+
+            } else if (filterData.showCustomDateFilterTab) {
                 buildAggFilterGUICustomTabDatePicker(byField);
             }
         }
