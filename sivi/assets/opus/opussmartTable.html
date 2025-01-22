@@ -3159,6 +3159,33 @@
                     var myButton1 = $('#reassignButtton');
                     myButton1.hide();
                 }
+				
+				let dept = conf.departmentName;
+                let adminUrl = conf.downloadData.environmentAdminUrl;
+                $.ajax({
+
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
+                    url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Analyst",
+                    async: false,
+                    type: 'GET',
+                    crossDomain: true,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (response) {
+                        var selectccColumns = document.getElementById("setCCcolumnss");
+                        var selectreassignCCcolumns = document.getElementById("reassignCCcolumnss");
+                        var options = response.map(function (domain) {
+                            return "<option>" + domain + "</option>";
+                        });
+                        selectccColumns.innerHTML = options.join("");
+                        selectreassignCCcolumns.innerHTML = options.join("");
+
+                    }
+
+                });
                 if (conf.url) {
                     $.ajax({
                         headers: conf.hdr,
@@ -4585,11 +4612,11 @@
                 <div class="modal-body">
                     <div class="row">
                         <span id="ccmySpan"></span>
-                        <div id="reassigncolumns" class="col-sm-4 alert alert-primary"
+                        <div id="CCcolumns" class="col-sm-4 alert alert-primary"
                             style="height: 35px; width: 330px;padding: 2px 10px;margin:0px 8px;display: inline-flex;">
 
                             <label style="margin-top:7px;">Assign Analyst : </label>
-                            <select id="reassignCCcolumns"
+                            <select id="setCCcolumnss"
                                 style="border-radius: 0.2rem;padding: 2px 10px;margin: 2px 8px;">
                                 <option value="Analyst 1">Analyst 1</option>
                                 <option value="Analyst 2">Analyst 2</option>
