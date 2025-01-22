@@ -4735,9 +4735,9 @@
                                 contentType: 'application/json',
                                 success: function (response) {
                                     hideLoader(assignedLoader);
-                                    setTimeout(function () {
-                                        location.reload();
-                                    }, 2000);
+                                     setTimeout(function () {
+                                    $('#example').DataTable().clearPipeline().draw();
+                                }, 2000);
                                 },
                                 error: function (error) {
                                     console.log("ERROR happened >>>> ", error);
