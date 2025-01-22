@@ -4686,12 +4686,13 @@
                         "script": {
 
                             "source": `
-                               ctx._source.CC = params.CC;
+                               ctx._source.analystName = params.analystName;
                                ctx._source.assigned_date = params.assigned_date;
+			        ctx._source.Status = params.Status;
 	                         `,
                             "lang": "painless",
                             "params": {
-                                "CC": newValue,
+                                "analystName": newValue,
                                 "assigned_date": assignDate,
                                 "Status":"Assigned to Analyst"
                             }
