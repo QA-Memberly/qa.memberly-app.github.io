@@ -3147,7 +3147,9 @@
                     var myButton1 = $('#reassignButtton');
                     myButton1.hide();
                     $('#updateStatus').hide();
-                }
+                }else{
+				$("#ccButton").hide();
+				}
                 if (ccData.selectRowReaasign) {
                     console.log(ccData.selectRowReaasign, "selectRowReaasign")
                     let assignButon = true
@@ -3590,6 +3592,134 @@
                                             // return outHTML;
 
                                         } else if (configMap.origin && configMap.map360 &&
+                                            propKey === "comments") {
+											console.log("::::::::::::inside")
+                                           // let uniqueIdentifier1 = row.memberID_merged;
+                                            let selectedRowComments = row.comments;
+                                            if (!ccData.selectedDoneRow && (!selectedRowComments ||
+                                                selectedRowComments == null ||
+                                                selectedRowComments == "" ||
+                                                selectedRowComments == undefined)) {
+												console.log("::::::::::::insideif")
+                                                let uniqueIdentifier = row.User;
+                                                outHTML = '<textarea id ="hospitalcontact' + uniqueIdentifier +
+                                                   '">';
+
+                                            } else if (!ccData.selectedDoneRow) {
+											console.log("::::::::::::insideifelse")
+                                                //let uniqueIdentifier = row.memberID_merged;
+                                                outHTML = '<textarea id="hospitalcontact' +
+                                                     '">' + (
+                                                        selectedRowComments || '') + '</textarea>';
+                                            } else {
+											console.log("::::::::::::insideelse")
+                                                outHTML = ccData.selectedDoneRow ?
+                                                    selectedRowComments : '';
+                                            }
+                                            setTimeout(function () {
+                                                var textarea = document.getElementById('hospitalcontact');
+                                                if (textarea) {
+                                                    textarea.addEventListener('keypress', function (event) {
+                                                        var char = String.fromCharCode(event.which);
+                                                        if (char === "'" || char === '"' || char === '\\') {
+                                                            event.preventDefault();
+                                                        }
+                                                    });
+                                                    textarea.addEventListener('input', function (event) {
+                                                        var value = event.target.value;
+                                                        if (value.includes("'") || value.includes('"') || value.includes('\\')) {
+                                                            event.target.value = value.replace(/['"\\]/g, '');
+                                                        }
+                                                    });
+                                                }
+                                            }, 0);
+                                            return outHTML;
+                                        }   
+										else if (configMap.origin && configMap.map360 &&
+                                            propKey === "action_code") {
+
+                                            let outHTML = '';
+                                            console.log("::::::::::::::::::configMap====",configMap);
+											
+                                            let selectedRowStatus = row.action_code;
+
+                                            if (!ccData.selectedDoneRow) {
+                                                let uniqueIdentifier = row.Patient_ + row.Account;
+                                                outHTML = '<select id="status' + uniqueIdentifier +
+                                                    '">';
+                                                outHTML +=
+                                                    '<option value="" selected>Select a Status</option>';
+												
+                                                 if (configMap.tocProgramStatusValues) {
+                                                    // for sorting the values in dropdown
+                                                    configMap.tocProgramStatusValues.sort((a, b) =>
+                                                        a.value.trim().localeCompare(b.value
+                                                            .trim()));
+                                                    configMap.tocProgramStatusValues.forEach(
+                                                        option => {
+                                                            let statusValue = option.value;
+                                                            outHTML +=
+                                                                `<option value="${statusValue}" ${statusValue === selectedRowStatus ? 'selected' : ''}>${statusValue}</option>`;
+                                                        });
+                                                }
+
+                                                outHTML += '</select>';
+                                            } else {
+                                                outHTML = ccData.selectedDoneRow ?
+                                                    selectedRowStatus : '';
+                                            }
+
+                                            return outHTML;
+                                        } else if (configMap.origin && configMap.map360 &&
+                                            propKey === "work_date") {
+
+                                            let outHTML = '';
+
+                                            let selectedDate = row.work_date ||
+                                                moment().utc().format("MM-DD-YYYY");
+
+                                            // console.log(selectedDate, "selectedDate")
+                                            if (!ccData.selectedDoneRow) {
+                                                let uniqueIdentifier = row.memberID_merged;
+
+                                                outHTML =
+                                                    '<div style="display:flex; flex-direction: row;"> <input type="text" style="width: 120px;" placeholder="MM-DD-YYYY" id="dateValue' +
+                                                    uniqueIdentifier + '"';
+                                                if (selectedDate) {
+                                                    outHTML += ' value="' + moment.utc(selectedDate)
+                                                        .format("MM-DD-YYYY") + '"';
+                                                }
+                                                outHTML += ' readonly/>';
+                                                outHTML +=
+                                                    `<input type="date" style="width: 19px;" onchange="setDateFieldValue(${uniqueIdentifier})" id="date${uniqueIdentifier}" /></div>`;
+
+                                            } else {
+                                                const isValidDate = !isNaN(Date.parse(
+                                                    selectedDate));
+
+                                                if (isValidDate) {
+                                                    // Format the date as MM-DD-YYYY
+                                                    const formattedDate = new Date(row
+                                                        .work_date)
+                                                        .toLocaleDateString('en-US', {
+                                                            month: '2-digit',
+                                                            day: '2-digit',
+                                                            year: 'numeric'
+
+
+
+                                                        }).replace(/\//g, '-');
+                                                    var assignDate = moment.utc(row
+                                                        .work_date).format(
+                                                            "MM-DD-YYYY");
+
+                                                    outHTML = assignDate
+                                                } else {
+                                                    outHTML = '';
+                                                }
+                                            }
+                                            return outHTML;
+                                        }else if (configMap.origin && configMap.map360 &&
                                             propKey ===
                                             "Patient") {
                                             let propDefaultValue = (!_.isNil(row[propKey])) ? row[
@@ -4368,6 +4498,9 @@
                         <button id="reassignButtton" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 						cursor-pointer" type="button" style="height: 35px; width: 27%;padding: 2px 10px;margin:0px 8px">Assign
                         Caller</button>
+						  <button id="updateStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update
+                        Status</button>
                     <div class="col-sm-3 text-right text-end">
                         <div id="col-selector-panel" class="btn-group mb-2 mr-2 col-selector-panel">
                             <button id="enhanced_columns_trigger" class="btn btn-sm btn-primary mr-1" type="button"
