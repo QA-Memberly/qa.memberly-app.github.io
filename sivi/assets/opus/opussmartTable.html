@@ -4736,7 +4736,7 @@
                                 success: function (response) {
                                     hideLoader(assignedLoader);
                                      setTimeout(function () {
-                                    $('#example').DataTable().clearPipeline().draw();
+                                   location.reload();
                                 }, 2000);
                                 },
                                 error: function (error) {
