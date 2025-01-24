@@ -3593,21 +3593,18 @@
 
                                         } else if (configMap.origin && configMap.map360 &&
                                             propKey === "comments") {
-											console.log("::::::::::::inside")
-                                           // let uniqueIdentifier1 = row.memberID_merged;
+										 // let uniqueIdentifier1 = row.memberID_merged;
                                             let selectedRowComments = row.comments;
                                             if (!ccData.selectedDoneRow && (!selectedRowComments ||
                                                 selectedRowComments == null ||
                                                 selectedRowComments == "" ||
                                                 selectedRowComments == undefined)) {
-												console.log("::::::::::::insideif")
-                                                let uniqueIdentifier = row.User;
+												 let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
                                                 outHTML = '<textarea id ="hospitalcontact' + uniqueIdentifier +
                                                    '">';
 
                                             } else if (!ccData.selectedDoneRow) {
-											console.log("::::::::::::insideifelse")
-                                                //let uniqueIdentifier = row.memberID_merged;
+											    //let uniqueIdentifier = row.memberID_merged;
                                                 outHTML = '<textarea id="hospitalcontact' +
                                                      '">' + (
                                                         selectedRowComments || '') + '</textarea>';
@@ -3639,12 +3636,11 @@
                                             propKey === "action_code") {
 
                                             let outHTML = '';
-                                            console.log("::::::::::::::::::configMap====",configMap);
-											
+                                            
                                             let selectedRowStatus = row.action_code;
 
                                             if (!ccData.selectedDoneRow) {
-                                                let uniqueIdentifier = row.Patient_ + row.Account;
+                                                 let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
                                                 outHTML = '<select id="status' + uniqueIdentifier +
                                                     '">';
                                                 outHTML +=
@@ -3678,10 +3674,11 @@
                                             let selectedDate = row.work_date ||
                                                 moment().utc().format("MM-DD-YYYY");
 
-                                            // console.log(selectedDate, "selectedDate")
-                                            if (!ccData.selectedDoneRow) {
-                                                let uniqueIdentifier = row.memberID_merged;
-
+                                              if (!ccData.selectedDoneRow) {
+											    let patient = row.Patient_.replace(/[, ]/g, "");
+												
+                                                let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+												
                                                 outHTML =
                                                     '<div style="display:flex; flex-direction: row;"> <input type="text" style="width: 120px;" placeholder="MM-DD-YYYY" id="dateValue' +
                                                     uniqueIdentifier + '"';
@@ -4390,6 +4387,26 @@
 
 
         });
+		
+		   function setDateFieldValue(uniqueIdentifier) {
+            console.log(uniqueIdentifier, "ccData")
+            var date = $("#date" + uniqueIdentifier).val();
+            console.log(date, "ccData")
+            // Set the value of the date field
+            // let tt= (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0') + "-" + date.getFullYear();
+            // console.log(tt, "ccData")
+            var inputDate = new Date(date);
+
+            // Convert the date to UTC format using toISOString() method
+            var year = inputDate.getFullYear();
+            var month = (inputDate.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based, so we add 1
+            var day = inputDate.getDate().toString().padStart(2, '0');
+
+            // Format the date as "MM-DD-YYYY"
+            var formattedDate = (date) ? moment.utc(date).format("MM-DD-YYYY") : "";
+            // Set the formatted date value to the target input field
+            $("#dateValue" + uniqueIdentifier).val(formattedDate);
+        }
 
         function showLoader(modalBody) {
             // Store the original content of the modal body
@@ -4838,7 +4855,7 @@
 			console.log("selectedRow: " + selectedValue);
             var modalBody = $(this).closest(".modal-content").find(".modal-body");
             var assignedLoader = showLoaderCC(modalBody,
-                "Members Assigned to Radiologist!");
+                "Members Assigned to Analyst!");
             let data = (myTable.rows('.selected').data().toArray())
           
             console.log("selectedRow: " + JSON.stringify(data));
@@ -5128,7 +5145,8 @@
                 // const decodeObj = decodeURIComponent(row);
                 // console.log(JSON.parse(decodeObj),"decodeObj");
                 const careCordinatorData = row;
-                const uniqueIdentifier = careCordinatorData.memberID_merged;
+				const uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+                //const uniqueIdentifier = careCordinatorData.memberID_merged;
 
                 const statusId = "status" + uniqueIdentifier;
                 const dateId = "date" + uniqueIdentifier;
@@ -5148,7 +5166,7 @@
             // If any row is missing values, show an error and exit
             if (!allRowsValid) {
                 toastr.error(
-                    'Please Provide TOC_Program_Current_Status and TOC_Program_Current_Date for all selected rows.'
+                    'Please Provide Action Code and Work Date for all selected rows.'
                 );
                 return;
             }
@@ -5156,51 +5174,56 @@
             for (let i = 0; i < selectedRows.length; i++) {
                 const decodeObj = decodeURIComponent(selectedRows[i]);
                 var careCordinatorData = selectedRows[i];
-                const uniqueIdentifier = careCordinatorData.memberID_merged;
+                const uniqueIdentifier = careCordinatorData.Account +moment.utc(careCordinatorData.DOS).format("MMDDYYYY");
 
                 var statusId = "status" + uniqueIdentifier;
                 var dateId = "date" + uniqueIdentifier;
+				var hospitalcontactId = "hospitalcontact" + uniqueIdentifier;
 
                 var statusElement = $("#" + statusId);
                 var dateElement = $("#" + dateId);
+				var hospitalcontactElement = $("#" + hospitalcontactId);
 
                 var statusValue = statusElement.val();
                 var dateValue = dateElement.val();
+				var hospitalcontactValue = hospitalcontactElement.val();
 
                 console.log('careCordinatorData.statusValue', statusValue)
                 console.log('careCordinatorData.dateValue', dateValue)
+				console.log('careCordinatorData.hospitalcontactValue', hospitalcontactValue)
 
-                careCordinatorData.TOC_Program_Current_Status = statusValue;
-                careCordinatorData.TOC_Program_Current_Date = dateValue;
+                careCordinatorData.action_code = statusValue;
+                careCordinatorData.work_date = dateValue;
+				careCordinatorData.comments = hospitalcontactValue;
 
-                if (careCordinatorData.memberID_merged != null && careCordinatorData.memberDWID_merged &&
-                    careCordinatorData
-                    .PID_4 != null) {
+              console.log("::::::::::::::::::::::::careCordinatorData",careCordinatorData);
+			    if (careCordinatorData.Patient_ && careCordinatorData.Account && careCordinatorData.DOS ) {
                     let ccSaveQuery = {
                         "query": {
                             "bool": {
-                                "must": [{
-                                        "term": {
-                                            "memberID_merged": careCordinatorData.memberID_merged
-                                        }
+                                "must": [
+                                    {
+                                    "term": {
+                                        "Patient_": careCordinatorData.Patient_
+                                      }
                                     },
                                     {
-                                        "term": {
-                                            "memberDWID_merged": careCordinatorData.memberDWID_merged
-                                        }
+                                    "term": {
+                                        "Account": careCordinatorData.Account
+                                      }
                                     },
                                     {
-                                        "term": {
-                                            "PID_4": careCordinatorData.PID_4
-                                        }
+                                    "term": {
+                                        "DOS": careCordinatorData.DOS
+                                      }
                                     }
-                                ]
+                            ]
                             }
                         }
                     }
                     $.ajax({
                         headers: ccData.hdr,
-                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_cc_data/_search?size=10000",
+                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_search?size=10000",
                         async: false,
                         type: 'POST',
                         data: JSON.stringify(ccSaveQuery),
@@ -5210,26 +5233,20 @@
                             let responseDatas = res.hits.hits[0]._id;
                             let oldData = res.hits.hits[0]._source;
 
-                            if (careCordinatorData.TOC_Program_Current_Status ===
-                                "COMPLEX NEEDS - FIRST ATTEMPT COMPLETED, SECOND ATTEMPT PENDING") {
-                                careCordinatorData.Status = "Pending";
-                            } else {
-                                careCordinatorData.Status = "Done";
-                            }
+                           
 
                             var newObject = {
-                                "TOC_Program_Current_Date": careCordinatorData
-                                    .TOC_Program_Current_Date,
-                                "TOC_Program_Current_Status": careCordinatorData
-                                    .TOC_Program_Current_Status,
-                                "Status": careCordinatorData.Status,
-                                "created_by": ccData.loginContext
+                                "action_code": careCordinatorData
+                                    .action_code,
+                                "work_date": careCordinatorData
+                                    .work_date,
+                                "comments": careCordinatorData.comments
                             };
 
                             var combinedObject = $.extend({}, oldData, newObject);
                             $.ajax({
                                 headers: ccData.hdr,
-                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_cc_data/_doc/" +
+                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_doc/" +
                                     responseDatas,
                                 async: false,
                                 type: 'PUT',
@@ -5238,6 +5255,7 @@
                                 contentType: 'application/json',
                                 success: function (response) {
                                     // Handle success, if needed
+									toastr.success('Status Updated Successfully');
                                     location.reload();
                                 }
                             });
