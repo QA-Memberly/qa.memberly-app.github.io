@@ -3610,13 +3610,13 @@
                                 render: function (data, type, row, meta) {
                                     if (type === "display") {
                                         downlodDetails = configMap
-									    if (configMap.origin && configMap.map360 && propKey ===
+									    if (configMap.tablename == "analystListing" && configMap.origin && configMap.map360 && propKey ===
                                             "#") {
                                             // let outHTML =
                                             //     '<input type="checkbox" class="checkboxforcc"/>';
                                             // return outHTML;
 
-                                        } else if (configMap.origin && configMap.map360 &&
+                                        } else if (configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
                                             propKey === "comments") {
 										 // let uniqueIdentifier1 = row.memberID_merged;
                                             let selectedRowComments = row.comments;
@@ -3656,7 +3656,7 @@
                                                 }
                                             }, 0);
                                             return outHTML;
-                                        }  else if (configMap.origin && configMap.map360 &&
+                                        }  else if ( configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
                                             propKey === "denial_status") {
 										 // let uniqueIdentifier1 = row.memberID_merged;
                                             let selectedRowComments = row.denial_status;
@@ -3697,7 +3697,7 @@
                                             }, 0);
                                             return outHTML;
                                         }   
-										else if (configMap.origin && configMap.map360 &&
+										else if ( configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
                                             propKey === "action_code") {
 
                                             let outHTML = '';
@@ -3731,7 +3731,7 @@
                                             }
 
                                             return outHTML;
-                                        } else if (configMap.origin && configMap.map360 &&
+                                        } else if (configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
                                             propKey === "work_date") {
 
                                             let outHTML = '';
