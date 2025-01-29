@@ -1067,7 +1067,31 @@
                     } else if ($.isPlainObject(conf.data)) {
                         $.extend(request, conf.data);
                     }
-                    let wsDataRequest = {
+					let wsDataRequest
+					let order
+                    if (ccData.myListSort == true) {
+                        order = "asc"
+                    } else {
+                        order = "desc"
+                    }
+					if (ccData && ccData.timeColumn) {
+                        wsDataRequest = {
+                            "query": {
+                                "match_all": {}
+                            },
+                            "size": request.length,
+                            "sort": [{
+                                [ccData.timeColumn]: {
+                                    "order": order
+                                }
+                            }],
+                            //"_source":selColumns,"from":request.start,"sort":[{"_score":{"order":"desc"}}],"track_total_hits":true
+                            "_source": selColumns,
+                            "from": request.start,
+                            "track_total_hits": true
+                        }
+                    } else {
+                     wsDataRequest = {
                         "query": {
                             "match_all": {}
                         },
@@ -1077,6 +1101,7 @@
                         "from": request.start,
                         "track_total_hits": true
                     }
+					}
                     console.log(baseQuery, "baseQuery.runtimeMappings")
                     if (!_.isNil(baseQuery)) {
                         wsDataRequest.query = _.cloneDeep(baseQuery.query);
@@ -3585,6 +3610,7 @@
                                 render: function (data, type, row, meta) {
                                     if (type === "display") {
                                         downlodDetails = configMap
+										console.log(":::::::::::::::::::::::::::configMap::",configMap);
                                         if (configMap.origin && configMap.map360 && propKey ===
                                             "#") {
                                             // let outHTML =
@@ -3615,6 +3641,46 @@
                                             }
                                             setTimeout(function () {
                                                 var textarea = document.getElementById('hospitalcontact');
+                                                if (textarea) {
+                                                    textarea.addEventListener('keypress', function (event) {
+                                                        var char = String.fromCharCode(event.which);
+                                                        if (char === "'" || char === '"' || char === '\\') {
+                                                            event.preventDefault();
+                                                        }
+                                                    });
+                                                    textarea.addEventListener('input', function (event) {
+                                                        var value = event.target.value;
+                                                        if (value.includes("'") || value.includes('"') || value.includes('\\')) {
+                                                            event.target.value = value.replace(/['"\\]/g, '');
+                                                        }
+                                                    });
+                                                }
+                                            }, 0);
+                                            return outHTML;
+                                        }  else if (configMap.origin && configMap.map360 &&
+                                            propKey === "denial_status") {
+										 // let uniqueIdentifier1 = row.memberID_merged;
+                                            let selectedRowComments = row.denial_status;
+                                            if (!ccData.selectedDoneRow && (!selectedRowComments ||
+                                                selectedRowComments == null ||
+                                                selectedRowComments == "" ||
+                                                selectedRowComments == undefined)) {
+												 let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+                                                outHTML = '<input id ="denialstatus' + uniqueIdentifier +
+                                                   '">';
+
+                                            } else if (!ccData.selectedDoneRow) {
+											    //let uniqueIdentifier = row.memberID_merged;
+                                                outHTML = '<input type="text" id="denialstatus" value="' + (selectedRowComments || '') + '">';
+														
+														
+                                            } else {
+											console.log("::::::::::::insideelse")
+                                                outHTML = ccData.selectedDoneRow ?
+                                                    selectedRowComments : '';
+                                            }
+                                            setTimeout(function () {
+                                                var textarea = document.getElementById('denialstatus');
                                                 if (textarea) {
                                                     textarea.addEventListener('keypress', function (event) {
                                                         var char = String.fromCharCode(event.which);
@@ -4851,7 +4917,7 @@
     </div>
     <script id="rendered-js">
          $('#getValueButton').on('click', function () {
-			var selectedValue = $('#reassignCCcolumns').val();
+			var selectedValue = $('#setCCcolumnss').val();
 			console.log("selectedRow: " + selectedValue);
             var modalBody = $(this).closest(".modal-content").find(".modal-body");
             var assignedLoader = showLoaderCC(modalBody,
@@ -5179,24 +5245,57 @@
                 var statusId = "status" + uniqueIdentifier;
                 var dateId = "date" + uniqueIdentifier;
 				var hospitalcontactId = "hospitalcontact" + uniqueIdentifier;
+				var denialstatusId = "denialstatus" + uniqueIdentifier;
+				
+				var currentDate = new Date();
+                var year = currentDate.getUTCFullYear();
+                let day
+                let month = currentDate.getUTCMonth() + 1
+                day = currentDate.getUTCDate();
+                let date;
+                var hours = String(currentDate.getHours()).padStart(2, '0');
+                var minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                var seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                if (month < 10 && day < 10) {
+                    date = year + "-" + "0" + month + "-" + "0" + day + "T" + hours + ":" +
+                        minutes + ":" + seconds;
+                } else if (month < 10 && day >= 10) {
+                    date = year + "-" + "0" + month + "-" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else if (day < 10 && month >= 10) {
+                    date = year + "-" + month + "-" + "0" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else {
+                    // console.log(month, "mm.length", mm)
+                    date = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" +
+                        seconds;
+                }
+
+                let modifiedon = date;
 
                 var statusElement = $("#" + statusId);
                 var dateElement = $("#" + dateId);
 				var hospitalcontactElement = $("#" + hospitalcontactId);
+				var denialstatusElement = $("#" + denialstatusId);
 
                 var statusValue = statusElement.val();
                 var dateValue = dateElement.val();
 				var hospitalcontactValue = hospitalcontactElement.val();
+                var denialstatusValue = denialstatusElement.val();
 
+				
                 console.log('careCordinatorData.statusValue', statusValue)
                 console.log('careCordinatorData.dateValue', dateValue)
 				console.log('careCordinatorData.hospitalcontactValue', hospitalcontactValue)
+				console.log('careCordinatorData.denialstatusValue', denialstatusValue)
 
                 careCordinatorData.action_code = statusValue;
                 careCordinatorData.work_date = dateValue;
 				careCordinatorData.comments = hospitalcontactValue;
+				careCordinatorData.denialstatusValue = denialstatusValue;
 
-              console.log("::::::::::::::::::::::::careCordinatorData",careCordinatorData);
+				
+              console.log("::::::::::::::::::::::::careCordinatorData",careCordinatorData.denialstatusValue);
 			    if (careCordinatorData.Patient_ && careCordinatorData.Account && careCordinatorData.DOS ) {
                     let ccSaveQuery = {
                         "query": {
@@ -5240,7 +5339,9 @@
                                     .action_code,
                                 "work_date": careCordinatorData
                                     .work_date,
-                                "comments": careCordinatorData.comments
+                                "comments": careCordinatorData.comments,
+								"denial_status": careCordinatorData.denialstatusValue,
+								"modified_on":modifiedon
                             };
 
                             var combinedObject = $.extend({}, oldData, newObject);
