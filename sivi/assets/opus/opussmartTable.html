@@ -4991,14 +4991,14 @@
                         "script": {
 
                             "source": `
-                               ctx._source.analystName = params.analystName;
+                               ctx._source.Analyst = params.Analyst;
                                ctx._source.assigned_date = params.assigned_date;
 							   ctx._source.modified_on = params.assigned_date;
 			        ctx._source.Status = params.Status;
 	                         `,
                             "lang": "painless",
                             "params": {
-                                "analystName": newValue,
+                                "Analyst": newValue,
                                 "assigned_date": assignDate,
 								"modified_on": assignDate,
                                 "Status":"Assigned to Analyst"
