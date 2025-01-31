@@ -4913,6 +4913,16 @@
     </div>
     <script id="rendered-js">
          $('#getValueButton').on('click', function () {
+		  let data = (myTable.rows('.selected').data().toArray())
+            if (data.length == 0) {
+                toastr.error(
+                    'Select atleast one Member'
+                );
+            } else if (data.length == 0 || $("#setCCcolumnss").val() === "--Select--") {
+                toastr.error(
+                    'Select CC Name'
+                );
+            } else {
 			var selectedValue = $('#setCCcolumnss').val();
 			console.log("selectedRow: " + selectedValue);
             var modalBody = $(this).closest(".modal-content").find(".modal-body");
@@ -5031,6 +5041,7 @@
                        
                 
             })
+			}
         });
 
       function showSuccessMessage() {
