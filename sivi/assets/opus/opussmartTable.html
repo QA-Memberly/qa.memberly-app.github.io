@@ -2022,6 +2022,7 @@
                 loadSearchColumnsMenuDropdown();
                 $("#enhanced_columns_viewer").modal("hide");
                 $("#ccModel").modal("hide");
+				$("#ccReAssignModel").modal("hide");
                 $("#reassignModel").modal("hide");
             });
             $(document).on("click", "#ccButton", function () {
@@ -2031,21 +2032,15 @@
                 $('#ccmySpan').text(myData);
                 $("#ccModel").modal("show");
             });
+		
             $(document).on("click", "#reassignButtton", function () {
                 var data = myTable.rows('.selected').data().toArray()
-                var myData = data.length;
-                $('#mySpan').text(myData);
-                $('#ccmySpan').text(myData);
-                $("#reassignModel").modal("show");
+				var myData = "Members Selected : " + data.length;
+                $('#remySpan').text(myData);
+                $('#reccmySpan').text(myData);
+                $("#ccReAssignModel").modal("show");
             });
 			
-            $(document).on("click", "#reassignButtton", function () {
-                var data = myTable.rows('.selected').data().toArray()
-                var myData = "Members Selected : " + data.length;
-                $('#mySpan').text(myData);
-                $('#ccmySpan').text(myData);
-                $("#reassignModel").modal("show");
-            });
 
             $(document).on("click", "#enhanced_columns_trigger", function () {
                 $("#enhanced_columns_viewer").modal("show");
@@ -3169,11 +3164,11 @@
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").show();
-                    var myButton1 = $('#reassignButtton');
-                    myButton1.hide();
-                    $('#updateStatus').hide();
+					$("#reassignButtton").show();
+					$('#updateStatus').hide();
                 }else{
 				$("#ccButton").hide();
+				$("#reassignButtton").hide();
 				}
                 if (ccData.selectRowReaasign) {
                     console.log(ccData.selectRowReaasign, "selectRowReaasign")
@@ -3181,6 +3176,7 @@
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").hide();
+					$("#reassignButtton").hide();
                     var myButton1 = $('#reassignButtton');
                     $('#reassignButtton').show();
                     $('#updateStatus').hide();
@@ -3191,6 +3187,7 @@
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").hide();
+					$("#reassignButtton").hide();
                     var myButton1 = $('#reassignButtton');
                     myButton1.hide();
                 }
@@ -3211,11 +3208,13 @@
                     contentType: 'application/json',
                     success: function (response) {
                         var selectccColumns = document.getElementById("setCCcolumnss");
+						var selectccReAssignColumns = document.getElementById("setCCReAssigncolumnss");
                      
                         var options = response.map(function (domain) {
                             return "<option>" + domain + "</option>";
                         });
                         selectccColumns.innerHTML = options.join("");
+						selectccReAssignColumns.innerHTML = options.join("");
 
                     }
 
@@ -3534,6 +3533,7 @@
 
         function myFunction() {
             $("#ccButton").show();
+			$("#reassignButtton").show();
         }
 
         function triggerDataTable(configMap) {
@@ -4577,6 +4577,9 @@
                     <button id="ccButton" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 												cursor-pointer" type="button" style="height: 35px; width: 298px !important;padding: 2px 10px;margin:0px 8px">Assign
                         </button>
+					  <button id="reassignButtton" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+												cursor-pointer" type="button" style="height: 35px; width: 298px !important;padding: 2px 10px;margin:0px 8px">Re Assign
+                        </button>	
 						  <button id="updateStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update
                         Status</button>
@@ -4870,6 +4873,8 @@
                         </div>
                         <button id="getValueButton" class="btn btn-sm btn-primary cursor-pointer" type="button"
                             style="height: 35px;width: 74px;padding: 2px 10px;margin-left: 11px;margin-top: 3px;">Assign</button>
+						
+                    				
                     </div>
                     <div id="success-message" style="display:none;">Members Assigned to Analyst! </div>
                 </div>
@@ -4877,6 +4882,40 @@
             </div>
         </div>
     </div>
+	
+	 <div id="ccReAssignModel" class="modal" role="dialog" aria-labelledby="careTitle" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="careTitle">ReAssign Analyst</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" id="closeReassignModelButton">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <span id="reccmySpan"></span>
+                        <div id="CCcolumns" class="col-sm-4 alert alert-primary"
+                            style="height: 35px; width: 330px;padding: 2px 10px;margin:0px 8px;display: inline-flex;">
+
+                            <label style="margin-top:7px;">ReAssign Analyst : </label>
+                            <select id="setCCReAssigncolumnss"
+                                style="border-radius: 0.2rem;padding: 2px 10px;margin: 2px 8px;">
+                                <option value="Analyst 1">Analyst 1</option>
+                                <option value="Analyst 2">Analyst 2</option>
+                            </select>
+                        </div>
+                        
+                        <button id="getReAssignValueButton" class="btn btn-sm btn-primary cursor-pointer" type="button"
+                            style="height: 35px;width: 74px;padding: 2px 10px;margin-left: 11px;margin-top: 3px;">ReAssign</button>						
+                    </div>
+                    <div id="success-message" style="display:none;">Members Assigned to Analyst! </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+   
     <div id="reassignModel" class="modal" role="dialog" aria-labelledby="careTitle" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="width: 109%;">
@@ -4901,7 +4940,7 @@
                                
                             </select>
                         </div>
-                        <button id="getReassignValueButton" class="btn btn-sm btn-primary cursor-pointer" type="button"
+                        <button id="getReassignValueButton1" class="btn btn-sm btn-primary cursor-pointer" type="button"
                             style="height: 35px;width:84px;padding: 2px 10px;margin-left: 15px;margin-top: 0px;">Assign Caller</button>
                     </div>
                     <div id="success-message" style="display:none;">Members Assigned to Caller!</div>
@@ -4913,7 +4952,7 @@
     </div>
     <script id="rendered-js">
          $('#getValueButton').on('click', function () {
-		  let data = (myTable.rows('.selected').data().toArray())
+		 let data = (myTable.rows('.selected').data().toArray())
             if (data.length == 0) {
                 toastr.error(
                     'Select atleast one Member'
@@ -4935,6 +4974,155 @@
 			
             const newKey = 'CC';
             const newValue = selectedValue;
+			let assignedHistory;
+			let ccValue = ccData.loginContext
+            let dataNew = ccValue.replace(/^\s+|\s+$/g, "")
+
+            var currentDate = new Date();
+                var year = currentDate.getUTCFullYear();
+                let day
+                let month = currentDate.getUTCMonth() + 1
+                day = currentDate.getUTCDate();
+                let date;
+                var hours = String(currentDate.getHours()).padStart(2, '0');
+                var minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                var seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                if (month < 10 && day < 10) {
+                    date = year + "-" + "0" + month + "-" + "0" + day + "T" + hours + ":" +
+                        minutes + ":" + seconds;
+                } else if (month < 10 && day >= 10) {
+                    date = year + "-" + "0" + month + "-" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else if (day < 10 && month >= 10) {
+                    date = year + "-" + month + "-" + "0" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else {
+                    // console.log(month, "mm.length", mm)
+                    date = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" +
+                        seconds;
+                }
+
+                let assignDate = date;
+            const newKey1 = 'assigned_date';
+            // const newValue1 = date
+            if (!Array.isArray(data)) {
+                data = [data];
+            }
+            updatedCCArray = data.map(obj => ({
+                ...obj,
+                [newKey]: newValue,
+                ["Status"]: "Assigned",
+                [newKey1]: assignDate
+               
+            }));
+			
+			assignedHistory = [{
+							"reassignedby": dataNew,
+							"reassignedTo": newValue,
+						    "reassigneddate": assignDate
+							 }]	
+							 
+			data.forEach((element) => {
+              
+                    let query = {
+                        "query": {
+                            "bool": {
+                                "must": [
+                                    {
+                                    "term": {
+                                        "Patient_": element.Patient_
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "Account": element.Account
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "DOS": element.DOS
+                                      }
+                                    }
+                            ]
+                            }
+                        },
+                        "script": {
+
+                            "source": `
+                               ctx._source.Analyst = params.Analyst;
+                               ctx._source.assigned_date = params.assigned_date;
+							   ctx._source.modified_on = params.assigned_date;
+			                   ctx._source.Status = params.Status;
+							   ctx._source.assigned_history = params.assigned_history;
+							   
+							   
+	                         `,
+                            "lang": "painless",
+                            "params": {
+                                "Analyst": newValue,
+                                "assigned_date": assignDate,
+								"modified_on": assignDate,
+                                "Status":"Assigned to Analyst",
+								"assigned_history":assignedHistory
+                            }
+                        }
+                    }
+                      $.ajax({
+                                headers: ccData.hdr,
+                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_update_by_query",
+                            async: false,
+                                type: 'POST',
+                                data: JSON.stringify(query),
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    hideLoader(assignedLoader);
+                                     setTimeout(function () {
+                                   location.reload();
+                                }, 2000);
+                                },
+                                error: function (error) {
+                                    console.log("ERROR happened >>>> ", error);
+                                    hideLoader(assignedLoader);
+                                    return null;
+                                },
+                                complete: function () {
+                                    hideLoader(assignedLoader);
+                                }
+                            })
+                       
+                
+            })
+			}
+        });
+
+
+		 $('#getReAssignValueButton').on('click', function () {
+		 let data = (myTable.rows('.selected').data().toArray())
+            if (data.length == 0) {
+                toastr.error(
+                    'Select atleast one Member'
+                );
+            } else if (data.length == 0 || $("#setCCReAssigncolumnss").val() === "--Select--") {
+                toastr.error(
+                    'Select CC Name'
+                );
+            } else {
+			var selectedValue = $('#setCCReAssigncolumnss').val();
+			console.log("selectedRow: " + selectedValue);
+            var modalBody = $(this).closest(".modal-content").find(".modal-body");
+            var assignedLoader = showLoaderCC(modalBody,
+                "Members ReAssigned to Analyst!");
+            let data = (myTable.rows('.selected').data().toArray())
+          
+            console.log("selectedRow: " + JSON.stringify(data));
+            // var selectedValue = $('#reassignCCcolumns').val();
+			
+            const newKey = 'CC';
+            const newValue = selectedValue;
+			let assignedHistory;
+			let ccValue = ccData.loginContext
+            let dataNew = ccValue.replace(/^\s+|\s+$/g, "")
 
             var currentDate = new Date();
                 var year = currentDate.getUTCFullYear();
@@ -4975,7 +5163,71 @@
             }));
 			data.forEach((element) => {
               
-                
+                    let searchquery ={
+					"query": {
+                            "bool": {
+                                "must": [
+                                    {
+                                    "term": {
+                                        "Patient_": element.Patient_
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "Account": element.Account
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "DOS": element.DOS
+                                      }
+                                    }
+                            ]
+                            }
+                        }}
+						
+						$.ajax({
+                                headers: ccData.hdr,
+                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_search?size=1",
+                            async: false,
+                                type: 'POST',
+                                data: JSON.stringify(searchquery),
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                success: function (response) {
+								if (response.hits && response.hits
+                                            .hits && response.hits.hits
+                                                .length > 0 &&
+                                            response.hits.hits[0]._source ) {
+											let element =response.hits.hits[0]._source;
+												let history = element.assigned_history
+												
+												if (history && (history != null || history !=
+													'' || history != undefined)) {
+													assignedHistory = element[
+														"assigned_history"];
+													assignedHistory.push({
+														"reassignedby": dataNew,
+														"reassignedTo": newValue,
+														"reassigneddate": assignDate
+													});
+												} else {
+													assignedHistory = [{
+														"reassignedby": dataNew,
+														"reassignedTo": newValue,
+														"reassigneddate": assignDate
+													}]
+												}
+												
+												}
+                                  
+								   },
+                                error: function (error) {
+                                    console.log("ERROR happened >>>> ", error);
+                                    return null;
+                                }
+                            })
+				
                     let query = {
                         "query": {
                             "bool": {
@@ -5004,14 +5256,18 @@
                                ctx._source.Analyst = params.Analyst;
                                ctx._source.assigned_date = params.assigned_date;
 							   ctx._source.modified_on = params.assigned_date;
-			        ctx._source.Status = params.Status;
+			                   ctx._source.Status = params.Status;
+							   ctx._source.assigned_history = params.assigned_history;
+							   
+							   
 	                         `,
                             "lang": "painless",
                             "params": {
                                 "Analyst": newValue,
                                 "assigned_date": assignDate,
 								"modified_on": assignDate,
-                                "Status":"Assigned to Analyst"
+                                "Status":"Assigned to Analyst",
+								"assigned_history":assignedHistory
                             }
                         }
                     }
@@ -5044,7 +5300,7 @@
 			}
         });
 
-      function showSuccessMessage() {
+	 function showSuccessMessage() {
             $('#success-message').fadeIn().delay(2000).fadeOut();
         }
         var $quicksearch = $('#enhanced_col_search_term').keyup(debounce(function () {
