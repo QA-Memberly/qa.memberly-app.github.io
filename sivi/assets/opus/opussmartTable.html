@@ -262,6 +262,55 @@
             box-shadow: inset rgb(0 0 0 / 8%) 0px 0.9px 4px, rgb(0 0 0 / 6%) 0px 2.6px 8px, rgb(0 0 0 / 5%) 0px 5.7px 12px, inset rgb(0 0 0 / 4%) 0px 15px 15px !important;
         }
 
+		
+		   th {
+            background-image: linear-gradient(to bottom, #fff, #887ce036);
+        }
+
+        td {
+            background-color: white;
+        }
+		
+		th.select-checkbox,
+        td.select-checkbox {
+            position: sticky !important;
+            left: 0;
+            z-index: 1;
+			background-color: white;
+        }
+		
+		th.class_user,
+        td.class_user {
+            position: sticky !important;
+            left: 25px;
+            z-index: 1;
+			background-color: white;
+        }
+		
+		th.class_Patient,
+        td.class_Patient {
+            position: sticky !important;
+            left: 109px;
+            z-index: 1;
+			background-color: white;
+        }
+		th.class_Patient:first-child,
+        td.class_Patient:first-child {
+            position: sticky !important;
+            left: 0px;
+            z-index: 20;
+        }
+		
+		th:first-child,
+        th:nth-child(3) {
+            background-image: linear-gradient(to bottom, #fff, #e3e1f1);
+        }
+
+        td:first-child,
+        td:nth-child(3) {
+            background-color: white;
+        }
+		
         .noDataTables {
             position: relative !important;
             margin-left: calc(100vw - 50vw);
@@ -323,8 +372,11 @@
 		
 
         .table.dataTable[class*="table-"] thead th {
-            background-image: linear-gradient(to bottom, #fff, #887ce036);
+           background-image: linear-gradient(to bottom, #fff, #e3e1f1);
+
             border-bottom: 1px solid #c9d1d8;
+
+            padding-top: 8px !important;
         }
 
         .dtbody {
