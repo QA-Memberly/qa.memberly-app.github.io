@@ -320,6 +320,7 @@
             margin-top: -13px !important;
             margin-bottom: 5px !important;
         }
+		
 
         .table.dataTable[class*="table-"] thead th {
             background-image: linear-gradient(to bottom, #fff, #887ce036);
@@ -3658,45 +3659,39 @@
                                             return outHTML;
                                         }  else if ( configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
                                             propKey === "denial_status") {
-										 // let uniqueIdentifier1 = row.memberID_merged;
-                                            let selectedRowComments = row.denial_status;
-                                            if (!ccData.selectedDoneRow && (!selectedRowComments ||
-                                                selectedRowComments == null ||
-                                                selectedRowComments == "" ||
-                                                selectedRowComments == undefined)) {
-												 let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
-                                                outHTML = '<input id ="denialstatus' + uniqueIdentifier +
-                                                   '">';
 
-                                            } else if (!ccData.selectedDoneRow) {
-											    //let uniqueIdentifier = row.memberID_merged;
-                                                outHTML = '<input type="text" id="denialstatus" value="' + (selectedRowComments || '') + '">';
-														
-														
-                                            } else {
-											console.log("::::::::::::insideelse")
-                                                outHTML = ccData.selectedDoneRow ?
-                                                    selectedRowComments : '';
-                                            }
-                                            setTimeout(function () {
-                                                var textarea = document.getElementById('denialstatus');
-                                                if (textarea) {
-                                                    textarea.addEventListener('keypress', function (event) {
-                                                        var char = String.fromCharCode(event.which);
-                                                        if (char === "'" || char === '"' || char === '\\') {
-                                                            event.preventDefault();
-                                                        }
-                                                    });
-                                                    textarea.addEventListener('input', function (event) {
-                                                        var value = event.target.value;
-                                                        if (value.includes("'") || value.includes('"') || value.includes('\\')) {
-                                                            event.target.value = value.replace(/['"\\]/g, '');
-                                                        }
-                                                    });
+                                            let outHTML = '';
+                                            
+                                            let selectedRowStatus = row.denial_status;
+
+                                            if (!ccData.selectedDoneRow) {
+                                                 let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+                                                outHTML = '<select id="denialstatus' + uniqueIdentifier +
+                                                    '">';
+                                                outHTML +=
+                                                    '<option value="" selected>Select a Status</option>';
+												
+                                                 if (configMap.denialStatusValues) {
+                                                    // for sorting the values in dropdown
+                                                    configMap.denialStatusValues.sort((a, b) =>
+                                                        a.value.trim().localeCompare(b.value
+                                                            .trim()));
+                                                    configMap.denialStatusValues.forEach(
+                                                        option => {
+                                                            let denialValue = option.value;
+                                                            outHTML +=
+                                                                `<option value="${denialValue}" ${denialValue === selectedRowStatus ? 'selected' : ''}>${denialValue}</option>`;
+                                                        });
                                                 }
-                                            }, 0);
+
+                                                outHTML += '</select>';
+                                            } else {
+                                                outHTML = ccData.selectedDoneRow ?
+                                                    selectedRowStatus : '';
+                                            }
+
                                             return outHTML;
-                                        }   
+                                        } 
 										else if ( configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
                                             propKey === "action_code") {
 
@@ -3875,7 +3870,8 @@
                             if (total !== max) {
                                 info += ` (${max} Unique entries)`;
                             }
-                            return info;
+						 newRowHtml.find('.col-sm-4:first-child').html(info);
+                         return info;
                         },
                         processing: true,
                         serverSide: true,
@@ -3996,6 +3992,15 @@
                         });
                     }
                 });
+				
+				 var dtBodyElement = $('.col-sm-12.dtbody');
+
+                // Create HTML content for the title & show entries on top of the table
+                var newRowHtml = $(
+                    '<div class="row"><div class="col-sm-4"></div><div class="col-sm-8 headerTitle"></div></div>');
+					
+				 dtBodyElement.before(newRowHtml);	
+
             }
         }
 
@@ -5490,7 +5495,9 @@
 
                 console.log('statusValue', statusValue)
                 console.log('dateValue', dateValue)
-
+				 if(dateValue == ''){
+				dateValue = moment().utc().format("YYYY-MM-DD");
+				}
                 return statusValue && dateValue;
             });
 
@@ -5547,7 +5554,9 @@
                 var dateValue = dateElement.val();
 				var hospitalcontactValue = hospitalcontactElement.val();
                 var denialstatusValue = denialstatusElement.val();
-
+                if(dateValue == ''){
+				dateValue = moment().utc().format("YYYY-MM-DD");
+				}
 				
                 console.log('careCordinatorData.statusValue', statusValue)
                 console.log('careCordinatorData.dateValue', dateValue)
