@@ -3673,17 +3673,17 @@
                                             propKey === "comments") {
 										 // let uniqueIdentifier1 = row.memberID_merged;
                                             let selectedRowComments = row.comments;
+											let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
                                             if (!ccData.selectedDoneRow && (!selectedRowComments ||
                                                 selectedRowComments == null ||
                                                 selectedRowComments == "" ||
                                                 selectedRowComments == undefined)) {
-												 let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
                                                 outHTML = '<textarea id ="hospitalcontact' + uniqueIdentifier +
                                                    '">';
 
                                             } else if (!ccData.selectedDoneRow) {
 											    //let uniqueIdentifier = row.memberID_merged;
-                                                outHTML = '<textarea id="hospitalcontact' +
+                                                outHTML = '<textarea id="hospitalcontact' + uniqueIdentifier +
                                                      '">' + (
                                                         selectedRowComments || '') + '</textarea>';
                                             } else {
@@ -5537,8 +5537,8 @@
                 //const uniqueIdentifier = careCordinatorData.memberID_merged;
 
                 const statusId = "status" + uniqueIdentifier;
-                const dateId = "date" + uniqueIdentifier;
-
+                 var dateId = "dateValue" + uniqueIdentifier;
+				
                 const statusElement = $("#" + statusId);
                 const dateElement = $("#" + dateId);
 
@@ -5547,9 +5547,8 @@
 
                 console.log('statusValue', statusValue)
                 console.log('dateValue', dateValue)
-				 if(dateValue == ''){
-				dateValue = moment().utc().format("YYYY-MM-DD");
-				}
+
+				
                 return statusValue && dateValue;
             });
 
@@ -5567,7 +5566,7 @@
                 const uniqueIdentifier = careCordinatorData.Account +moment.utc(careCordinatorData.DOS).format("MMDDYYYY");
 
                 var statusId = "status" + uniqueIdentifier;
-                var dateId = "date" + uniqueIdentifier;
+                var dateId = "dateValue" + uniqueIdentifier;
 				var hospitalcontactId = "hospitalcontact" + uniqueIdentifier;
 				var denialstatusId = "denialstatus" + uniqueIdentifier;
 				
@@ -5606,9 +5605,11 @@
                 var dateValue = dateElement.val();
 				var hospitalcontactValue = hospitalcontactElement.val();
                 var denialstatusValue = denialstatusElement.val();
-                if(dateValue == ''){
-				dateValue = moment().utc().format("YYYY-MM-DD");
-				}
+               // if(dateValue == ''){
+				//dateValue = moment().utc().format("YYYY-MM-DD");
+				//}
+				
+				dateValue = moment.utc(dateValue).format("YYYY-MM-DD");
 				
                 console.log('careCordinatorData.statusValue', statusValue)
                 console.log('careCordinatorData.dateValue', dateValue)
