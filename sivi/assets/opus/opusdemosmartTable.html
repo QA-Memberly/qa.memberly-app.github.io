@@ -262,6 +262,55 @@
             box-shadow: inset rgb(0 0 0 / 8%) 0px 0.9px 4px, rgb(0 0 0 / 6%) 0px 2.6px 8px, rgb(0 0 0 / 5%) 0px 5.7px 12px, inset rgb(0 0 0 / 4%) 0px 15px 15px !important;
         }
 
+		
+		   th {
+            background-image: linear-gradient(to bottom, #fff, #887ce036);
+        }
+
+        td {
+            background-color: white;
+        }
+		
+		th.select-checkbox,
+        td.select-checkbox {
+            position: sticky !important;
+            left: 0;
+            z-index: 1;
+			background-color: white;
+        }
+		
+		th.class_user,
+        td.class_user {
+            position: sticky !important;
+            left: 25px;
+            z-index: 1;
+			background-color: white;
+        }
+		
+		th.class_Patient,
+        td.class_Patient {
+            position: sticky !important;
+            left: 109px;
+            z-index: 1;
+			background-color: white;
+        }
+		th.class_Patient:first-child,
+        td.class_Patient:first-child {
+            position: sticky !important;
+            left: 0px;
+            z-index: 20;
+        }
+		
+		th:first-child,
+        th:nth-child(3) {
+            background-image: linear-gradient(to bottom, #fff, #e3e1f1);
+        }
+
+        td:first-child,
+        td:nth-child(3) {
+            background-color: white;
+        }
+		
         .noDataTables {
             position: relative !important;
             margin-left: calc(100vw - 50vw);
@@ -320,10 +369,14 @@
             margin-top: -13px !important;
             margin-bottom: 5px !important;
         }
+		
 
         .table.dataTable[class*="table-"] thead th {
-            background-image: linear-gradient(to bottom, #fff, #887ce036);
+           background-image: linear-gradient(to bottom, #fff, #e3e1f1);
+
             border-bottom: 1px solid #c9d1d8;
+
+            padding-top: 8px !important;
         }
 
         .dtbody {
@@ -2022,6 +2075,7 @@
                 loadSearchColumnsMenuDropdown();
                 $("#enhanced_columns_viewer").modal("hide");
                 $("#ccModel").modal("hide");
+				$("#ccReAssignModel").modal("hide");
                 $("#reassignModel").modal("hide");
             });
             $(document).on("click", "#ccButton", function () {
@@ -2031,22 +2085,28 @@
                 $('#ccmySpan').text(myData);
                 $("#ccModel").modal("show");
             });
+		
             $(document).on("click", "#reassignButtton", function () {
                 var data = myTable.rows('.selected').data().toArray()
-                var myData = data.length;
-                $('#mySpan').text(myData);
-                $('#ccmySpan').text(myData);
-                $("#reassignModel").modal("show");
+				var myData = "Members Selected : " + data.length;
+                $('#remySpan').text(myData);
+                $('#reccmySpan').text(myData);
+                $("#ccReAssignModel").modal("show");
             });
 			
-            $(document).on("click", "#reassignButtton", function () {
-                var data = myTable.rows('.selected').data().toArray()
-                var myData = "Members Selected : " + data.length;
-                $('#mySpan').text(myData);
-                $('#ccmySpan').text(myData);
-                $("#reassignModel").modal("show");
+			  $(document).on("click", "#statusUpdateBySupervisor", function () {
+                window.parent.postMessage({
+                    launch: 'statusupdatebysupervisor'
+                }, '*');
             });
-
+			
+			$(document).on("click", "#backToSupervisorListing", function () {
+                window.parent.postMessage({
+                    launch: 'back'
+                }, '*');
+            });
+			
+			
             $(document).on("click", "#enhanced_columns_trigger", function () {
                 $("#enhanced_columns_viewer").modal("show");
             });
@@ -3164,33 +3224,43 @@
             if (_.isNil(mappingProps)) {
                 mappingProps = {};
                 ccData = conf
-                if (ccData.rowsSelection) {
+			  if (ccData.supervisorList) {
                     let assignButon = true
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").show();
-                    var myButton1 = $('#reassignButtton');
-                    myButton1.hide();
-                    $('#updateStatus').hide();
+					$("#reassignButtton").show();
+					$("#statusUpdateBySupervisor").show();
+					$("#backToSupervisorListing").hide();
+
+					$('#updateStatus').hide();
                 }else{
 				$("#ccButton").hide();
+				$("#reassignButtton").hide();
+				$("#statusUpdateBySupervisor").hide();
 				}
-                if (ccData.selectRowReaasign) {
-                    console.log(ccData.selectRowReaasign, "selectRowReaasign")
+                if (ccData.analystList) {
+                    console.log(ccData.analystList, "selectRowReaasign")
                     let assignButon = true
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").hide();
+					$("#reassignButtton").hide();
+					$("#statusUpdateBySupervisor").hide();
                     var myButton1 = $('#reassignButtton');
-                    $('#reassignButtton').show();
-                    $('#updateStatus').hide();
+                    $('#reassignButtton').hide();
+					$("#backToSupervisorListing").hide();
+                    $('#updateStatus').show();
                 }
-                if (ccData.selectedResponse) {
+                if (ccData.supervisorUpdate) {
                     let assignButon = true
                     $('#updateStatus').show();
+					$("#backToSupervisorListing").show();
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").hide();
+					$("#reassignButtton").hide();
+					$("#statusUpdateBySupervisor").hide();
                     var myButton1 = $('#reassignButtton');
                     myButton1.hide();
                 }
@@ -3211,11 +3281,13 @@
                     contentType: 'application/json',
                     success: function (response) {
                         var selectccColumns = document.getElementById("setCCcolumnss");
+						var selectccReAssignColumns = document.getElementById("setCCReAssigncolumnss");
                      
                         var options = response.map(function (domain) {
                             return "<option>" + domain + "</option>";
                         });
                         selectccColumns.innerHTML = options.join("");
+						selectccReAssignColumns.innerHTML = options.join("");
 
                     }
 
@@ -3534,6 +3606,9 @@
 
         function myFunction() {
             $("#ccButton").show();
+			$("#reassignButtton").show();
+			$("#statusUpdateBySupervisor").show();
+			$("#backToSupervisorListing").hide();
         }
 
         function triggerDataTable(configMap) {
@@ -3610,32 +3685,31 @@
                                 render: function (data, type, row, meta) {
                                     if (type === "display") {
                                         downlodDetails = configMap
-									    if (configMap.tablename == "analystListing" && configMap.origin && configMap.map360 && propKey ===
+									    if ( (configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 && propKey ===
                                             "#") {
                                             // let outHTML =
                                             //     '<input type="checkbox" class="checkboxforcc"/>';
                                             // return outHTML;
 
-                                        } else if (configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
+                                        } else if ((configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "comments") {
 										 // let uniqueIdentifier1 = row.memberID_merged;
                                             let selectedRowComments = row.comments;
+											let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
                                             if (!ccData.selectedDoneRow && (!selectedRowComments ||
                                                 selectedRowComments == null ||
                                                 selectedRowComments == "" ||
                                                 selectedRowComments == undefined)) {
-												 let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
                                                 outHTML = '<textarea id ="hospitalcontact' + uniqueIdentifier +
                                                    '">';
 
                                             } else if (!ccData.selectedDoneRow) {
 											    //let uniqueIdentifier = row.memberID_merged;
-                                                outHTML = '<textarea id="hospitalcontact' +
+                                                outHTML = '<textarea id="hospitalcontact' + uniqueIdentifier +
                                                      '">' + (
                                                         selectedRowComments || '') + '</textarea>';
                                             } else {
-											console.log("::::::::::::insideelse")
-                                                outHTML = ccData.selectedDoneRow ?
+											    outHTML = ccData.selectedDoneRow ?
                                                     selectedRowComments : '';
                                             }
                                             setTimeout(function () {
@@ -3656,48 +3730,42 @@
                                                 }
                                             }, 0);
                                             return outHTML;
-                                        }  else if ( configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
+                                        }  else if ( (configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "denial_status") {
-										 // let uniqueIdentifier1 = row.memberID_merged;
-                                            let selectedRowComments = row.denial_status;
-                                            if (!ccData.selectedDoneRow && (!selectedRowComments ||
-                                                selectedRowComments == null ||
-                                                selectedRowComments == "" ||
-                                                selectedRowComments == undefined)) {
-												 let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
-                                                outHTML = '<input id ="denialstatus' + uniqueIdentifier +
-                                                   '">';
 
-                                            } else if (!ccData.selectedDoneRow) {
-											    //let uniqueIdentifier = row.memberID_merged;
-                                                outHTML = '<input type="text" id="denialstatus" value="' + (selectedRowComments || '') + '">';
-														
-														
-                                            } else {
-											console.log("::::::::::::insideelse")
-                                                outHTML = ccData.selectedDoneRow ?
-                                                    selectedRowComments : '';
-                                            }
-                                            setTimeout(function () {
-                                                var textarea = document.getElementById('denialstatus');
-                                                if (textarea) {
-                                                    textarea.addEventListener('keypress', function (event) {
-                                                        var char = String.fromCharCode(event.which);
-                                                        if (char === "'" || char === '"' || char === '\\') {
-                                                            event.preventDefault();
-                                                        }
-                                                    });
-                                                    textarea.addEventListener('input', function (event) {
-                                                        var value = event.target.value;
-                                                        if (value.includes("'") || value.includes('"') || value.includes('\\')) {
-                                                            event.target.value = value.replace(/['"\\]/g, '');
-                                                        }
-                                                    });
+                                            let outHTML = '';
+                                            
+                                            let selectedRowStatus = row.denial_status;
+
+                                            if (!ccData.selectedDoneRow) {
+                                                 let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+                                                outHTML = '<select id="denialstatus' + uniqueIdentifier +
+                                                    '">';
+                                                outHTML +=
+                                                    '<option value="" selected>Select a Status</option>';
+												
+                                                 if (configMap.denialStatusValues) {
+                                                    // for sorting the values in dropdown
+                                                    configMap.denialStatusValues.sort((a, b) =>
+                                                        a.value.trim().localeCompare(b.value
+                                                            .trim()));
+                                                    configMap.denialStatusValues.forEach(
+                                                        option => {
+                                                            let denialValue = option.value;
+                                                            outHTML +=
+                                                                `<option value="${denialValue}" ${denialValue === selectedRowStatus ? 'selected' : ''}>${denialValue}</option>`;
+                                                        });
                                                 }
-                                            }, 0);
+
+                                                outHTML += '</select>';
+                                            } else {
+                                                outHTML = ccData.selectedDoneRow ?
+                                                    selectedRowStatus : '';
+                                            }
+
                                             return outHTML;
-                                        }   
-										else if ( configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
+                                        } 
+										else if ( (configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "action_code") {
 
                                             let outHTML = '';
@@ -3731,7 +3799,7 @@
                                             }
 
                                             return outHTML;
-                                        } else if (configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
+                                        } else if ((configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "work_date") {
 
                                             let outHTML = '';
@@ -3875,7 +3943,8 @@
                             if (total !== max) {
                                 info += ` (${max} Unique entries)`;
                             }
-                            return info;
+						 newRowHtml.find('.col-sm-4:first-child').html(info);
+                         return info;
                         },
                         processing: true,
                         serverSide: true,
@@ -3996,6 +4065,15 @@
                         });
                     }
                 });
+				
+				 var dtBodyElement = $('.col-sm-12.dtbody');
+
+                // Create HTML content for the title & show entries on top of the table
+                var newRowHtml = $(
+                    '<div class="row"><div class="col-sm-4"></div><div class="col-sm-8 headerTitle"></div></div>');
+					
+				 dtBodyElement.before(newRowHtml);	
+
             }
         }
 
@@ -4577,16 +4655,27 @@
                     <button id="ccButton" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 												cursor-pointer" type="button" style="height: 35px; width: 298px !important;padding: 2px 10px;margin:0px 8px">Assign
                         </button>
+					  <button id="reassignButtton" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+												cursor-pointer" type="button" style="height: 35px; width: 298px !important;padding: 2px 10px;margin:0px 8px">Re Assign
+                        </button>	
+					<button id="statusUpdateBySupervisor" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update Action</button>
+						
+						
+						
 						  <button id="updateStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update
                         Status</button>
                     <div class="col-sm-3 text-right text-end">
+					
                         <div id="col-selector-panel" class="btn-group mb-2 mr-2 col-selector-panel">
                             <button id="enhanced_columns_trigger" class="btn btn-sm btn-primary mr-1" type="button"
                                 aria-haspopup="true" aria-expanded="false"
                                 style="border-radius: 3px !important;height: 32px !important;">
                                 Customize Columns
                             </button>
+							<i id="backToSupervisorListing" aria-haspopup="true" aria-expanded="false" class="fa fa-arrow-circle-left"  style="font-size:32px;color:#666;margin-left:10px;" title="Go Back to Supervisor Assignment"></i>	
+					
                             <!---<button id="customize_columns_trigger" class="btn btn-sm btn-primary dropdown-toggle has-ripple mr-2" 
 								type="button" data-bs-auto-close="outside" data-bs-toggle="dropdown" 
 								aria-haspopup="true" aria-expanded="false">
@@ -4870,6 +4959,8 @@
                         </div>
                         <button id="getValueButton" class="btn btn-sm btn-primary cursor-pointer" type="button"
                             style="height: 35px;width: 74px;padding: 2px 10px;margin-left: 11px;margin-top: 3px;">Assign</button>
+						
+                    				
                     </div>
                     <div id="success-message" style="display:none;">Members Assigned to Analyst! </div>
                 </div>
@@ -4877,6 +4968,40 @@
             </div>
         </div>
     </div>
+	
+	 <div id="ccReAssignModel" class="modal" role="dialog" aria-labelledby="careTitle" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="careTitle">ReAssign Analyst</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" id="closeReassignModelButton">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <span id="reccmySpan"></span>
+                        <div id="CCcolumns" class="col-sm-4 alert alert-primary"
+                            style="height: 35px; width: 330px;padding: 2px 10px;margin:0px 8px;display: inline-flex;">
+
+                            <label style="margin-top:7px;">ReAssign Analyst : </label>
+                            <select id="setCCReAssigncolumnss"
+                                style="border-radius: 0.2rem;padding: 2px 10px;margin: 2px 8px;">
+                                <option value="Analyst 1">Analyst 1</option>
+                                <option value="Analyst 2">Analyst 2</option>
+                            </select>
+                        </div>
+                        
+                        <button id="getReAssignValueButton" class="btn btn-sm btn-primary cursor-pointer" type="button"
+                            style="height: 35px;width: 74px;padding: 2px 10px;margin-left: 11px;margin-top: 3px;">ReAssign</button>						
+                    </div>
+                    <div id="success-message" style="display:none;">Members Assigned to Analyst! </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+   
     <div id="reassignModel" class="modal" role="dialog" aria-labelledby="careTitle" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="width: 109%;">
@@ -4901,7 +5026,7 @@
                                
                             </select>
                         </div>
-                        <button id="getReassignValueButton" class="btn btn-sm btn-primary cursor-pointer" type="button"
+                        <button id="getReassignValueButton1" class="btn btn-sm btn-primary cursor-pointer" type="button"
                             style="height: 35px;width:84px;padding: 2px 10px;margin-left: 15px;margin-top: 0px;">Assign Caller</button>
                     </div>
                     <div id="success-message" style="display:none;">Members Assigned to Caller!</div>
@@ -4913,7 +5038,7 @@
     </div>
     <script id="rendered-js">
          $('#getValueButton').on('click', function () {
-		  let data = (myTable.rows('.selected').data().toArray())
+		 let data = (myTable.rows('.selected').data().toArray())
             if (data.length == 0) {
                 toastr.error(
                     'Select atleast one Member'
@@ -4935,6 +5060,155 @@
 			
             const newKey = 'CC';
             const newValue = selectedValue;
+			let assignedHistory;
+			let ccValue = ccData.loginContext
+            let dataNew = ccValue.replace(/^\s+|\s+$/g, "")
+
+            var currentDate = new Date();
+                var year = currentDate.getUTCFullYear();
+                let day
+                let month = currentDate.getUTCMonth() + 1
+                day = currentDate.getUTCDate();
+                let date;
+                var hours = String(currentDate.getHours()).padStart(2, '0');
+                var minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                var seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                if (month < 10 && day < 10) {
+                    date = year + "-" + "0" + month + "-" + "0" + day + "T" + hours + ":" +
+                        minutes + ":" + seconds;
+                } else if (month < 10 && day >= 10) {
+                    date = year + "-" + "0" + month + "-" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else if (day < 10 && month >= 10) {
+                    date = year + "-" + month + "-" + "0" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else {
+                    // console.log(month, "mm.length", mm)
+                    date = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" +
+                        seconds;
+                }
+
+                let assignDate = date;
+            const newKey1 = 'assigned_date';
+            // const newValue1 = date
+            if (!Array.isArray(data)) {
+                data = [data];
+            }
+            updatedCCArray = data.map(obj => ({
+                ...obj,
+                [newKey]: newValue,
+                ["Status"]: "Assigned",
+                [newKey1]: assignDate
+               
+            }));
+			
+			assignedHistory = [{
+							"reassignedby": dataNew,
+							"reassignedTo": newValue,
+						    "reassigneddate": assignDate
+							 }]	
+							 
+			data.forEach((element) => {
+              
+                    let query = {
+                        "query": {
+                            "bool": {
+                                "must": [
+                                    {
+                                    "term": {
+                                        "Patient_": element.Patient_
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "Account": element.Account
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "DOS": element.DOS
+                                      }
+                                    }
+                            ]
+                            }
+                        },
+                        "script": {
+
+                            "source": `
+                               ctx._source.Analyst = params.Analyst;
+                               ctx._source.assigned_date = params.assigned_date;
+							   ctx._source.modified_on = params.assigned_date;
+			                   ctx._source.Status = params.Status;
+							   ctx._source.assigned_history = params.assigned_history;
+							   
+							   
+	                         `,
+                            "lang": "painless",
+                            "params": {
+                                "Analyst": newValue,
+                                "assigned_date": assignDate,
+								"modified_on": assignDate,
+                                "Status":"Assigned to Analyst",
+								"assigned_history":assignedHistory
+                            }
+                        }
+                    }
+                      $.ajax({
+                                headers: ccData.hdr,
+                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_update_by_query",
+                            async: false,
+                                type: 'POST',
+                                data: JSON.stringify(query),
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    hideLoader(assignedLoader);
+                                     setTimeout(function () {
+                                   location.reload();
+                                }, 2000);
+                                },
+                                error: function (error) {
+                                    console.log("ERROR happened >>>> ", error);
+                                    hideLoader(assignedLoader);
+                                    return null;
+                                },
+                                complete: function () {
+                                    hideLoader(assignedLoader);
+                                }
+                            })
+                       
+                
+            })
+			}
+        });
+
+
+		 $('#getReAssignValueButton').on('click', function () {
+		 let data = (myTable.rows('.selected').data().toArray())
+            if (data.length == 0) {
+                toastr.error(
+                    'Select atleast one Member'
+                );
+            } else if (data.length == 0 || $("#setCCReAssigncolumnss").val() === "--Select--") {
+                toastr.error(
+                    'Select CC Name'
+                );
+            } else {
+			var selectedValue = $('#setCCReAssigncolumnss').val();
+			console.log("selectedRow: " + selectedValue);
+            var modalBody = $(this).closest(".modal-content").find(".modal-body");
+            var assignedLoader = showLoaderCC(modalBody,
+                "Members ReAssigned to Analyst!");
+            let data = (myTable.rows('.selected').data().toArray())
+          
+            console.log("selectedRow: " + JSON.stringify(data));
+            // var selectedValue = $('#reassignCCcolumns').val();
+			
+            const newKey = 'CC';
+            const newValue = selectedValue;
+			let assignedHistory;
+			let ccValue = ccData.loginContext
+            let dataNew = ccValue.replace(/^\s+|\s+$/g, "")
 
             var currentDate = new Date();
                 var year = currentDate.getUTCFullYear();
@@ -4975,7 +5249,71 @@
             }));
 			data.forEach((element) => {
               
-                
+                    let searchquery ={
+					"query": {
+                            "bool": {
+                                "must": [
+                                    {
+                                    "term": {
+                                        "Patient_": element.Patient_
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "Account": element.Account
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "DOS": element.DOS
+                                      }
+                                    }
+                            ]
+                            }
+                        }}
+						
+						$.ajax({
+                                headers: ccData.hdr,
+                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_search?size=1",
+                            async: false,
+                                type: 'POST',
+                                data: JSON.stringify(searchquery),
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                success: function (response) {
+								if (response.hits && response.hits
+                                            .hits && response.hits.hits
+                                                .length > 0 &&
+                                            response.hits.hits[0]._source ) {
+											let element =response.hits.hits[0]._source;
+												let history = element.assigned_history
+												
+												if (history && (history != null || history !=
+													'' || history != undefined)) {
+													assignedHistory = element[
+														"assigned_history"];
+													assignedHistory.push({
+														"reassignedby": dataNew,
+														"reassignedTo": newValue,
+														"reassigneddate": assignDate
+													});
+												} else {
+													assignedHistory = [{
+														"reassignedby": dataNew,
+														"reassignedTo": newValue,
+														"reassigneddate": assignDate
+													}]
+												}
+												
+												}
+                                  
+								   },
+                                error: function (error) {
+                                    console.log("ERROR happened >>>> ", error);
+                                    return null;
+                                }
+                            })
+				
                     let query = {
                         "query": {
                             "bool": {
@@ -5004,14 +5342,18 @@
                                ctx._source.Analyst = params.Analyst;
                                ctx._source.assigned_date = params.assigned_date;
 							   ctx._source.modified_on = params.assigned_date;
-			        ctx._source.Status = params.Status;
+			                   ctx._source.Status = params.Status;
+							   ctx._source.assigned_history = params.assigned_history;
+							   
+							   
 	                         `,
                             "lang": "painless",
                             "params": {
                                 "Analyst": newValue,
                                 "assigned_date": assignDate,
 								"modified_on": assignDate,
-                                "Status":"Assigned to Analyst"
+                                "Status":"Assigned to Analyst",
+								"assigned_history":assignedHistory
                             }
                         }
                     }
@@ -5044,7 +5386,7 @@
 			}
         });
 
-      function showSuccessMessage() {
+	 function showSuccessMessage() {
             $('#success-message').fadeIn().delay(2000).fadeOut();
         }
         var $quicksearch = $('#enhanced_col_search_term').keyup(debounce(function () {
@@ -5215,7 +5557,7 @@
         });
 
         function updateStatus(selectedRows) {
-            const allRowsValid = selectedRows.every((row) => {
+		 const allRowsValid = selectedRows.every((row) => {
                 console.log(row, "row");
                 // const decodeObj = decodeURIComponent(row);
                 // console.log(JSON.parse(decodeObj),"decodeObj");
@@ -5224,8 +5566,8 @@
                 //const uniqueIdentifier = careCordinatorData.memberID_merged;
 
                 const statusId = "status" + uniqueIdentifier;
-                const dateId = "date" + uniqueIdentifier;
-
+                 var dateId = "dateValue" + uniqueIdentifier;
+				
                 const statusElement = $("#" + statusId);
                 const dateElement = $("#" + dateId);
 
@@ -5235,6 +5577,7 @@
                 console.log('statusValue', statusValue)
                 console.log('dateValue', dateValue)
 
+				
                 return statusValue && dateValue;
             });
 
@@ -5252,7 +5595,7 @@
                 const uniqueIdentifier = careCordinatorData.Account +moment.utc(careCordinatorData.DOS).format("MMDDYYYY");
 
                 var statusId = "status" + uniqueIdentifier;
-                var dateId = "date" + uniqueIdentifier;
+                var dateId = "dateValue" + uniqueIdentifier;
 				var hospitalcontactId = "hospitalcontact" + uniqueIdentifier;
 				var denialstatusId = "denialstatus" + uniqueIdentifier;
 				
@@ -5291,7 +5634,27 @@
                 var dateValue = dateElement.val();
 				var hospitalcontactValue = hospitalcontactElement.val();
                 var denialstatusValue = denialstatusElement.val();
-
+				let loginValue = ccData.loginContext
+                let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
+               // if(dateValue == ''){
+				//dateValue = moment().utc().format("YYYY-MM-DD");
+				//}
+				var status;
+				if(incConfMap.tablename == 'analystListing'){
+				status = 'Update by Analyst';
+				}else if(incConfMap.tablename == 'supervisorUpdateListing'){
+				status = 'Update by Supervisor';
+				}
+				
+				var claimstatus;
+				if(statusValue == 'Calling'){
+				claimstatus = 'Caller View';
+				status = 'Caller View';
+				}else{
+				claimstatus = 'Done';
+				status = 'Done';
+				}
+				dateValue = moment.utc(dateValue).format("YYYY-MM-DD");
 				
                 console.log('careCordinatorData.statusValue', statusValue)
                 console.log('careCordinatorData.dateValue', dateValue)
@@ -5302,10 +5665,13 @@
                 careCordinatorData.work_date = dateValue;
 				careCordinatorData.comments = hospitalcontactValue;
 				careCordinatorData.denialstatusValue = denialstatusValue;
+				careCordinatorData.claim_status = claimstatus;
+				
+				
+				
 
 				
-              console.log("::::::::::::::::::::::::careCordinatorData",careCordinatorData.denialstatusValue);
-			    if (careCordinatorData.Patient_ && careCordinatorData.Account && careCordinatorData.DOS ) {
+             if (careCordinatorData.Patient_ && careCordinatorData.Account && careCordinatorData.DOS ) {
                     let ccSaveQuery = {
                         "query": {
                             "bool": {
@@ -5350,6 +5716,9 @@
                                     .work_date,
                                 "comments": careCordinatorData.comments,
 								"denial_status": careCordinatorData.denialstatusValue,
+								"claim_status" : careCordinatorData.claim_status,
+								"Status": status,
+								"supervisor":loginVal,
 								"modified_on":modifiedon
                             };
 
