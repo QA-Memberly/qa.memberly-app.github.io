@@ -51417,9 +51417,10 @@ else{
                                         newformatdate = moment(item.assigned_date)
                                             .format('MM-DD-YYYY');
 											if(item.cc_PV1_44_asDate){
-                                        admitdate = moment(item
-                                                .cc_PV1_44_asDate)
-                                            .format('MM-DD-YYYY');
+                                        admitdate = moment.utc(row
+                                        .cc_PV1_44_asDate)
+                                    .format(
+                                        "MM-DD-YYYY");
 											}else{
 										admitdate ="";	
 											}
