@@ -4661,19 +4661,21 @@
 					<button id="statusUpdateBySupervisor" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update Action</button>
 						
-					<button id="backToSupervisorListing" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
-						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Back</button>	
+						
 						
 						  <button id="updateStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update
                         Status</button>
                     <div class="col-sm-3 text-right text-end">
+					
                         <div id="col-selector-panel" class="btn-group mb-2 mr-2 col-selector-panel">
                             <button id="enhanced_columns_trigger" class="btn btn-sm btn-primary mr-1" type="button"
                                 aria-haspopup="true" aria-expanded="false"
                                 style="border-radius: 3px !important;height: 32px !important;">
                                 Customize Columns
                             </button>
+							<i id="backToSupervisorListing" aria-haspopup="true" aria-expanded="false" class="fa fa-arrow-circle-left"  style="font-size:32px;color:#666;margin-left:10px;" title="Go Back to Supervisor Assignment"></i>	
+					
                             <!---<button id="customize_columns_trigger" class="btn btn-sm btn-primary dropdown-toggle has-ripple mr-2" 
 								type="button" data-bs-auto-close="outside" data-bs-toggle="dropdown" 
 								aria-haspopup="true" aria-expanded="false">
@@ -5632,6 +5634,8 @@
                 var dateValue = dateElement.val();
 				var hospitalcontactValue = hospitalcontactElement.val();
                 var denialstatusValue = denialstatusElement.val();
+				let loginValue = ccData.loginContext
+                let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
                // if(dateValue == ''){
 				//dateValue = moment().utc().format("YYYY-MM-DD");
 				//}
@@ -5645,10 +5649,10 @@
 				var claimstatus;
 				if(statusValue == 'Calling'){
 				claimstatus = 'Caller View';
-				//status = 'Caller View';
+				status = 'Caller View';
 				}else{
 				claimstatus = 'Done';
-				//status = 'Done';
+				status = 'Done';
 				}
 				dateValue = moment.utc(dateValue).format("YYYY-MM-DD");
 				
@@ -5714,6 +5718,7 @@
 								"denial_status": careCordinatorData.denialstatusValue,
 								"claim_status" : careCordinatorData.claim_status,
 								"Status": status,
+								"supervisor":loginVal,
 								"modified_on":modifiedon
                             };
 
