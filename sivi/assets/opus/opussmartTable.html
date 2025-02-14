@@ -2094,7 +2094,19 @@
                 $("#ccReAssignModel").modal("show");
             });
 			
-
+			  $(document).on("click", "#statusUpdateBySupervisor", function () {
+                window.parent.postMessage({
+                    launch: 'statusupdatebysupervisor'
+                }, '*');
+            });
+			
+			$(document).on("click", "#backToSupervisorListing", function () {
+                window.parent.postMessage({
+                    launch: 'back'
+                }, '*');
+            });
+			
+			
             $(document).on("click", "#enhanced_columns_trigger", function () {
                 $("#enhanced_columns_viewer").modal("show");
             });
@@ -3212,35 +3224,43 @@
             if (_.isNil(mappingProps)) {
                 mappingProps = {};
                 ccData = conf
-                if (ccData.rowsSelection) {
+			  if (ccData.supervisorList) {
                     let assignButon = true
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").show();
 					$("#reassignButtton").show();
+					$("#statusUpdateBySupervisor").show();
+					$("#backToSupervisorListing").hide();
+
 					$('#updateStatus').hide();
                 }else{
 				$("#ccButton").hide();
 				$("#reassignButtton").hide();
+				$("#statusUpdateBySupervisor").hide();
 				}
-                if (ccData.selectRowReaasign) {
-                    console.log(ccData.selectRowReaasign, "selectRowReaasign")
+                if (ccData.analystList) {
+                    console.log(ccData.analystList, "selectRowReaasign")
                     let assignButon = true
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").hide();
 					$("#reassignButtton").hide();
+					$("#statusUpdateBySupervisor").hide();
                     var myButton1 = $('#reassignButtton');
-                    $('#reassignButtton').show();
-                    $('#updateStatus').hide();
+                    $('#reassignButtton').hide();
+					$("#backToSupervisorListing").hide();
+                    $('#updateStatus').show();
                 }
-                if (ccData.selectedResponse) {
+                if (ccData.supervisorUpdate) {
                     let assignButon = true
                     $('#updateStatus').show();
+					$("#backToSupervisorListing").show();
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").hide();
 					$("#reassignButtton").hide();
+					$("#statusUpdateBySupervisor").hide();
                     var myButton1 = $('#reassignButtton');
                     myButton1.hide();
                 }
@@ -3587,6 +3607,8 @@
         function myFunction() {
             $("#ccButton").show();
 			$("#reassignButtton").show();
+			$("#statusUpdateBySupervisor").show();
+			$("#backToSupervisorListing").hide();
         }
 
         function triggerDataTable(configMap) {
@@ -3663,13 +3685,13 @@
                                 render: function (data, type, row, meta) {
                                     if (type === "display") {
                                         downlodDetails = configMap
-									    if (configMap.tablename == "analystListing" && configMap.origin && configMap.map360 && propKey ===
+									    if ( (configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 && propKey ===
                                             "#") {
                                             // let outHTML =
                                             //     '<input type="checkbox" class="checkboxforcc"/>';
                                             // return outHTML;
 
-                                        } else if (configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
+                                        } else if ((configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "comments") {
 										 // let uniqueIdentifier1 = row.memberID_merged;
                                             let selectedRowComments = row.comments;
@@ -3687,8 +3709,7 @@
                                                      '">' + (
                                                         selectedRowComments || '') + '</textarea>';
                                             } else {
-											console.log("::::::::::::insideelse")
-                                                outHTML = ccData.selectedDoneRow ?
+											    outHTML = ccData.selectedDoneRow ?
                                                     selectedRowComments : '';
                                             }
                                             setTimeout(function () {
@@ -3709,7 +3730,7 @@
                                                 }
                                             }, 0);
                                             return outHTML;
-                                        }  else if ( configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
+                                        }  else if ( (configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "denial_status") {
 
                                             let outHTML = '';
@@ -3744,7 +3765,7 @@
 
                                             return outHTML;
                                         } 
-										else if ( configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
+										else if ( (configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "action_code") {
 
                                             let outHTML = '';
@@ -3778,7 +3799,7 @@
                                             }
 
                                             return outHTML;
-                                        } else if (configMap.tablename == "analystListing" && configMap.origin && configMap.map360 &&
+                                        } else if ((configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "work_date") {
 
                                             let outHTML = '';
@@ -4637,6 +4658,12 @@
 					  <button id="reassignButtton" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 												cursor-pointer" type="button" style="height: 35px; width: 298px !important;padding: 2px 10px;margin:0px 8px">Re Assign
                         </button>	
+					<button id="statusUpdateBySupervisor" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update Action</button>
+						
+					<button id="backToSupervisorListing" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Back</button>	
+						
 						  <button id="updateStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update
                         Status</button>
@@ -5528,7 +5555,7 @@
         });
 
         function updateStatus(selectedRows) {
-            const allRowsValid = selectedRows.every((row) => {
+		 const allRowsValid = selectedRows.every((row) => {
                 console.log(row, "row");
                 // const decodeObj = decodeURIComponent(row);
                 // console.log(JSON.parse(decodeObj),"decodeObj");
@@ -5608,7 +5635,21 @@
                // if(dateValue == ''){
 				//dateValue = moment().utc().format("YYYY-MM-DD");
 				//}
+				var status;
+				if(incConfMap.tablename == 'analystListing'){
+				status = 'Update by Analyst';
+				}else if(incConfMap.tablename == 'supervisorUpdateListing'){
+				status = 'Update by Supervisor';
+				}
 				
+				var claimstatus;
+				if(statusValue == 'Calling'){
+				claimstatus = 'Caller View';
+				//status = 'Caller View';
+				}else{
+				claimstatus = 'Done';
+				//status = 'Done';
+				}
 				dateValue = moment.utc(dateValue).format("YYYY-MM-DD");
 				
                 console.log('careCordinatorData.statusValue', statusValue)
@@ -5620,10 +5661,13 @@
                 careCordinatorData.work_date = dateValue;
 				careCordinatorData.comments = hospitalcontactValue;
 				careCordinatorData.denialstatusValue = denialstatusValue;
+				careCordinatorData.claim_status = claimstatus;
+				
+				
+				
 
 				
-              console.log("::::::::::::::::::::::::careCordinatorData",careCordinatorData.denialstatusValue);
-			    if (careCordinatorData.Patient_ && careCordinatorData.Account && careCordinatorData.DOS ) {
+             if (careCordinatorData.Patient_ && careCordinatorData.Account && careCordinatorData.DOS ) {
                     let ccSaveQuery = {
                         "query": {
                             "bool": {
@@ -5668,6 +5712,8 @@
                                     .work_date,
                                 "comments": careCordinatorData.comments,
 								"denial_status": careCordinatorData.denialstatusValue,
+								"claim_status" : careCordinatorData.claim_status,
+								"Status": status,
 								"modified_on":modifiedon
                             };
 
