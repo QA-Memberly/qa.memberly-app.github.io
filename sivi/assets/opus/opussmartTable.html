@@ -2078,7 +2078,15 @@
 				$("#ccReAssignModel").modal("hide");
                 $("#reassignModel").modal("hide");
             });
-            $(document).on("click", "#ccButton", function () {
+            $(document).on("click", "#assignCaller", function () {
+                var data = myTable.rows('.selected').data().toArray()
+                var myData = "Members Selected : " + data.length;
+                $('#mySpan').text(myData);
+                $('#myCallerSpan').text(myData);
+                $("#assigncallerModel").modal("show");
+            });
+			
+			  $(document).on("click", "#ccButton", function () {
                 var data = myTable.rows('.selected').data().toArray()
                 var myData = "Members Selected : " + data.length;
                 $('#mySpan').text(myData);
@@ -3232,6 +3240,7 @@
 					$("#reassignButtton").show();
 					$("#statusUpdateBySupervisor").show();
 					$("#backToSupervisorListing").hide();
+					$("#assignCaller").hide();
 
 					$('#updateStatus').hide();
                 }else{
@@ -3251,6 +3260,7 @@
                     $('#reassignButtton').hide();
 					$("#backToSupervisorListing").hide();
                     $('#updateStatus').show();
+					$("#assignCaller").hide();
                 }
                 if (ccData.supervisorUpdate) {
                     let assignButon = true
@@ -3261,8 +3271,21 @@
                     $("#ccButton").hide();
 					$("#reassignButtton").hide();
 					$("#statusUpdateBySupervisor").hide();
+					$("#assignCaller").hide();
                     var myButton1 = $('#reassignButtton');
                     myButton1.hide();
+                }
+				
+				 if (ccData.callerSupervisor) {
+                    let assignButon = true
+                    var $myButton = $('#ccButton');
+                    // $myButton.show().prop("disabled", false);
+                    $("#ccButton").hide();
+					$("#reassignButtton").hide();
+					$("#statusUpdateBySupervisor").hide();
+					$("#backToSupervisorListing").hide();
+					$("#assignCaller").show();
+					$('#updateStatus').hide();
                 }
 				
 				let dept = conf.departmentName;
@@ -3288,7 +3311,6 @@
                         });
                         selectccColumns.innerHTML = options.join("");
 						selectccReAssignColumns.innerHTML = options.join("");
-
                     }
 
                 });
@@ -3306,12 +3328,12 @@
                     contentType: 'application/json',
                     success: function (response) {
 
-                        var selectreassignCCcolumns = document.getElementById("reassignCCcolumnss");
+                        var selectcallercolumns = document.getElementById("assigncallercolumns");
                         var options = response.map(function (domain) {
                             return "<option>" + domain + "</option>";
                         });
 
-                        selectreassignCCcolumns.innerHTML = options.join("");
+                        selectcallercolumns.innerHTML = options.join("");
 
                     }
 
@@ -4661,7 +4683,9 @@
 					<button id="statusUpdateBySupervisor" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update Action</button>
 						
-						
+					<button id="assignCaller" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+												cursor-pointer" type="button" style="height: 35px; width: 298px !important;padding: 2px 10px;margin:0px 8px">Assign caller
+                        </button>	
 						
 						  <button id="updateStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update
@@ -5002,31 +5026,31 @@
         </div>
     </div>
    
-    <div id="reassignModel" class="modal" role="dialog" aria-labelledby="careTitle" tabindex="-1" aria-hidden="true">
+    <div id="assigncallerModel" class="modal" role="dialog" aria-labelledby="careTitle" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="width: 109%;">
                 <div class="modal-header">
                     <h5 class="modal-title" id="careTitle">Number of Members assigned to Caller:<span
-                            id="mySpan"></span></h5>
+                            id="myCallerSpan"></span></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true" id="closeReassignModelButton">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <span id="mySpan"></span>
-                        <div id="reassigncolumns" class="col-sm-4 alert alert-primary"
+                        <span id="myCallerSpan"></span>
+                        <div id="CCcolumns" class="col-sm-4 alert alert-primary"
                             style="height: 35px; width: 330px;padding: 2px 10px;margin:0px 8px;display: inline-flex;">
 
                             <label style="margin-top:7px;">Assign Caller : </label>
-                            <select id="reassignCCcolumnss"
+                            <select id="assigncallercolumns"
                                 style="border-radius: 0.2rem;padding: 2px 10px;margin: 2px 8px;">
                                 <option value="select">--Select--</option>
                                 <option value="jstockmyer">Jessica Stockmyer</option>
                                
                             </select>
                         </div>
-                        <button id="getReassignValueButton1" class="btn btn-sm btn-primary cursor-pointer" type="button"
+                        <button id="callerAssignValueButton" class="btn btn-sm btn-primary cursor-pointer" type="button"
                             style="height: 35px;width:84px;padding: 2px 10px;margin-left: 15px;margin-top: 0px;">Assign Caller</button>
                     </div>
                     <div id="success-message" style="display:none;">Members Assigned to Caller!</div>
@@ -5183,6 +5207,152 @@
         });
 
 
+		 $('#callerAssignValueButton').on('click', function () {
+		 let data = (myTable.rows('.selected').data().toArray())
+            if (data.length == 0) {
+                toastr.error(
+                    'Select atleast one Member'
+                );
+            } else if (data.length == 0 || $("#assigncallercolumns").val() === "--Select--") {
+                toastr.error(
+                    'Select CC Name'
+                );
+            } else {
+			var selectedValue = $('#assigncallercolumns').val();
+			console.log("selectedRow: " + selectedValue);
+            var modalBody = $(this).closest(".modal-content").find(".modal-body");
+            var assignedLoader = showLoaderCC(modalBody,
+                "Members Assigned to Caller!");
+            let data = (myTable.rows('.selected').data().toArray())
+          
+            console.log("selectedRow: " + JSON.stringify(data));
+            // var selectedValue = $('#reassignCCcolumns').val();
+			
+            const newKey = 'CC';
+            const newValue = selectedValue;
+			let assignedHistory;
+			let ccValue = ccData.loginContext
+            let dataNew = ccValue.replace(/^\s+|\s+$/g, "")
+
+            var currentDate = new Date();
+                var year = currentDate.getUTCFullYear();
+                let day
+                let month = currentDate.getUTCMonth() + 1
+                day = currentDate.getUTCDate();
+                let date;
+                var hours = String(currentDate.getHours()).padStart(2, '0');
+                var minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                var seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                if (month < 10 && day < 10) {
+                    date = year + "-" + "0" + month + "-" + "0" + day + "T" + hours + ":" +
+                        minutes + ":" + seconds;
+                } else if (month < 10 && day >= 10) {
+                    date = year + "-" + "0" + month + "-" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else if (day < 10 && month >= 10) {
+                    date = year + "-" + month + "-" + "0" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else {
+                    // console.log(month, "mm.length", mm)
+                    date = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" +
+                        seconds;
+                }
+
+                let assignDate = date;
+            const newKey1 = 'assigned_date';
+            // const newValue1 = date
+            if (!Array.isArray(data)) {
+                data = [data];
+            }
+            updatedCCArray = data.map(obj => ({
+                ...obj,
+                [newKey]: newValue,
+                ["Status"]: "Assigned",
+                [newKey1]: assignDate
+               
+            }));
+			
+			assignedHistory = [{
+							"reassignedby": dataNew,
+							"reassignedTo": newValue,
+						    "reassigneddate": assignDate
+							 }]	
+							 
+			data.forEach((element) => {
+              
+                    let query = {
+                        "query": {
+                            "bool": {
+                                "must": [
+                                    {
+                                    "term": {
+                                        "Patient_": element.Patient_
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "Account": element.Account
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "DOS": element.DOS
+                                      }
+                                    }
+                            ]
+                            }
+                        },
+                        "script": {
+
+                            "source": `
+                               ctx._source.caller = params.caller;
+                               ctx._source.assigned_date = params.assigned_date;
+							   ctx._source.modified_on = params.assigned_date;
+			                   ctx._source.Status = params.Status;
+							   ctx._source.assigned_history = params.assigned_history;
+							   
+							   
+	                         `,
+                            "lang": "painless",
+                            "params": {
+                                "caller": newValue,
+                                "assigned_date": assignDate,
+								"modified_on": assignDate,
+                                "Status":"Assigned to Caller",
+								"assigned_history":assignedHistory
+                            }
+                        }
+                    }
+                      $.ajax({
+                                headers: ccData.hdr,
+                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_update_by_query",
+                            async: false,
+                                type: 'POST',
+                                data: JSON.stringify(query),
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    hideLoader(assignedLoader);
+                                     setTimeout(function () {
+                                   location.reload();
+                                }, 2000);
+                                },
+                                error: function (error) {
+                                    console.log("ERROR happened >>>> ", error);
+                                    hideLoader(assignedLoader);
+                                    return null;
+                                },
+                                complete: function () {
+                                    hideLoader(assignedLoader);
+                                }
+                            })
+                       
+                
+            })
+			}
+        });
+
+		
 		 $('#getReAssignValueButton').on('click', function () {
 		 let data = (myTable.rows('.selected').data().toArray())
             if (data.length == 0) {
