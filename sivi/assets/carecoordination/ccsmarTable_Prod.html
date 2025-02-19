@@ -514,7 +514,37 @@
         td.class_Status {
             display: none !important;
         }
+        .fa-bullseye:before {
+            content: "\f140"
+        }
+        .fa-bullseye-arrow:before {
+            content: "\f648"
+        }
+        .fa-bullseye-pointer:before {
+            content: "\f649"
+        }
+        .fa-duotone.fa-bullseye:after,
+        .fad.fa-bullseye:after {
+            content: "\f140\f140"
+        }
+        .fa-duotone.fa-bullseye-arrow:after,
+        .fad.fa-bullseye-arrow:after {
+            content: "\f648\f648"
+        }
+        .fa-duotone.fa-bullseye-pointer:after,
+        .fad.fa-bullseye-pointer:after {
+            content: "\e29c\e29c"
+        }
+        .fa-duotone.fa-bullseye-pointer-arrow:after,
+        .fad.fa-bullseye-pointer-arrow:after {
+            content: "\e29d\e29d"
+        }
+        .fa-duotone.fa-bullseye-pointer:after,
+        .fad.fa-bullseye-pointer:after {
+            content: "\f649\f649"
+        }
 
+		
         th.sorting_disabled.class_s_no,
         th.sorting_disabled.class_assigned_history,
         td.class_s_no,
@@ -5072,7 +5102,16 @@
                                                 '</button><i class="fa-light fa-copy"  id="' +
                                                 data +
                                                 '" style="cursor: pointer; margin: 5px; width: 20px; height: 20px; background: transparent" title="Copy ID"></i>';
-                                            if (ccData.selectedResponse == true || ccData
+                                                if (ccData.rowsSelection == true) {
+
+                                                outHTML +=
+                                                    '</button> <i class="fa-sharp fa-light fa-pen-to-square"  id="btnEditResponse" style="cursor: pointer; margin: 5px; width: 20px; height: 20px; background: transparent" title="Edit Member Data"></i>';
+
+                                                outHTML +=
+                                                    '</button> <i class="fa-solid fa-bullseye-pointer"  id="btnHry" style="cursor: pointer; margin: 5px; width: 20px; height: 20px; background: transparent" title=" Member History"></i>';
+
+                                            }
+                                                if (ccData.selectedResponse == true || ccData
                                                 .myListRow == true) {
                                                 outHTML +=
                                                     '</button> <i class="fa-solid fa-timeline"  id="btnHistory" style="cursor: pointer; margin: 5px; width: 20px; height: 20px; background: transparent" title=" Assigned History"></i>';
@@ -6946,6 +6985,18 @@
         </div>
     </div>
     </div>
+    <div id="viewModelHistory" style="display:none" title="Assignment History">
+        <div id="historyDetailsView" style="display: flex;width: 100%;">
+            <div class="row">
+                <div class="col-md-6">Assigned By</div>
+                <div class="col-md-6"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">Assigned Date</div>
+                <div class="col-md-6"></div>
+            </div>
+        </div>
+    </div>
     <!-- <script id="rendered-js"> -->
     <!-- //  document.getElementById('date').addEventListener('input', function () {
         //     // Get the date value from the input
@@ -7864,8 +7915,7 @@
                 width: 600,
                 height: 400
             });
-
-            $(document).on("click", ".fa-timeline", function () {
+           $(document).on("click", ".fa-timeline", function () {
                 var buttonValues = $(this).siblings('button.btn-outline-primary');
                 var admissionValues = buttonValues.attr('data-custom-admissionDate');
                 var healthPlanValues = buttonValues.attr('data-custom-healthid');
@@ -7969,6 +8019,136 @@
             });
 
         });
+        $(document).ready(function () {
+    $("#viewModelHistory").dialog({
+        autoOpen: false,
+        modal: true,
+        width: 1300,
+        height: 400
+    });
+
+    $(document).on("click", ".fa-bullseye-pointer", function () {
+        console.log(":::::::::::::::::::insideee");
+        var buttonValues = $(this).siblings('button.btn-outline-primary');
+        var admissionValues = buttonValues.attr('data-custom-admissionDate');
+        var healthPlanValues = buttonValues.attr('data-custom-healthid');
+        var memberValues = buttonValues.attr('data-custom-memberid');
+        var compositeKey = buttonValues.attr('data-custom-compositKey');
+        var dateofAdmissionValues = Number(admissionValues);
+        
+        console.log(":::::::::::::::::::memberValues",memberValues);
+        console.log(":::::::::::::::::::compositeKey",compositeKey);
+
+        if (memberValues != null && healthPlanValues != null) {
+            let ccSaveQuery = {
+                "query": {
+                    "bool": {
+                        "must": [{
+                                "term": {
+                                    "memberID_merged": memberValues
+                                }
+                            }
+
+                        ]
+                    }
+                },
+                  "sort": {
+                        "modified_on": {
+                          "order": "desc"
+                        }
+                }
+            };
+            
+            console.log(":::::::::::::::::::ccSaveQuery",JSON.stringify(ccSaveQuery));
+            
+            $.ajax({
+                headers: ccData.hdr,
+                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/dhmp_cc_data/_search",
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                crossDomain: true,
+                data: JSON.stringify(ccSaveQuery),
+                contentType: 'application/json',
+                success: function (response) {
+                    console.log("res", response);
+                    var html = '';
+                    if (response.hits && response.hits.hits && response
+                        .hits.hits.length > 0 && response.hits.hits[0]._source) {
+                        var responseHistorys = response.hits.hits[0]._source;
+                        var resHisry = response.hits.hits[0]._source
+                            .assigned_history; 
+                        if (responseHistorys.length === 0) {
+                            html +=
+                                '<p style="text-align: center;">No Data  Avaliable</p>';
+                        } else {
+                            html += '<table class="tblAssignHistory">';
+                            html +=
+                                '<tr><th><i class="fa fa-calendar" aria-hidden="true"></i> Assign Date</th><th><i class="fa fa-calendar" aria-hidden="true"></i> Admit Date</th><th><i class="fa fa-calendar" aria-hidden="true"></i> Discharge Date</th><th><i class="fa fa-user" aria-hidden="true"></i> TOC Program Current Status</th><th><i class="fa fa-user" aria-hidden="true"></i> TOC Comments</th><th><i class="fa fa-user" aria-hidden="true"></i> Status</th><th><i class="fa fa-user" aria-hidden="true"></i> Assigned To</th></tr>';
+                            
+                            item = responseHistorys;
+                            
+                                newformatdate = moment(item.assigned_date)
+                                    .format('MM-DD-YYYY');
+                                    if(item.cc_PV1_44_asDate){
+                                admitdate = moment.utc(item
+                                .cc_PV1_44_asDate)
+                            .format(
+                                "MM-DD-YYYY");
+                                    }else{
+                                admitdate ="";	
+                                    }
+                                    
+                                    if(item.cc_PV1_45_asDate){
+                                dischargedate = moment.utc(item
+                                        .cc_PV1_45_asDate)
+                                    .format('MM-DD-YYYY');	
+                                    }else {
+                                dischargedate ="";	
+                                    }
+                                    
+                                 if (item.assigned_date) {
+                                    html += '<tr>';
+                                    html +=
+                                        '<td> ' + newformatdate + '</td>';
+
+                                    html +=
+                                        '<td> ' + admitdate + '</td>'
+                                    html +=
+                                        '<td> ' + dischargedate + '</td>'
+                                    html +=
+                                        '<td> ' + item.TOC_Program_Current_Status + '</td>'
+                                    html +=
+                                        '<td> ' + item.TOC_Comments + '</td>'
+                                    html +=
+                                        '<td> ' + item.Status + '</td>'	
+                                    html +=
+                                        '<td> ' + item.CC + '</td>'		
+                                    html += '</tr>';
+
+
+                                }
+                       
+                            html += '</table>';
+                        }
+                    } else {
+                        html +=
+                            '<p style="text-align: center;">No Data Available</p>';
+                    }
+
+                    $('#historyDetailsView').html(html);
+                    $("#viewModelHistory").dialog("option", "title",
+                        "History of Member: " + memberValues);
+                    $("#viewModelHistory").dialog("open");
+                },
+                error: function (error) {}
+            });
+        }
+
+
+    });
+
+});
 
     </script>
 </body>
