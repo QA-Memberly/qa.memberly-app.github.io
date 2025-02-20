@@ -973,6 +973,8 @@
         let hcUtilsESURL = "https://sivi-healthcare-utilities.es.us-east4.gcp.elastic-cloud.com";
         let hcUtilsAUTH = "ApiKey Ui1TVTQ0WUJGZk5MQ012TUsxd3Y6QVNNVHh4cmlTbFNGbWh1d0l2Q29MZw==";
         let ccData
+        let dept
+        let adminUrl
         let incConfMap = null;
         let baseQuery = null;
         let myTable = null;
@@ -1630,7 +1632,7 @@
             incConfMap = configMap;
             baseQuery = configMap.query;
             if (configMap) {
-                retrieveIndexMappers(configMap);
+                // retrieveIndexMappers(configMap);
             }
             //console.log("extFieldEngg \n"+JSON.stringify(extFieldEngg));
             sanitizeBaseQuery();
@@ -2038,7 +2040,7 @@
                     ds: "dhmp_rk_claims",
                     pages: 1
                 };
-                retrieveIndexMappers(configMap);
+                // retrieveIndexMappers(configMap);
                 //console.log("extFieldEngg \n"+JSON.stringify(extFieldEngg));
                 loadTableProps(configMap);
                 triggerDataTable(configMap);
@@ -2089,7 +2091,57 @@
             });
 			
 			  $(document).on("click", "#ccButton", function () {
-                var data = myTable.rows('.selected').data().toArray()
+                $.ajax({
+
+                      headers: {
+                          'content-type': 'application/json'
+                      },
+                      //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
+                      url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Analyst",
+                      async: false,
+                      type: 'GET',
+                      crossDomain: true,
+                      dataType: 'json',
+                      contentType: 'application/json',
+                      success: function (response) {
+                          var selectccColumns = document.getElementById("setCCcolumnss");
+                          var selectccReAssignColumns = document.getElementById("setCCReAssigncolumnss");
+
+                          var options = response.map(function (domain) {
+                              return "<option>" + domain + "</option>";
+                          });
+                          selectccColumns.innerHTML = options.join("");
+                          selectccReAssignColumns.innerHTML = options.join("");
+                      }
+
+                  });
+                $.ajax({
+
+                      headers: {
+                          'content-type': 'application/json'
+                      },
+                      //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
+                      url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Caller",
+                      async: false,
+                      type: 'GET',
+                      crossDomain: true,
+                      dataType: 'json',
+                      contentType: 'application/json',
+                      success: function (response) {
+
+                          var selectcallercolumns = document.getElementById("assigncallercolumns");
+                          var options = response.map(function (domain) {
+                              return "<option>" + domain + "</option>";
+                          });
+
+                          selectcallercolumns.innerHTML = options.join("");
+
+                      }
+
+                  });
+
+
+                 var data = myTable.rows('.selected').data().toArray()
                 var myData = "Members Selected : " + data.length;
                 $('#mySpan').text(myData);
                 $('#ccmySpan').text(myData);
@@ -3308,58 +3360,9 @@
 					$('#updatecallerStatus').show();
                 }
 				
-				let dept = conf.departmentName;
-                let adminUrl = conf.downloadData.environmentAdminUrl;
-                $.ajax({
-
-                    headers: {
-                        'content-type': 'application/json'
-                    },
-                    //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
-                    url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Analyst",
-                    async: false,
-                    type: 'GET',
-                    crossDomain: true,
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    success: function (response) {
-                        var selectccColumns = document.getElementById("setCCcolumnss");
-						var selectccReAssignColumns = document.getElementById("setCCReAssigncolumnss");
-                     
-                        var options = response.map(function (domain) {
-                            return "<option>" + domain + "</option>";
-                        });
-                        selectccColumns.innerHTML = options.join("");
-						selectccReAssignColumns.innerHTML = options.join("");
-                    }
-
-                });
-                $.ajax({
-
-                    headers: {
-                        'content-type': 'application/json'
-                    },
-                    //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
-                    url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Caller",
-                    async: false,
-                    type: 'GET',
-                    crossDomain: true,
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    success: function (response) {
-
-                        var selectcallercolumns = document.getElementById("assigncallercolumns");
-                        var options = response.map(function (domain) {
-                            return "<option>" + domain + "</option>";
-                        });
-
-                        selectcallercolumns.innerHTML = options.join("");
-
-                    }
-
-                });
-
-                 if (conf.url) {
+				dept = conf.departmentName;
+                adminUrl = conf.downloadData.environmentAdminUrl;
+                if (conf.url) {
                     $.ajax({
                         headers: conf.hdr,
                         url: conf.url.replace("/_msearch", "") + "/_mapping",
@@ -3448,7 +3451,7 @@
                         }
                     });
                 }
-            }
+                }
             //console.log("BUILT TABLE PROPS :::: "+JSON.stringify(mappingProps));
         }
 
