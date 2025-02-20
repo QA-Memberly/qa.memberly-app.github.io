@@ -279,28 +279,29 @@
 			background-color: white;
         }
 		
-		th.class_Patient,
-        td.class_Patient {
+	    th.class_age,
+        td.class_age {
             position: sticky !important;
             left: 25px;
             z-index: 1;
 			background-color: white;
         }
 		
-		th.class_Account,
-        td.class_Account {
+		th.class_age_label,
+        td.class_age_label {
             position: sticky !important;
-            left: 103.5px;
+            left: 131px;
             z-index: 1;
 			background-color: white;
         }
 		
-		th.class_Account:first-child,
-        td.class_Account:first-child {
+		th.class_age_label:first-child,
+        td.class_age_label:first-child {
             position: sticky !important;
             left: 0px;
             z-index: 20;
         }
+		
 		
 		th:first-child,
         th:nth-child(3) {
@@ -1629,7 +1630,7 @@
             incConfMap = configMap;
             baseQuery = configMap.query;
             if (configMap) {
-                // retrieveIndexMappers(configMap);
+                retrieveIndexMappers(configMap);
             }
             //console.log("extFieldEngg \n"+JSON.stringify(extFieldEngg));
             sanitizeBaseQuery();
@@ -1778,7 +1779,6 @@
                     console.log("ISOTOPE populated POST "+$('.element-item').length);
                 },500);*/
             }
-        
         }
 
         function sanitizeColumns() {
@@ -2038,7 +2038,7 @@
                     ds: "dhmp_rk_claims",
                     pages: 1
                 };
-                // retrieveIndexMappers(configMap);
+                retrieveIndexMappers(configMap);
                 //console.log("extFieldEngg \n"+JSON.stringify(extFieldEngg));
                 loadTableProps(configMap);
                 triggerDataTable(configMap);
@@ -3245,6 +3245,8 @@
 					$("#assignCaller").hide();
 
 					$('#updateStatus').hide();
+					$('#updatecallerStatus').hide();
+					
                 }else{
 				$("#ccButton").hide();
 				$("#reassignButtton").hide();
@@ -3263,6 +3265,7 @@
 					$("#backToSupervisorListing").hide();
                     $('#updateStatus').show();
 					$("#assignCaller").hide();
+					$('#updatecallerStatus').hide();
                 }
                 if (ccData.supervisorUpdate) {
                     let assignButon = true
@@ -3276,6 +3279,7 @@
 					$("#assignCaller").hide();
                     var myButton1 = $('#reassignButtton');
                     myButton1.hide();
+					$('#updatecallerStatus').hide();
                 }
 				
 				 if (ccData.callerSupervisor) {
@@ -3288,58 +3292,72 @@
 					$("#backToSupervisorListing").hide();
 					$("#assignCaller").show();
 					$('#updateStatus').hide();
+					$('#updatecallerStatus').hide();
+                }
+				
+				 if (ccData.callerUpdate) {
+                    let assignButon = true
+                    var $myButton = $('#ccButton');
+                    // $myButton.show().prop("disabled", false);
+                    $("#ccButton").hide();
+					$("#reassignButtton").hide();
+					$("#statusUpdateBySupervisor").hide();
+					$("#backToSupervisorListing").hide();
+					$("#assignCaller").hide();
+					$('#updateStatus').hide();
+					$('#updatecallerStatus').show();
                 }
 				
 				let dept = conf.departmentName;
                 let adminUrl = conf.downloadData.environmentAdminUrl;
-                // $.ajax({
+                $.ajax({
 
-                //     headers: {
-                //         'content-type': 'application/json'
-                //     },
-                //     //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
-                //     url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Analyst",
-                //     async: false,
-                //     type: 'GET',
-                //     crossDomain: true,
-                //     dataType: 'json',
-                //     contentType: 'application/json',
-                //     success: function (response) {
-                //         var selectccColumns = document.getElementById("setCCcolumnss");
-				// 		var selectccReAssignColumns = document.getElementById("setCCReAssigncolumnss");
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
+                    url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Analyst",
+                    async: false,
+                    type: 'GET',
+                    crossDomain: true,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (response) {
+                        var selectccColumns = document.getElementById("setCCcolumnss");
+						var selectccReAssignColumns = document.getElementById("setCCReAssigncolumnss");
                      
-                //         var options = response.map(function (domain) {
-                //             return "<option>" + domain + "</option>";
-                //         });
-                //         selectccColumns.innerHTML = options.join("");
-				// 		selectccReAssignColumns.innerHTML = options.join("");
-                //     }
+                        var options = response.map(function (domain) {
+                            return "<option>" + domain + "</option>";
+                        });
+                        selectccColumns.innerHTML = options.join("");
+						selectccReAssignColumns.innerHTML = options.join("");
+                    }
 
-                // });
-                // $.ajax({
+                });
+                $.ajax({
 
-                //     headers: {
-                //         'content-type': 'application/json'
-                //     },
-                //     //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
-                //     url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Caller",
-                //     async: false,
-                //     type: 'GET',
-                //     crossDomain: true,
-                //     dataType: 'json',
-                //     contentType: 'application/json',
-                //     success: function (response) {
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
+                    url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Caller",
+                    async: false,
+                    type: 'GET',
+                    crossDomain: true,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (response) {
 
-                //         var selectcallercolumns = document.getElementById("assigncallercolumns");
-                //         var options = response.map(function (domain) {
-                //             return "<option>" + domain + "</option>";
-                //         });
+                        var selectcallercolumns = document.getElementById("assigncallercolumns");
+                        var options = response.map(function (domain) {
+                            return "<option>" + domain + "</option>";
+                        });
 
-                //         selectcallercolumns.innerHTML = options.join("");
+                        selectcallercolumns.innerHTML = options.join("");
 
-                //     }
+                    }
 
-                // });
+                });
 
                  if (conf.url) {
                     $.ajax({
@@ -3668,8 +3686,43 @@
                     return "<th></th>"
                 }).join(""));
                 let invisibles = [];
-                let diffs = _.union(selColumns, runtimeColumns, Object.keys(mappingProps["properties"]));
-                console.log("diffs>>>> ", diffs, selColumns);
+                let selColumnsWithruntime = [...selColumns]; // Create a copy of selColumns
+
+                let ageIndex = selColumns.indexOf("#");
+
+                if (ageIndex !== -1) {
+                    
+                    selColumnsWithruntime.splice(ageIndex + 1, 0, "age");
+                    selColumnsWithruntime.splice(ageIndex + 2, 0, "age_label");
+                    
+                } else {
+                    selColumnsWithruntime.push("age");
+                    selColumnsWithruntime.push("age_label");
+                }
+               
+				let assigndate = selColumnsWithruntime.indexOf("assigned_date");
+
+                if (assigndate !== -1) {
+                    
+                    selColumnsWithruntime.splice(assigndate + 1, 0, "assigned_days");
+                    
+                } else {
+                    selColumnsWithruntime.push("assigned_days");
+                    
+                }
+				
+				let statusColumn =selColumnsWithruntime.indexOf("Status");
+                if (statusColumn !== -1) {
+                    
+                    selColumnsWithruntime.splice(statusColumn + 1, 0, "AD");
+                    selColumnsWithruntime.splice(statusColumn + 2, 0, "Category");
+                    selColumnsWithruntime.splice(statusColumn + 3, 0, "claim_classification");
+                } else {
+                    selColumnsWithruntime.push("AD");
+                }
+				
+                let diffs = _.union(selColumnsWithruntime, runtimeColumns, Object.keys(mappingProps["properties"]));
+                console.log("diffs>>>> ", diffs, selColumnsWithruntime);
                 //let diffs = _.union(selColumns,runtimeColumns);
                 myTable = $('#example')
                     .on("draw.dt", function () {
@@ -3715,7 +3768,96 @@
                                             //     '<input type="checkbox" class="checkboxforcc"/>';
                                             // return outHTML;
 
-                                        } else if ((configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
+                                        } else if ((configMap.tablename == "callerUpdateListing") && configMap.origin && configMap.map360 &&
+                                            propKey === "caller_comments") {
+										 // let uniqueIdentifier1 = row.memberID_merged;
+                                            let selectedRowComments = row.caller_comments;
+											let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+                                            if (!ccData.selectedDoneRow && (!selectedRowComments ||
+                                                selectedRowComments == null ||
+                                                selectedRowComments == "" ||
+                                                selectedRowComments == undefined)) {
+                                                outHTML = '<textarea id ="callercomments' + uniqueIdentifier +
+                                                   '">';
+
+                                            } else if (!ccData.selectedDoneRow) {
+											    //let uniqueIdentifier = row.memberID_merged;
+                                                outHTML = '<textarea id="callercomments' + uniqueIdentifier +
+                                                     '">' + (
+                                                        selectedRowComments || '') + '</textarea>';
+                                            } else {
+											    outHTML = ccData.selectedDoneRow ?
+                                                    selectedRowComments : '';
+                                            }
+                                            setTimeout(function () {
+                                                var textarea = document.getElementById('callercomments');
+                                                if (textarea) {
+                                                    textarea.addEventListener('keypress', function (event) {
+                                                        var char = String.fromCharCode(event.which);
+                                                        if (char === "'" || char === '"' || char === '\\') {
+                                                            event.preventDefault();
+                                                        }
+                                                    });
+                                                    textarea.addEventListener('input', function (event) {
+                                                        var value = event.target.value;
+                                                        if (value.includes("'") || value.includes('"') || value.includes('\\')) {
+                                                            event.target.value = value.replace(/['"\\]/g, '');
+                                                        }
+                                                    });
+                                                }
+                                            }, 0);
+                                            return outHTML;
+                                        }else if ((configMap.tablename == "callerUpdateListing") && configMap.origin && configMap.map360 &&
+                                            propKey === "call_date") {
+
+                                            let outHTML = '';
+
+                                            let selectedDate = row.call_date ||
+                                                moment().utc().format("MM-DD-YYYY");
+
+                                              if (!ccData.selectedDoneRow) {
+											    let patient = row.Patient_.replace(/[, ]/g, "");
+												
+                                                let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+												
+                                                outHTML =
+                                                    '<div style="display:flex; flex-direction: row;"> <input type="text" style="width: 120px;" placeholder="MM-DD-YYYY" id="calldateValue' +
+                                                    uniqueIdentifier + '"';
+                                                if (selectedDate) {
+                                                    outHTML += ' value="' + moment.utc(selectedDate)
+                                                        .format("MM-DD-YYYY") + '"';
+                                                }
+                                                outHTML += ' readonly/>';
+                                                outHTML +=
+                                                    `<input type="date" style="width: 19px;" onchange="setDateFieldValue(${uniqueIdentifier})" id="date${uniqueIdentifier}" /></div>`;
+
+                                            } else {
+                                                const isValidDate = !isNaN(Date.parse(
+                                                    selectedDate));
+
+                                                if (isValidDate) {
+                                                    // Format the date as MM-DD-YYYY
+                                                    const formattedDate = new Date(row
+                                                        .work_date)
+                                                        .toLocaleDateString('en-US', {
+                                                            month: '2-digit',
+                                                            day: '2-digit',
+                                                            year: 'numeric'
+
+
+
+                                                        }).replace(/\//g, '-');
+                                                    var assignDate = moment.utc(row
+                                                        .work_date).format(
+                                                            "MM-DD-YYYY");
+
+                                                    outHTML = assignDate
+                                                } else {
+                                                    outHTML = '';
+                                                }
+                                            }
+                                            return outHTML;
+                                        }else if ((configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "comments") {
 										 // let uniqueIdentifier1 = row.memberID_merged;
                                             let selectedRowComments = row.comments;
@@ -4692,6 +4834,11 @@
 						  <button id="updateStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update
                         Status</button>
+						
+						 <button id="updatecallerStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update
+                        Status</button>
+						
                     <div class="col-sm-3 text-right text-end">
 					<i id="backToSupervisorListing" aria-haspopup="true" aria-expanded="false" class="fa fa-arrow-circle-left"  style="font-size:15px;color:black;margin-right:10px;" title="Go Back to Supervisor Assignment"></i>	
 					
@@ -5308,8 +5455,8 @@
 
                             "source": `
                                ctx._source.caller = params.caller;
-                               ctx._source.assigned_date = params.assigned_date;
-							   ctx._source.modified_on = params.assigned_date;
+                               ctx._source.call_assigned_date = params.call_assigned_date;
+							   ctx._source.modified_on = params.modified_on;
 			                   ctx._source.Status = params.Status;
 							   ctx._source.assigned_history = params.assigned_history;
 							   
@@ -5318,7 +5465,7 @@
                             "lang": "painless",
                             "params": {
                                 "caller": newValue,
-                                "assigned_date": assignDate,
+                                "call_assigned_date": assignDate,
 								"modified_on": assignDate,
                                 "Status":"Assigned to Caller",
 								"assigned_history":assignedHistory
@@ -5726,7 +5873,19 @@
                 // });
                 updateStatus(rowObj);
             });
+			  $('#updatecallerStatus').on('click', function () {
+                var selectedRows = [];
+                console.log('selectedRows')
+                // $('.select-checkbox class_:checked').each(function () {
+                console.log('selectedRows', selectedRows)
+                var rowObj = (myTable.rows('.selected').data().toArray());
+                // selectedRows.push(rowObj);
+                console.log('selectedRows', rowObj)
+                // });
+                updateCallStatus(rowObj);
+            });
         });
+		
 
         function updateStatus(selectedRows) {
 		 const allRowsValid = selectedRows.every((row) => {
@@ -5820,8 +5979,8 @@
 				
 				var claimstatus;
 				if(statusValue == 'Calling'){
-				claimstatus = 'Caller View';
-				status = 'Caller View';
+				claimstatus = 'Awaiting caller Assignment';
+				status = 'Awaiting caller Assignment';
 				}else{
 				claimstatus = 'Done';
 				status = 'Done';
@@ -5915,6 +6074,167 @@
                 }
             }
         }
+		
+		 function updateCallStatus(selectedRows) {
+		 const allRowsValid = selectedRows.every((row) => {
+                console.log(row, "row");
+                // const decodeObj = decodeURIComponent(row);
+                // console.log(JSON.parse(decodeObj),"decodeObj");
+                const careCordinatorData = row;
+				const uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+                //const uniqueIdentifier = careCordinatorData.memberID_merged;
+
+                const comments = "callercomments" + uniqueIdentifier;
+                 var dateId = "calldateValue" + uniqueIdentifier;
+				
+                const commentsElement = $("#" + comments);
+                const dateElement = $("#" + dateId);
+
+                var commentsValue = commentsElement.val();
+                var dateValue = dateElement.val();
+
+                console.log('commentsValue', commentsValue)
+                console.log('dateValue', dateValue)
+
+				
+                return commentsValue && dateValue;
+            });
+
+            // If any row is missing values, show an error and exit
+            if (!allRowsValid) {
+                toastr.error(
+                    'Please Provide Comments and Call Date for all selected rows.'
+                );
+                return;
+            }
+
+            for (let i = 0; i < selectedRows.length; i++) {
+                const decodeObj = decodeURIComponent(selectedRows[i]);
+                var careCordinatorData = selectedRows[i];
+                const uniqueIdentifier = careCordinatorData.Account +moment.utc(careCordinatorData.DOS).format("MMDDYYYY");
+
+                var dateId = "calldateValue" + uniqueIdentifier;
+				var comments = "callercomments" + uniqueIdentifier;
+			
+				
+				var currentDate = new Date();
+                var year = currentDate.getUTCFullYear();
+                let day
+                let month = currentDate.getUTCMonth() + 1
+                day = currentDate.getUTCDate();
+                let date;
+                var hours = String(currentDate.getHours()).padStart(2, '0');
+                var minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                var seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                if (month < 10 && day < 10) {
+                    date = year + "-" + "0" + month + "-" + "0" + day + "T" + hours + ":" +
+                        minutes + ":" + seconds;
+                } else if (month < 10 && day >= 10) {
+                    date = year + "-" + "0" + month + "-" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else if (day < 10 && month >= 10) {
+                    date = year + "-" + month + "-" + "0" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else {
+                    // console.log(month, "mm.length", mm)
+                    date = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" +
+                        seconds;
+                }
+
+                let modifiedon = date;
+
+                var dateElement = $("#" + dateId);
+				var callCommentsElement = $("#" + comments);
+
+                var dateValue = dateElement.val();
+				var callCommentsValue = callCommentsElement.val();
+                let loginValue = ccData.loginContext
+                let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
+               // if(dateValue == ''){
+				//dateValue = moment().utc().format("YYYY-MM-DD");
+				//}
+				
+				dateValue = moment.utc(dateValue).format("YYYY-MM-DD");
+				
+                console.log('careCordinatorData.dateValue', dateValue)
+				console.log('careCordinatorData.hospitalcontactValue', callCommentsValue)
+				
+                careCordinatorData.call_date = dateValue;
+				careCordinatorData.caller_comments = callCommentsValue;
+				
+				
+
+				
+             if (careCordinatorData.Patient_ && careCordinatorData.Account && careCordinatorData.DOS ) {
+                    let ccSaveQuery = {
+                        "query": {
+                            "bool": {
+                                "must": [
+                                    {
+                                    "term": {
+                                        "Patient_": careCordinatorData.Patient_
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "Account": careCordinatorData.Account
+                                      }
+                                    },
+                                    {
+                                    "term": {
+                                        "DOS": careCordinatorData.DOS
+                                      }
+                                    }
+                            ]
+                            }
+                        }
+                    }
+                    $.ajax({
+                        headers: ccData.hdr,
+                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_search?size=10000",
+                        async: false,
+                        type: 'POST',
+                        data: JSON.stringify(ccSaveQuery),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (res) {
+                            let responseDatas = res.hits.hits[0]._id;
+                            let oldData = res.hits.hits[0]._source;
+
+                           
+
+                            var newObject = {
+                                
+                                "call_date": careCordinatorData
+                                    .call_date,
+                                "caller_comments": careCordinatorData.caller_comments,
+								"Status": 'Update by Caller',
+								"supervisor":loginVal,
+								"modified_on":modifiedon
+                            };
+
+                            var combinedObject = $.extend({}, oldData, newObject);
+                            $.ajax({
+                                headers: ccData.hdr,
+                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_doc/" +
+                                    responseDatas,
+                                async: false,
+                                type: 'PUT',
+                                data: JSON.stringify(combinedObject),
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    // Handle success, if needed
+									toastr.success('Status Updated Successfully');
+                                    location.reload();
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        }
+   
     </script>
 </body>
 
