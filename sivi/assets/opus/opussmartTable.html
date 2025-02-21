@@ -5950,27 +5950,38 @@
 
                 const statusId = "status" + uniqueIdentifier;
                 var dateId = "dateValue" + uniqueIdentifier;
+				 var hospitalcontactId = "hospitalcontact" + uniqueIdentifier;
+                var denialstatusId = "denialstatus" + uniqueIdentifier;
 
-                const statusElement = $("#" + statusId);
-                const dateElement = $("#" + dateId);
+				
+				var statusElement = $("#" + statusId);
+                var dateElement = $("#" + dateId);
+                var hospitalcontactElement = $("#" + hospitalcontactId);
+                var denialstatusElement = $("#" + denialstatusId);
 
                 var statusValue = statusElement.val();
                 var dateValue = dateElement.val();
+                var hospitalcontactValue = hospitalcontactElement.val();
+                var denialstatusValue = denialstatusElement.val();
+
 
                 console.log('statusValue', statusValue)
                 console.log('dateValue', dateValue)
+				console.log('statusValue', hospitalcontactValue)
+                console.log('dateValue', denialstatusValue)
 
 
-                return statusValue && dateValue;
+                return statusValue && dateValue && hospitalcontactValue && denialstatusValue;
             });
 
             // If any row is missing values, show an error and exit
             if (!allRowsValid) {
                 toastr.error(
-                    'Please Provide Action Code and Work Date for all selected rows.'
+                    'Please Provide Action Code and Work Date and Comments and Denial Code for all selected rows.'
                 );
                 return;
             }
+
 
             for (let i = 0; i < selectedRows.length; i++) {
                 const decodeObj = decodeURIComponent(selectedRows[i]);
