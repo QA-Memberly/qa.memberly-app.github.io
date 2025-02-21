@@ -1632,7 +1632,7 @@
             incConfMap = configMap;
             baseQuery = configMap.query;
             if (configMap) {
-                // retrieveIndexMappers(configMap);
+                retrieveIndexMappers(configMap);
             }
             //console.log("extFieldEngg \n"+JSON.stringify(extFieldEngg));
             sanitizeBaseQuery();
@@ -2040,7 +2040,7 @@
                     ds: "dhmp_rk_claims",
                     pages: 1
                 };
-                // retrieveIndexMappers(configMap);
+                retrieveIndexMappers(configMap);
                 //console.log("extFieldEngg \n"+JSON.stringify(extFieldEngg));
                 loadTableProps(configMap);
                 triggerDataTable(configMap);
