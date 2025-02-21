@@ -5499,7 +5499,7 @@
                             "source": `
                                ctx._source.caller = params.caller;
                                ctx._source.call_assigned_date = params.call_assigned_date;
-							   ctx._source.assigned_by = params.assigned_by;
+							   ctx._source.caller_assigned_by = params.caller_assigned_by;
 							   ctx._source.modified_on = params.modified_on;
 			                   ctx._source.Status = params.Status;
 							   ctx._source.assigned_history = params.assigned_history;
@@ -5510,7 +5510,7 @@
                             "params": {
                                 "caller": newValue,
                                 "call_assigned_date": assignDate,
-                                "assigned_by": loginVal,
+                                "caller_assigned_by": loginVal,
                                 "modified_on": assignDate,
                                 "Status": "Assigned to Caller",
                                 "assigned_history": assignedHistory
