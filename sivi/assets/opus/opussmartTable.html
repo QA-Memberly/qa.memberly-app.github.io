@@ -1,4 +1,3 @@
-       
 <html>
 
 <head>
@@ -26,10 +25,10 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
-    </script>
+        </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"
         integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -262,48 +261,48 @@
             box-shadow: inset rgb(0 0 0 / 8%) 0px 0.9px 4px, rgb(0 0 0 / 6%) 0px 2.6px 8px, rgb(0 0 0 / 5%) 0px 5.7px 12px, inset rgb(0 0 0 / 4%) 0px 15px 15px !important;
         }
 
-		
-		   th {
+
+        th {
             background-image: linear-gradient(to bottom, #fff, #887ce036);
         }
 
         td {
             background-color: white;
         }
-		
-		th.select-checkbox,
+
+        th.select-checkbox,
         td.select-checkbox {
             position: sticky !important;
             left: 0;
             z-index: 1;
-			background-color: white;
+            background-color: white;
         }
-		
-	    th.class_age,
+
+        th.class_age,
         td.class_age {
             position: sticky !important;
             left: 25px;
             z-index: 1;
-			background-color: white;
+            background-color: white;
         }
-		
-		th.class_age_label,
+
+        th.class_age_label,
         td.class_age_label {
             position: sticky !important;
             left: 131px;
             z-index: 1;
-			background-color: white;
+            background-color: white;
         }
-		
-		th.class_age_label:first-child,
+
+        th.class_age_label:first-child,
         td.class_age_label:first-child {
             position: sticky !important;
             left: 0px;
             z-index: 20;
         }
-		
-		
-		th:first-child,
+
+
+        th:first-child,
         th:nth-child(3) {
             background-image: linear-gradient(to bottom, #fff, #e3e1f1);
         }
@@ -312,7 +311,7 @@
         td:nth-child(3) {
             background-color: white;
         }
-		
+
         .noDataTables {
             position: relative !important;
             margin-left: calc(100vw - 50vw);
@@ -371,10 +370,10 @@
             margin-top: -13px !important;
             margin-bottom: 5px !important;
         }
-		
+
 
         .table.dataTable[class*="table-"] thead th {
-           background-image: linear-gradient(to bottom, #fff, #e3e1f1);
+            background-image: linear-gradient(to bottom, #fff, #e3e1f1);
 
             border-bottom: 1px solid #c9d1d8;
 
@@ -1000,20 +999,20 @@
         var runtimeMappings = {};
         let downlodDetails;
         let selColumns = [
-        "#",
-  "User",
-  "Patient_",
-  "Account",
-  "DOS",
-  "CPT",
-  "Procedure",
-  "Diagnosis",
-  "Facility",
-  "ICD",
-  "Denial_Code",
-  "Responsible_Party",
-  "Charge",
-  "P_Type"
+            "#",
+            "User",
+            "Patient_",
+            "Account",
+            "DOS",
+            "CPT",
+            "Procedure",
+            "Diagnosis",
+            "Facility",
+            "ICD",
+            "Denial_Code",
+            "Responsible_Party",
+            "Charge",
+            "P_Type"
 
         ];
 
@@ -1124,14 +1123,14 @@
                     } else if ($.isPlainObject(conf.data)) {
                         $.extend(request, conf.data);
                     }
-					let wsDataRequest
-					let order
+                    let wsDataRequest
+                    let order
                     if (ccData.myListSort == true) {
                         order = "asc"
                     } else {
                         order = "desc"
                     }
-					if (ccData && ccData.timeColumn) {
+                    if (ccData && ccData.timeColumn) {
                         wsDataRequest = {
                             "query": {
                                 "match_all": {}
@@ -1148,17 +1147,17 @@
                             "track_total_hits": true
                         }
                     } else {
-                     wsDataRequest = {
-                        "query": {
-                            "match_all": {}
-                        },
-                        "size": request.length,
-                        //"_source":selColumns,"from":request.start,"sort":[{"_score":{"order":"desc"}}],"track_total_hits":true
-                        "_source": selColumns,
-                        "from": request.start,
-                        "track_total_hits": true
+                        wsDataRequest = {
+                            "query": {
+                                "match_all": {}
+                            },
+                            "size": request.length,
+                            //"_source":selColumns,"from":request.start,"sort":[{"_score":{"order":"desc"}}],"track_total_hits":true
+                            "_source": selColumns,
+                            "from": request.start,
+                            "track_total_hits": true
+                        }
                     }
-					}
                     console.log(baseQuery, "baseQuery.runtimeMappings")
                     if (!_.isNil(baseQuery)) {
                         wsDataRequest.query = _.cloneDeep(baseQuery.query);
@@ -1185,7 +1184,7 @@
                         wsDataRequest.sort = sortSelected;
                     }
                     if ((!_.isNil(searchTerms) && _.trim(searchTerms).length > 0) || (!_.isNil(aggrFilters) && !
-                            _
+                        _
                             .isEmpty(aggrFilters) && _.size(aggrFilters) > 0)) {
 
                         console.log("EITHER searchTerm or AggrFilter is NOT null ---> ");
@@ -1229,26 +1228,26 @@
                             success: function (response) {
 
                                 if (response["aggregations"] && response["aggregations"][
-                                        "classes"
-                                    ] &&
+                                    "classes"
+                                ] &&
                                     response["aggregations"]["classes"]["buckets"]) {
                                     response = response["aggregations"]["classes"]["buckets"][0]
                                         .doc_count;
                                 } else if (response["aggregations"] && response["aggregations"][
-                                        "classes"
-                                    ] && response["aggregations"]["classes"]["value"]) {
+                                    "classes"
+                                ] && response["aggregations"]["classes"]["value"]) {
                                     response = response["aggregations"]["classes"]["value"];
                                 } else if (response["aggregations"] && response["aggregations"][
-                                        "type_count"
-                                    ] && response["aggregations"]["type_count"]["value"]) {
+                                    "type_count"
+                                ] && response["aggregations"]["type_count"]["value"]) {
                                     response = response["aggregations"]["type_count"]["value"];
                                 } else if (response["aggregations"] && response["aggregations"][
-                                        "escalationType"
-                                    ] && response["aggregations"]["escalationType"]["value"]) {
+                                    "escalationType"
+                                ] && response["aggregations"]["escalationType"]["value"]) {
                                     response = response["aggregations"]["escalationType"]["value"];
                                 } else if (response["aggregations"] && response["aggregations"][
-                                        "cardinality"
-                                    ] && response["aggregations"]["cardinality"]["value"]) {
+                                    "cardinality"
+                                ] && response["aggregations"]["cardinality"]["value"]) {
                                     response = response["aggregations"]["cardinality"].value;
                                 } else {
                                     response = response.aggregations.value_count.value;
@@ -1305,30 +1304,30 @@
                             contentType: 'application/json',
                             success: function (response) {
                                 if (response["aggregations"] && response["aggregations"][
-                                        "classes"
-                                    ] &&
+                                    "classes"
+                                ] &&
                                     response["aggregations"]["classes"]["buckets"]) {
                                     response = response["aggregations"]["classes"]["buckets"][0]
                                         .doc_count;
                                 } else if (response["aggregations"] && response["aggregations"][
-                                        "classes"
-                                    ] && response["aggregations"]["classes"]["value"]) {
+                                    "classes"
+                                ] && response["aggregations"]["classes"]["value"]) {
                                     response = response["aggregations"]["classes"]["value"];
                                 } else if (response["aggregations"] && response["aggregations"][
-                                        "type_count"
-                                    ] && response["aggregations"]["type_count"]["value"]) {
+                                    "type_count"
+                                ] && response["aggregations"]["type_count"]["value"]) {
                                     response = response["aggregations"]["type_count"]["value"];
                                 } else if (response["aggregations"] && response["aggregations"][
-                                        "escalationType"
-                                    ] && response["aggregations"]["escalationType"]["value"]) {
+                                    "escalationType"
+                                ] && response["aggregations"]["escalationType"]["value"]) {
                                     response = response["aggregations"]["escalationType"]["value"];
                                 } else if (response["aggregations"] && response["aggregations"][
-                                        "value_count"
-                                    ] && response["aggregations"]["value_count"]["value"]) {
+                                    "value_count"
+                                ] && response["aggregations"]["value_count"]["value"]) {
                                     response = response.aggregations.value_count.value;
                                 } else if (response["aggregations"] && response["aggregations"][
-                                        "cardinality"
-                                    ] && response["aggregations"]["cardinality"]["value"]) {
+                                    "cardinality"
+                                ] && response["aggregations"]["cardinality"]["value"]) {
                                     response = response["aggregations"]["cardinality"].value;
                                 }
                                 console.log("VALUE count KEY valueCount Null >>>>> " + response)
@@ -1367,7 +1366,7 @@
                                 let hitsTotal = json["responses"][0]["hits"]["total"]["value"];
                                 json = _.map(json["responses"][0]["hits"]["hits"], hit => {
                                     if (!_.isEmpty(runtimeEntities) && !_.isEmpty(hit
-                                            .fields)) {
+                                        .fields)) {
                                         return getMergedSource(hit.fields, hit._source);
                                     } else {
                                         return hit._source;
@@ -1375,7 +1374,7 @@
                                 });
                                 console.log("valueCount.recordsTotal vs Hits-Total vs JSON " +
                                     valueCount
-                                    .recordsTotal + " vs " + hitsTotal + " vs " + json.length);
+                                        .recordsTotal + " vs " + hitsTotal + " vs " + json.length);
                                 if (!_.isNil(valueCount)) {
                                     valueCount.query = wsDataRequest;
                                     valueCount.recordsFiltered = hitsTotal;
@@ -1410,7 +1409,7 @@
                                         if (_.isObject(json["responses"][0]["error"])) {
                                             let errObj = json["responses"][0]["error"];
                                             if (_.startsWith(errObj.caused_by.reason,
-                                                    "Result window is too large")) {
+                                                "Result window is too large")) {
                                                 $("#dt_error_message").html(
                                                     "Please contact Administrator to set Maximum data retrieval configuration for this Dataset"
                                                 );
@@ -1561,7 +1560,7 @@
             let sortCtnt = '<div class="alert alert-secondary me-1 sort-info-box" data-sortdir="' + dataAction +
                 '" data-col="' + dataColumn + '">';
             sortCtnt += '<i class="' + ((dataAction === "desc") ? "fa-light fa-arrow-down-a-z" :
-                    "fa-light fa-arrow-up-a-z") +
+                "fa-light fa-arrow-up-a-z") +
                 ' me-2"></i>';
             sortCtnt += dataLabel + ((dataAction === "desc") ? " (descending)" : " (ascending)");
             sortCtnt += '<button data-action="removesort" data-col="' + dataColumn +
@@ -1577,12 +1576,12 @@
                     let fltrTitle = _.join(filt.displayValues, "<br>");
                     let fltrCtnt = '<div class="alert alert-warning me-1 aggrfilters-info-box" data-col="' +
                         filt
-                        .field + '" ';
+                            .field + '" ';
                     fltrCtnt +=
                         'data-bs-toggle="popover" data-bs-trigger="hover" data-bs-customClass="adt-popover" ';
                     fltrCtnt += 'data-bs-placement="bottom" data-bs-html="true"  data-bs-content="Field : <b>' +
                         filt
-                        .label + '</b><br>Applied filter values <hr>' + fltrTitle + '">';
+                            .label + '</b><br>Applied filter values <hr>' + fltrTitle + '">';
                     if (!_.isNil(filt.label)) {
                         fltrCtnt += '<i class="fa-light fa-filters me-2"></i><b>' + filt.label + '</b>: ';
                     } else {
@@ -1590,7 +1589,7 @@
                     }
                     if (_.size(filt.displayValues) > 2) {
                         fltrCtnt += _.join(_.take(filt.displayValues, 2), ", ") + " +" + (_.size(filt
-                                .displayValues) -
+                            .displayValues) -
                             2);
                     } else {
                         fltrCtnt += _.join(filt.displayValues, ", ");
@@ -1679,7 +1678,7 @@
                                 return hit._source
                             });
                             extFieldEngg = _.filter(extFieldEngg, conf => {
-                               if (typeof (conf["entity_parent"]) === 'string') {
+                                if (typeof (conf["entity_parent"]) === 'string') {
                                     return (conf["entity_parent"] === configMap.ds);
                                 } else {
                                     return (conf["entity_parent"].includes(configMap.ds));
@@ -1802,7 +1801,7 @@
             console.log("Selected Columns " + selColumns);
         }
 
-        function sanitizeBaseQuery() {}
+        function sanitizeBaseQuery() { }
 
         function debounce(fn, threshold) {
             var timeout;
@@ -1941,7 +1940,7 @@
             // Reset checkbox states when clicking outside
             $(document).on("click", function (event) {
                 if (!$(event.target).closest("#tweak-select-all-columns").length && !$(event.target).is(
-                        'input[data-role="cb-col-selector"]')) {
+                    'input[data-role="cb-col-selector"]')) {
                     resetPopupState();
                 }
             });
@@ -1983,44 +1982,44 @@
                     doColumnsSearch()
                 },
                 options: [{
-                        id: "keyword",
-                        values: "keyword",
-                        label: "Keyword",
-                        optgrp: "Data-Types"
-                    },
-                    {
-                        id: "number",
-                        values: "integer,long,double,float",
-                        label: "Numerical",
-                        optgrp: "Data-Types"
-                    },
-                    {
-                        id: "date",
-                        values: "date",
-                        label: "Date",
-                        optgrp: "Data-Types"
-                    },
-                    {
-                        id: "text",
-                        values: "text",
-                        label: "Text",
-                        optgrp: "Data-Types"
-                    },
-                    {
-                        id: "labels",
-                        values: "labelled",
-                        label: "Has Label",
-                        optgrp: "Miscellaneous"
-                    },
+                    id: "keyword",
+                    values: "keyword",
+                    label: "Keyword",
+                    optgrp: "Data-Types"
+                },
+                {
+                    id: "number",
+                    values: "integer,long,double,float",
+                    label: "Numerical",
+                    optgrp: "Data-Types"
+                },
+                {
+                    id: "date",
+                    values: "date",
+                    label: "Date",
+                    optgrp: "Data-Types"
+                },
+                {
+                    id: "text",
+                    values: "text",
+                    label: "Text",
+                    optgrp: "Data-Types"
+                },
+                {
+                    id: "labels",
+                    values: "labelled",
+                    label: "Has Label",
+                    optgrp: "Miscellaneous"
+                },
                 ],
                 optgroups: [{
-                        grpid: "Data-Types",
-                        grpname: 'Data-Types'
-                    },
-                    {
-                        grpid: "Miscellaneous",
-                        grpname: "Miscellaneous"
-                    }
+                    grpid: "Data-Types",
+                    grpname: 'Data-Types'
+                },
+                {
+                    grpid: "Miscellaneous",
+                    grpname: "Miscellaneous"
+                }
                 ],
                 labelField: "label",
                 valueField: "values",
@@ -2079,96 +2078,122 @@
                 loadSearchColumnsMenuDropdown();
                 $("#enhanced_columns_viewer").modal("hide");
                 $("#ccModel").modal("hide");
-				$("#ccReAssignModel").modal("hide");
+                $("#ccReAssignModel").modal("hide");
                 $("#reassignModel").modal("hide");
             });
             $(document).on("click", "#assignCaller", function () {
+                $.ajax({
+
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
+                    url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Caller",
+                    async: false,
+                    type: 'GET',
+                    crossDomain: true,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (response) {
+
+                        var selectcallercolumns = document.getElementById("assigncallercolumns");
+                        var options = response.map(function (domain) {
+                            return "<option>" + domain + "</option>";
+                        });
+
+                        selectcallercolumns.innerHTML = options.join("");
+
+                    }
+
+                });
+
+
                 var data = myTable.rows('.selected').data().toArray()
                 var myData = "Members Selected : " + data.length;
                 $('#mySpan').text(myData);
                 $('#myCallerSpan').text(myData);
                 $("#assigncallerModel").modal("show");
             });
-			
-			  $(document).on("click", "#ccButton", function () {
+
+            $(document).on("click", "#ccButton", function () {
                 $.ajax({
 
-                      headers: {
-                          'content-type': 'application/json'
-                      },
-                      //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
-                      url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Analyst",
-                      async: false,
-                      type: 'GET',
-                      crossDomain: true,
-                      dataType: 'json',
-                      contentType: 'application/json',
-                      success: function (response) {
-                          var selectccColumns = document.getElementById("setCCcolumnss");
-                          var selectccReAssignColumns = document.getElementById("setCCReAssigncolumnss");
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
+                    url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Analyst",
+                    async: false,
+                    type: 'GET',
+                    crossDomain: true,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (response) {
+                        var selectccColumns = document.getElementById("setCCcolumnss");
+                        var selectccReAssignColumns = document.getElementById("setCCReAssigncolumnss");
 
-                          var options = response.map(function (domain) {
-                              return "<option>" + domain + "</option>";
-                          });
-                          selectccColumns.innerHTML = options.join("");
-                          selectccReAssignColumns.innerHTML = options.join("");
-                      }
+                        var options = response.map(function (domain) {
+                            return "<option>" + domain + "</option>";
+                        });
+                        selectccColumns.innerHTML = options.join("");
+                        selectccReAssignColumns.innerHTML = options.join("");
+                    }
 
-                  });
+                });
                 $.ajax({
 
-                      headers: {
-                          'content-type': 'application/json'
-                      },
-                      //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
-                      url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Caller",
-                      async: false,
-                      type: 'GET',
-                      crossDomain: true,
-                      dataType: 'json',
-                      contentType: 'application/json',
-                      success: function (response) {
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    //url: "https://devus.servicedx.com/admin/getDomainBasedUserList/department/DenverDept/domain/CareManager",
+                    url: adminUrl + "getDomainBasedUserList/department/" + dept + "/domain/Caller",
+                    async: false,
+                    type: 'GET',
+                    crossDomain: true,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (response) {
 
-                          var selectcallercolumns = document.getElementById("assigncallercolumns");
-                          var options = response.map(function (domain) {
-                              return "<option>" + domain + "</option>";
-                          });
+                        var selectcallercolumns = document.getElementById("assigncallercolumns");
+                        var options = response.map(function (domain) {
+                            return "<option>" + domain + "</option>";
+                        });
 
-                          selectcallercolumns.innerHTML = options.join("");
+                        selectcallercolumns.innerHTML = options.join("");
 
-                      }
+                    }
 
-                  });
+                });
 
 
-                 var data = myTable.rows('.selected').data().toArray()
+                var data = myTable.rows('.selected').data().toArray()
                 var myData = "Members Selected : " + data.length;
                 $('#mySpan').text(myData);
                 $('#ccmySpan').text(myData);
                 $("#ccModel").modal("show");
             });
-		
+
             $(document).on("click", "#reassignButtton", function () {
                 var data = myTable.rows('.selected').data().toArray()
-				var myData = "Members Selected : " + data.length;
+                var myData = "Members Selected : " + data.length;
                 $('#remySpan').text(myData);
                 $('#reccmySpan').text(myData);
                 $("#ccReAssignModel").modal("show");
             });
-			
-			  $(document).on("click", "#statusUpdateBySupervisor", function () {
+
+            $(document).on("click", "#statusUpdateBySupervisor", function () {
                 window.parent.postMessage({
                     launch: 'statusupdatebysupervisor'
                 }, '*');
             });
-			
-			$(document).on("click", "#backToSupervisorListing", function () {
+
+            $(document).on("click", "#backToSupervisorListing", function () {
                 window.parent.postMessage({
                     launch: 'back'
                 }, '*');
             });
-			
-			
+
+
             $(document).on("click", "#enhanced_columns_trigger", function () {
                 $("#enhanced_columns_viewer").modal("show");
             });
@@ -2446,20 +2471,20 @@
                     dataField + "']");
                 let activeTab = (activeTabElement != null && activeTabElement.length == 1) ?
                     activeTabElement
-                    .attr("data-tab") : "standard";
+                        .attr("data-tab") : "standard";
                 let outArray = [];
                 let displayOutArray = [];
                 if (activeTab === "standard") {
                     outArray = _.map($("i.cb_selected[data-role='filter-field-selector'][data-field='" +
                         dataField + "']"), selected => {
-                        return $(selected).attr("data-aggrval");
-                    });
+                            return $(selected).attr("data-aggrval");
+                        });
                     displayOutArray = _.map($(
                         "i.cb_selected[data-role='filter-field-selector'][data-field='" +
                         dataField +
                         "']"), selected => {
-                        return $(selected).attr("data-aggrdisplayval");
-                    });
+                            return $(selected).attr("data-aggrdisplayval");
+                        });
                 } else {
                     if (dateSelection === "daterange") {
                         outArray = []
@@ -2467,7 +2492,7 @@
                         let rangeElement = $("#filter-range-" + dataField);
                         let rangeResult = (rangeElement != null && rangeElement.length == 1) ?
                             rangeElement
-                            .data("ionRangeSlider").result : null;
+                                .data("ionRangeSlider").result : null;
                         if (rangeResult != null) {
                             outArray.push(rangeResult.from + RANGE_DELIMITER + rangeResult.to);
                             displayOutArray.push(rangeResult.from_pretty + " to " + rangeResult
@@ -2587,11 +2612,11 @@
             //console.log("Available AGGS KEYS ->"+Object.keys(aggrFiltersContext)+"<-");
             if (!_.isNil(aggrFiltersContext) && !_.isNil(aggrFiltersContext[byField])) {
                 //console.log("FOUND the Aggregation already >>>>>>>>>>>>> \n"+JSON.stringify(aggrFiltersContext[byField]));
-                console.log("valueCount>> ",valueCount);
+                console.log("valueCount>> ", valueCount);
                 buildAggFilterGUI(byField, dataESType, dataLabel, aggrFiltersContext[byField]);
             } else {
-                console.log("valueCount>> ",valueCount);
-                console.log("valueCount>> ",valueCount.query);
+                console.log("valueCount>> ", valueCount);
+                console.log("valueCount>> ", valueCount.query);
                 if (!_.isNil(valueCount) && !_.isNil(valueCount.query)) {
                     let queryName = null;
                     let wsDataRequest = valueCount.query;
@@ -2662,7 +2687,7 @@
                                     try {
                                         aggrFiltersContext[byField] = {}
                                         aggrFiltersContext[byField].buckets = response.aggregations[
-                                                queryName]
+                                            queryName]
                                             .buckets;
                                         aggrFiltersContext[byField].min = response.aggregations[byField +
                                             "_min"];
@@ -2670,7 +2695,7 @@
                                             "_max"];
                                         buildAggFilterGUI(byField, dataESType, dataLabel,
                                             aggrFiltersContext[
-                                                byField]);
+                                            byField]);
                                     } catch (error) {
                                         console.log("ERROR while building KWD AGGR [" + byField +
                                             "] ::::: " +
@@ -2800,7 +2825,7 @@
                     intervalValue = Math.pow(10, digitCounts);
                 } else if (referenceValue > 0) {
                     intervalValue = (referenceValue > 1000) ? 100 : (referenceValue > 100) ? 10 : (referenceValue >
-                            20) ? 5 :
+                        20) ? 5 :
                         1;
                 }
             } else {
@@ -2902,7 +2927,7 @@
             }
         }
 
-       
+
         function prepareFilterData(byField, dataESType, aggrResults, appliedFilters, appliedFiltersUITab) {
             let filterData = {};
             filterData.fieldName = byField;
@@ -2925,7 +2950,7 @@
                     let endKey = aggrResults.buckets[aggrResults.buckets.length - 1].key;
                     filterData.custom.rangeEnd = (filterData.isFieldDateType) ? moment(endKey).endOf('month')
                         .valueOf() : (
-                            endKey + filterData.rangeInterval);
+                        endKey + filterData.rangeInterval);
                     filterData.custom.rangeFrom = aggrResults.min.value;
                     filterData.custom.rangeTo = aggrResults.max.value;
                 }
@@ -3032,7 +3057,7 @@
                         aggrvalue + '" data-aggrdisplayval="' + entKey + '" ';
 
                     if (isStandardFilterRangeinAppliedFilters(appliedFilters, filterData, aggrvalue, rangeStart,
-                            rangeEnd)) {
+                        rangeEnd)) {
                         if (aggrvalue === "Others") {
                             outCtnt += 'class="fa-solid fa-check cb_muted cb_selected mx-1"></i>';
                         } else {
@@ -3076,7 +3101,7 @@
                         }
                         filterData.standard.rangeToEnded = (filterData.standard.rangeToEnded || (aggrBucketEnd >
                             filterData
-                            .standard.rangeTo));
+                                .standard.rangeTo));
                         if (filterData.standard.rangeToEnded && filterData
                             .isFieldNumberType) { //Last partial bucket selection
                             filterData.standard.rangeToEnded = !(aggrBucketStart >= filterData.standard.rangeFrom &&
@@ -3286,81 +3311,81 @@
             if (_.isNil(mappingProps)) {
                 mappingProps = {};
                 ccData = conf
-			  if (ccData.supervisorList) {
+                if (ccData.supervisorList) {
                     let assignButon = true
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").show();
-					$("#reassignButtton").show();
-					$("#statusUpdateBySupervisor").show();
-					$("#backToSupervisorListing").hide();
-					$("#assignCaller").hide();
+                    $("#reassignButtton").show();
+                    $("#statusUpdateBySupervisor").show();
+                    $("#backToSupervisorListing").hide();
+                    $("#assignCaller").hide();
 
-					$('#updateStatus').hide();
-					$('#updatecallerStatus').hide();
-					
-                }else{
-				$("#ccButton").hide();
-				$("#reassignButtton").hide();
-				$("#statusUpdateBySupervisor").hide();
-				}
+                    $('#updateStatus').hide();
+                    $('#updatecallerStatus').hide();
+
+                } else {
+                    $("#ccButton").hide();
+                    $("#reassignButtton").hide();
+                    $("#statusUpdateBySupervisor").hide();
+                }
                 if (ccData.analystList) {
                     console.log(ccData.analystList, "selectRowReaasign")
                     let assignButon = true
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").hide();
-					$("#reassignButtton").hide();
-					$("#statusUpdateBySupervisor").hide();
+                    $("#reassignButtton").hide();
+                    $("#statusUpdateBySupervisor").hide();
                     var myButton1 = $('#reassignButtton');
                     $('#reassignButtton').hide();
-					$("#backToSupervisorListing").hide();
+                    $("#backToSupervisorListing").hide();
                     $('#updateStatus').show();
-					$("#assignCaller").hide();
-					$('#updatecallerStatus').hide();
+                    $("#assignCaller").hide();
+                    $('#updatecallerStatus').hide();
                 }
                 if (ccData.supervisorUpdate) {
                     let assignButon = true
                     $('#updateStatus').show();
-					$("#backToSupervisorListing").show();
+                    $("#backToSupervisorListing").show();
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").hide();
-					$("#reassignButtton").hide();
-					$("#statusUpdateBySupervisor").hide();
-					$("#assignCaller").hide();
+                    $("#reassignButtton").hide();
+                    $("#statusUpdateBySupervisor").hide();
+                    $("#assignCaller").hide();
                     var myButton1 = $('#reassignButtton');
                     myButton1.hide();
-					$('#updatecallerStatus').hide();
+                    $('#updatecallerStatus').hide();
                 }
-				
-				 if (ccData.callerSupervisor) {
+
+                if (ccData.callerSupervisor) {
                     let assignButon = true
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").hide();
-					$("#reassignButtton").hide();
-					$("#statusUpdateBySupervisor").hide();
-					$("#backToSupervisorListing").hide();
-					$("#assignCaller").show();
-					$('#updateStatus').hide();
-					$('#updatecallerStatus').hide();
+                    $("#reassignButtton").hide();
+                    $("#statusUpdateBySupervisor").hide();
+                    $("#backToSupervisorListing").hide();
+                    $("#assignCaller").show();
+                    $('#updateStatus').hide();
+                    $('#updatecallerStatus').hide();
                 }
-				
-				 if (ccData.callerUpdate) {
+
+                if (ccData.callerUpdate) {
                     let assignButon = true
                     var $myButton = $('#ccButton');
                     // $myButton.show().prop("disabled", false);
                     $("#ccButton").hide();
-					$("#reassignButtton").hide();
-					$("#statusUpdateBySupervisor").hide();
-					$("#backToSupervisorListing").hide();
-					$("#assignCaller").hide();
-					$('#updateStatus').hide();
-					$('#updatecallerStatus').show();
+                    $("#reassignButtton").hide();
+                    $("#statusUpdateBySupervisor").hide();
+                    $("#backToSupervisorListing").hide();
+                    $("#assignCaller").hide();
+                    $('#updateStatus').hide();
+                    $('#updatecallerStatus').show();
                 }
-				
-				dept = conf.departmentName;
+
+                dept = conf.departmentName;
                 adminUrl = conf.downloadData.environmentAdminUrl;
                 if (conf.url) {
                     $.ajax({
@@ -3451,7 +3476,7 @@
                         }
                     });
                 }
-                }
+            }
             //console.log("BUILT TABLE PROPS :::: "+JSON.stringify(mappingProps));
         }
 
@@ -3506,7 +3531,7 @@
                     outString += '<i class="' + colKeyConf["entity_icon"] +
                         ' mr-2 text-primary fw-light"></i><span class="fw-bold">';
                     outString += (!_.isNil(colKeyConf["entity_label"])) ? colKeyConf["entity_label"] : (!_.isNil(
-                            label)) ?
+                        label)) ?
                         label : colKey;
                     outString += '</span>';
                 }
@@ -3526,7 +3551,7 @@
             $('[data-bs-toggle="popover"]').each(function () {
                 // Check if the clicked element is the popover toggle button or inside the popover content
                 if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e
-                        .target)
+                    .target)
                     .length === 0) {
                     $(this).popover('hide');
                 }
@@ -3554,7 +3579,7 @@
                             let dateObject = new Date(propValue);
                             formattedValue = new Intl.DateTimeFormat(formatters[propKey]["DEFAULT"]["config"]["locale"],
                                 formatters[propKey]["DEFAULT"]["config"]["opts"]).format(dateObject).replaceAll("/",
-                                "-");
+                                    "-");
                         } else if (formatters[propKey]["DEFAULT"]["type"] === "INTL") {
                             formattedValue = new Intl.NumberFormat(formatters[propKey]["DEFAULT"]["config"]["locale"],
                                 formatters[propKey]["DEFAULT"]["config"]["opts"]).format(propValue);
@@ -3651,9 +3676,9 @@
 
         function myFunction() {
             $("#ccButton").show();
-			$("#reassignButtton").show();
-			$("#statusUpdateBySupervisor").show();
-			$("#backToSupervisorListing").hide();
+            $("#reassignButtton").show();
+            $("#statusUpdateBySupervisor").show();
+            $("#backToSupervisorListing").hide();
         }
 
         function triggerDataTable(configMap) {
@@ -3694,36 +3719,36 @@
                 let ageIndex = selColumns.indexOf("#");
 
                 if (ageIndex !== -1) {
-                    
+
                     selColumnsWithruntime.splice(ageIndex + 1, 0, "age");
                     selColumnsWithruntime.splice(ageIndex + 2, 0, "age_label");
-                    
+
                 } else {
                     selColumnsWithruntime.push("age");
                     selColumnsWithruntime.push("age_label");
                 }
-               
-				let assigndate = selColumnsWithruntime.indexOf("assigned_date");
+
+                let assigndate = selColumnsWithruntime.indexOf("assigned_date");
 
                 if (assigndate !== -1) {
-                    
+
                     selColumnsWithruntime.splice(assigndate + 1, 0, "assigned_days");
-                    
+
                 } else {
                     selColumnsWithruntime.push("assigned_days");
-                    
+
                 }
-				
-				let statusColumn =selColumnsWithruntime.indexOf("Status");
+
+                let statusColumn = selColumnsWithruntime.indexOf("Status");
                 if (statusColumn !== -1) {
-                    
+
                     selColumnsWithruntime.splice(statusColumn + 1, 0, "AD");
                     selColumnsWithruntime.splice(statusColumn + 2, 0, "Category");
                     selColumnsWithruntime.splice(statusColumn + 3, 0, "claim_classification");
                 } else {
                     selColumnsWithruntime.push("AD");
                 }
-				
+
                 let diffs = _.union(selColumnsWithruntime, runtimeColumns, Object.keys(mappingProps["properties"]));
                 console.log("diffs>>>> ", diffs, selColumnsWithruntime);
                 //let diffs = _.union(selColumns,runtimeColumns);
@@ -3765,7 +3790,7 @@
                                 render: function (data, type, row, meta) {
                                     if (type === "display") {
                                         downlodDetails = configMap
-									    if ( (configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 && propKey ===
+                                        if ((configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 && propKey ===
                                             "#") {
                                             // let outHTML =
                                             //     '<input type="checkbox" class="checkboxforcc"/>';
@@ -3773,23 +3798,23 @@
 
                                         } else if ((configMap.tablename == "callerUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "caller_comments") {
-										 // let uniqueIdentifier1 = row.memberID_merged;
+                                            // let uniqueIdentifier1 = row.memberID_merged;
                                             let selectedRowComments = row.caller_comments;
-											let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+                                            let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
                                             if (!ccData.selectedDoneRow && (!selectedRowComments ||
                                                 selectedRowComments == null ||
                                                 selectedRowComments == "" ||
                                                 selectedRowComments == undefined)) {
                                                 outHTML = '<textarea id ="callercomments' + uniqueIdentifier +
-                                                   '">';
+                                                    '">';
 
                                             } else if (!ccData.selectedDoneRow) {
-											    //let uniqueIdentifier = row.memberID_merged;
+                                                //let uniqueIdentifier = row.memberID_merged;
                                                 outHTML = '<textarea id="callercomments' + uniqueIdentifier +
-                                                     '">' + (
+                                                    '">' + (
                                                         selectedRowComments || '') + '</textarea>';
                                             } else {
-											    outHTML = ccData.selectedDoneRow ?
+                                                outHTML = ccData.selectedDoneRow ?
                                                     selectedRowComments : '';
                                             }
                                             setTimeout(function () {
@@ -3810,7 +3835,7 @@
                                                 }
                                             }, 0);
                                             return outHTML;
-                                        }else if ((configMap.tablename == "callerUpdateListing") && configMap.origin && configMap.map360 &&
+                                        } else if ((configMap.tablename == "callerUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "call_date") {
 
                                             let outHTML = '';
@@ -3818,11 +3843,11 @@
                                             let selectedDate = row.call_date ||
                                                 moment().utc().format("MM-DD-YYYY");
 
-                                              if (!ccData.selectedDoneRow) {
-											    let patient = row.Patient_.replace(/[, ]/g, "");
-												
-                                                let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
-												
+                                            if (!ccData.selectedDoneRow) {
+                                                let patient = row.Patient_.replace(/[, ]/g, "");
+
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
+
                                                 outHTML =
                                                     '<div style="display:flex; flex-direction: row;"> <input type="text" style="width: 120px;" placeholder="MM-DD-YYYY" id="calldateValue' +
                                                     uniqueIdentifier + '"';
@@ -3860,25 +3885,25 @@
                                                 }
                                             }
                                             return outHTML;
-                                        }else if ((configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
+                                        } else if ((configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "comments") {
-										 // let uniqueIdentifier1 = row.memberID_merged;
+                                            // let uniqueIdentifier1 = row.memberID_merged;
                                             let selectedRowComments = row.comments;
-											let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+                                            let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
                                             if (!ccData.selectedDoneRow && (!selectedRowComments ||
                                                 selectedRowComments == null ||
                                                 selectedRowComments == "" ||
                                                 selectedRowComments == undefined)) {
                                                 outHTML = '<textarea id ="hospitalcontact' + uniqueIdentifier +
-                                                   '">';
+                                                    '">';
 
                                             } else if (!ccData.selectedDoneRow) {
-											    //let uniqueIdentifier = row.memberID_merged;
+                                                //let uniqueIdentifier = row.memberID_merged;
                                                 outHTML = '<textarea id="hospitalcontact' + uniqueIdentifier +
-                                                     '">' + (
+                                                    '">' + (
                                                         selectedRowComments || '') + '</textarea>';
                                             } else {
-											    outHTML = ccData.selectedDoneRow ?
+                                                outHTML = ccData.selectedDoneRow ?
                                                     selectedRowComments : '';
                                             }
                                             setTimeout(function () {
@@ -3899,21 +3924,21 @@
                                                 }
                                             }, 0);
                                             return outHTML;
-                                        }  else if ( (configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
+                                        } else if ((configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "denial_status") {
 
                                             let outHTML = '';
-                                            
+
                                             let selectedRowStatus = row.denial_status;
 
                                             if (!ccData.selectedDoneRow) {
-                                                 let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
                                                 outHTML = '<select id="denialstatus' + uniqueIdentifier +
                                                     '">';
                                                 outHTML +=
                                                     '<option value="" selected>Select a Status</option>';
-												
-                                                 if (configMap.denialStatusValues) {
+
+                                                if (configMap.denialStatusValues) {
                                                     // for sorting the values in dropdown
                                                     configMap.denialStatusValues.sort((a, b) =>
                                                         a.value.trim().localeCompare(b.value
@@ -3933,22 +3958,22 @@
                                             }
 
                                             return outHTML;
-                                        } 
-										else if ( (configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
+                                        }
+                                        else if ((configMap.tablename == "analystListing" || configMap.tablename == "supervisorUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "action_code") {
 
                                             let outHTML = '';
-                                            
+
                                             let selectedRowStatus = row.action_code;
 
                                             if (!ccData.selectedDoneRow) {
-                                                 let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
                                                 outHTML = '<select id="status' + uniqueIdentifier +
                                                     '">';
                                                 outHTML +=
                                                     '<option value="" selected>Select a Status</option>';
-												
-                                                 if (configMap.tocProgramStatusValues) {
+
+                                                if (configMap.tocProgramStatusValues) {
                                                     // for sorting the values in dropdown
                                                     configMap.tocProgramStatusValues.sort((a, b) =>
                                                         a.value.trim().localeCompare(b.value
@@ -3976,11 +4001,11 @@
                                             let selectedDate = row.work_date ||
                                                 moment().utc().format("MM-DD-YYYY");
 
-                                              if (!ccData.selectedDoneRow) {
-											    let patient = row.Patient_.replace(/[, ]/g, "");
-												
-                                                let uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
-												
+                                            if (!ccData.selectedDoneRow) {
+                                                let patient = row.Patient_.replace(/[, ]/g, "");
+
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
+
                                                 outHTML =
                                                     '<div style="display:flex; flex-direction: row;"> <input type="text" style="width: 120px;" placeholder="MM-DD-YYYY" id="dateValue' +
                                                     uniqueIdentifier + '"';
@@ -4018,26 +4043,26 @@
                                                 }
                                             }
                                             return outHTML;
-                                        }else if (configMap.origin && configMap.map360 &&
+                                        } else if (configMap.origin && configMap.map360 &&
                                             propKey ===
                                             "Patient") {
                                             let propDefaultValue = (!_.isNil(row[propKey])) ? row[
-                                                    propKey] :
+                                                propKey] :
                                                 "";
                                             let propValue = getFormattedValue(rowFormatters,
                                                 propKey, row[
-                                                    propKey], propDefaultValue, (propKey,
-                                                    propValue,
-                                                    defaultValue) => {
-                                                    return propValue;
-                                                });
+                                            propKey], propDefaultValue, (propKey,
+                                                propValue,
+                                                defaultValue) => {
+                                                return propValue;
+                                            });
                                             if (rowFormatters[propKey] && rowFormatters[propKey][
-                                                    "MASK"
-                                                ] !=
+                                                "MASK"
+                                            ] !=
                                                 "undefined") {
                                                 let maskedValue = doMask(propKey, propValue,
                                                     rowFormatters[
-                                                        propKey]["MASK"]["config"]["opts"]);
+                                                    propKey]["MASK"]["config"]["opts"]);
                                                 let outHTML = '<div class="d-inline-flex">';
                                                 outHTML +=
                                                     '<button class="btn btn-sm mr-2" data-origin="' +
@@ -4084,16 +4109,16 @@
                                             return outHTML;
                                         } else {
                                             let propDefaultValue = (!_.isNil(row[propKey])) ? row[
-                                                    propKey] :
+                                                propKey] :
                                                 ""; //Set this to empty string after refactoring based on the current behavior of application.
                                             let propValue = getFormattedValue(rowFormatters,
                                                 propKey, row[
-                                                    propKey], propDefaultValue, (propKey,
-                                                    propValue,
-                                                    defaultValue) => {
-                                                    //return '<div class="value-row text-danger" data-col="' + propKey + '">***' + propValue + '</div>';
-                                                    return propValue;
-                                                });
+                                            propKey], propDefaultValue, (propKey,
+                                                propValue,
+                                                defaultValue) => {
+                                                //return '<div class="value-row text-danger" data-col="' + propKey + '">***' + propValue + '</div>';
+                                                return propValue;
+                                            });
                                             return propValue;
                                         }
                                     }
@@ -4112,8 +4137,8 @@
                             if (total !== max) {
                                 info += ` (${max} Unique entries)`;
                             }
-						 newRowHtml.find('.col-sm-4:first-child').html(info);
-                         return info;
+                            newRowHtml.find('.col-sm-4:first-child').html(info);
+                            return info;
                         },
                         processing: true,
                         serverSide: true,
@@ -4141,7 +4166,7 @@
                                         if (_.size(runtimeEntitity) > 0) {
                                             _.forEach(runtimeEntitity, entity => {
                                                 if (!_.includes(selColumns, entity[
-                                                        'runtime_field'])) {
+                                                    'runtime_field'])) {
                                                     selColumns = selColumns.concat(entity[
                                                         'runtime_field']);
                                                     if (entity['disableParent']) {
@@ -4166,7 +4191,7 @@
                                 if ($("#dt_search").val().trim() !== "") {
                                     $("#example tbody").html('<tr><td  class="dataTables_empty" colspan="' +
                                         myTable
-                                        .columns().visible().count() +
+                                            .columns().visible().count() +
                                         '">No Matching Records Found</td></tr>');
                                 } else {
                                     $("#example tbody").html('<tr><td  colspan="' + myTable.columns().visible()
@@ -4234,14 +4259,14 @@
                         });
                     }
                 });
-				
-				 var dtBodyElement = $('.col-sm-12.dtbody');
+
+                var dtBodyElement = $('.col-sm-12.dtbody');
 
                 // Create HTML content for the title & show entries on top of the table
                 var newRowHtml = $(
                     '<div class="row"><div class="col-sm-4"></div><div class="col-sm-8 headerTitle"></div></div>');
-					
-				 dtBodyElement.before(newRowHtml);	
+
+                dtBodyElement.before(newRowHtml);
 
             }
         }
@@ -4273,7 +4298,7 @@
                 var modalBody = buttonElement.closest(".modal-content").find(".modal-body");
                 showLoader(modalBody);
 
-              
+
                 console.log('Selected Value:', selectElement);
                 // var selectedValue = selectElement.value;
                 var selectElements = document.getElementById('CCcolumns');
@@ -4290,7 +4315,7 @@
                     "index_name": downlodDetails.ds
                 }
                 let dataset = indexDetails.index_name
-		     console.log("testtt")
+                console.log("testtt")
                 $.ajax({
                     headers: downlodDetails.hdr,
                     url: downlodDetails.url.replace("/_msearch", "") + "/_settings",
@@ -4316,7 +4341,7 @@
                         .length >= 18 && selColumns.length <= 25 && totalRecord > 5000 || selColumns.length >=
                         26 &&
                         selColumns.length <= 30 && totalRecord > 4000 || selColumns.length >= 31 && selColumns
-                        .length <= 36 && totalRecord > 1500) {
+                            .length <= 36 && totalRecord > 1500) {
                         document.getElementById('limitColumns').style.display = 'block';
                         document.getElementById('limit37Columns').style.display = 'none';
                     }
@@ -4328,41 +4353,41 @@
                         totalRecord <
                         4000 && selColumns.length >= 26 && selColumns.length <= 32 || totalRecord < 5000 &&
                         selColumns
-                        .length >= 18 && selColumns.length <= 25 || selColumns.length >= 14 && selColumns
-                        .length <=
-                        17 && totalRecord < 7000 || totalRecord < 2000 && selColumns.length >= 31 && selColumns
-                        .length <= 36 || selColumns.length >= 37) {
+                            .length >= 18 && selColumns.length <= 25 || selColumns.length >= 14 && selColumns
+                                .length <=
+                            17 && totalRecord < 7000 || totalRecord < 2000 && selColumns.length >= 31 && selColumns
+                                .length <= 36 || selColumns.length >= 37) {
                         $("#DownloadNoModel").modal("show");
                     } else if (totalRecord > 10000 && totalRecord != 0 && selColumns.length < 14) {
                         $("#DownloadFilterModel").modal("show");
                     }
 
                 } else {
-                    console.log("testtt",selColumns)
+                    console.log("testtt", selColumns)
                     totalRecordsCount = myTable.page.info().recordsTotal;
                     if (selColumns.length >= 14 && selColumns.length <= 17 && totalRecord > 7000 || selColumns
                         .length >= 18 && selColumns.length <= 25 && totalRecord > 5000 || selColumns.length >=
                         26 &&
                         selColumns.length <= 30 && totalRecord > 4000 || selColumns.length >= 31 && selColumns
-                        .length <= 36 && totalRecord > 1500) {
-                            console.log("ddddtesttt")
+                            .length <= 36 && totalRecord > 1500) {
+                        console.log("ddddtesttt")
                         document.getElementById('limitColumns').style.display = 'block';
                         document.getElementById('limit37Columns').style.display = 'none';
                     }
                     if (totalRecord > 10000 && totalRecord != 0 && selColumns.length >= 14 && selColumns
                         .length <=
                         36) {
-                            console.log("11testtt")
+                        console.log("11testtt")
                         $("#myModal").modal("show");
                     } else if (totalRecord == 0 || totalRecord < 10000 && selColumns.length < 14 ||
                         totalRecord <
                         4000 && selColumns.length >= 26 && selColumns.length <= 30 || totalRecord < 5000 &&
                         selColumns
-                        .length >= 18 && selColumns.length <= 25 || selColumns.length >= 14 && selColumns
-                        .length <=
-                        17 && totalRecord < 7000 || totalRecord < 2000 && selColumns.length >= 31 && selColumns
-                        .length <= 36 || selColumns.length > 36) {
-                            console.log("11t2esttt")
+                            .length >= 18 && selColumns.length <= 25 || selColumns.length >= 14 && selColumns
+                                .length <=
+                            17 && totalRecord < 7000 || totalRecord < 2000 && selColumns.length >= 31 && selColumns
+                                .length <= 36 || selColumns.length > 36) {
+                        console.log("11t2esttt")
                         $("#DownloadNoModel").modal("show");
                     } else if (totalRecord > 10000 && totalRecord != 0 && selColumns.length < 14) {
                         console.log("11eetesttt")
@@ -4371,7 +4396,7 @@
                 }
             }
 
-           
+
             function checkConditionsCSVAndDownload(buttonElement, modalId) {
                 // Get the total number of records in the whole DataTable
                 var totalRecordsCount = myTable.page.info().recordsTotal;
@@ -4699,8 +4724,8 @@
 
 
         });
-		
-		   function setDateFieldValue(uniqueIdentifier) {
+
+        function setDateFieldValue(uniqueIdentifier) {
             console.log(uniqueIdentifier, "ccData")
             var date = $("#date" + uniqueIdentifier).val();
             console.log(date, "ccData")
@@ -4822,36 +4847,42 @@
                     <button id="downloadButton" class="btn btn-sm btn-primary 
 						cursor-pointer" style="height: 35px; padding: 2px 10px;margin:0px 8px">Download</button>
                     <button id="ccButton" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
-												cursor-pointer" type="button" style="height: 35px; width: 298px !important;padding: 2px 10px;margin:0px 8px">Assign
-                        </button>
-					  <button id="reassignButtton" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
-												cursor-pointer" type="button" style="height: 35px; width: 298px !important;padding: 2px 10px;margin:0px 8px">Re Assign
-                        </button>	
-					<button id="statusUpdateBySupervisor" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
-						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update Action</button>
-						
-					<button id="assignCaller" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
-												cursor-pointer" type="button" style="height: 35px; width: 298px !important;padding: 2px 10px;margin:0px 8px">Assign caller
-                        </button>	
-						
-						  <button id="updateStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+												cursor-pointer" type="button"
+                        style="height: 35px; width: 298px !important;padding: 2px 10px;margin:0px 8px">Assign
+                    </button>
+                    <button id="reassignButtton" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+												cursor-pointer" type="button"
+                        style="height: 35px; width: 298px !important;padding: 2px 10px;margin:0px 8px">Re Assign
+                    </button>
+                    <button id="statusUpdateBySupervisor" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update
+                        Action</button>
+
+                    <button id="assignCaller" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+												cursor-pointer" type="button"
+                        style="height: 35px; width: 298px !important;padding: 2px 10px;margin:0px 8px">Assign caller
+                    </button>
+
+                    <button id="updateStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update
                         Status</button>
-						
-						 <button id="updatecallerStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+
+                    <button id="updatecallerStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update
                         Status</button>
-						
+
                     <div class="col-sm-3 text-right text-end">
-					<i id="backToSupervisorListing" aria-haspopup="true" aria-expanded="false" class="fa fa-arrow-circle-left"  style="font-size:15px;color:black;margin-right:10px;" title="Go Back to Supervisor Assignment"></i>	
-					
+                        <i id="backToSupervisorListing" aria-haspopup="true" aria-expanded="false"
+                            class="fa fa-arrow-circle-left" style="font-size:15px;color:black;margin-right:10px;"
+                            title="Go Back to Supervisor Assignment"></i>
+
                         <div id="col-selector-panel" class="btn-group mb-2 mr-2 col-selector-panel">
                             <button id="enhanced_columns_trigger" class="btn btn-sm btn-primary mr-1" type="button"
                                 aria-haspopup="true" aria-expanded="false"
                                 style="border-radius: 3px !important;height: 32px !important;">
                                 Customize Columns
                             </button>
-							
+
                             <!---<button id="customize_columns_trigger" class="btn btn-sm btn-primary dropdown-toggle has-ripple mr-2" 
 								type="button" data-bs-auto-close="outside" data-bs-toggle="dropdown" 
 								aria-haspopup="true" aria-expanded="false">
@@ -5127,16 +5158,15 @@
                             style="height: 35px; width: 330px;padding: 2px 10px;margin:0px 8px;display: inline-flex;">
 
                             <label style="margin-top:7px;">Assign Analyst : </label>
-                            <select id="setCCcolumnss"
-                                style="border-radius: 0.2rem;padding: 2px 10px;margin: 2px 8px;">
+                            <select id="setCCcolumnss" style="border-radius: 0.2rem;padding: 2px 10px;margin: 2px 8px;">
                                 <option value="Analyst 1">Analyst 1</option>
                                 <option value="Analyst 2">Analyst 2</option>
                             </select>
                         </div>
                         <button id="getValueButton" class="btn btn-sm btn-primary cursor-pointer" type="button"
                             style="height: 35px;width: 74px;padding: 2px 10px;margin-left: 11px;margin-top: 3px;">Assign</button>
-						
-                    				
+
+
                     </div>
                     <div id="success-message" style="display:none;">Members Assigned to Analyst! </div>
                 </div>
@@ -5144,8 +5174,8 @@
             </div>
         </div>
     </div>
-	
-	 <div id="ccReAssignModel" class="modal" role="dialog" aria-labelledby="careTitle" tabindex="-1" aria-hidden="true">
+
+    <div id="ccReAssignModel" class="modal" role="dialog" aria-labelledby="careTitle" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -5167,9 +5197,9 @@
                                 <option value="Analyst 2">Analyst 2</option>
                             </select>
                         </div>
-                        
+
                         <button id="getReAssignValueButton" class="btn btn-sm btn-primary cursor-pointer" type="button"
-                            style="height: 35px;width: 74px;padding: 2px 10px;margin-left: 11px;margin-top: 3px;">ReAssign</button>						
+                            style="height: 35px;width: 74px;padding: 2px 10px;margin-left: 11px;margin-top: 3px;">ReAssign</button>
                     </div>
                     <div id="success-message" style="display:none;">Members Assigned to Analyst! </div>
                 </div>
@@ -5177,8 +5207,9 @@
             </div>
         </div>
     </div>
-   
-    <div id="assigncallerModel" class="modal" role="dialog" aria-labelledby="careTitle" tabindex="-1" aria-hidden="true">
+
+    <div id="assigncallerModel" class="modal" role="dialog" aria-labelledby="careTitle" tabindex="-1"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="width: 109%;">
                 <div class="modal-header">
@@ -5199,11 +5230,12 @@
                                 style="border-radius: 0.2rem;padding: 2px 10px;margin: 2px 8px;">
                                 <option value="select">--Select--</option>
                                 <option value="jstockmyer">Jessica Stockmyer</option>
-                               
+
                             </select>
                         </div>
                         <button id="callerAssignValueButton" class="btn btn-sm btn-primary cursor-pointer" type="button"
-                            style="height: 35px;width:84px;padding: 2px 10px;margin-left: 15px;margin-top: 0px;">Assign Caller</button>
+                            style="height: 35px;width:84px;padding: 2px 10px;margin-left: 15px;margin-top: 0px;">Assign
+                            Caller</button>
                     </div>
                     <div id="success-message" style="display:none;">Members Assigned to Caller!</div>
                 </div>
@@ -5213,8 +5245,8 @@
     </div>
     </div>
     <script id="rendered-js">
-         $('#getValueButton').on('click', function () {
-		 let data = (myTable.rows('.selected').data().toArray())
+        $('#getValueButton').on('click', function () {
+            let data = (myTable.rows('.selected').data().toArray())
             if (data.length == 0) {
                 toastr.error(
                     'Select atleast one Member'
@@ -5224,23 +5256,23 @@
                     'Select CC Name'
                 );
             } else {
-			var selectedValue = $('#setCCcolumnss').val();
-			console.log("selectedRow: " + selectedValue);
-            var modalBody = $(this).closest(".modal-content").find(".modal-body");
-            var assignedLoader = showLoaderCC(modalBody,
-                "Members Assigned to Analyst!");
-            let data = (myTable.rows('.selected').data().toArray())
-          
-            console.log("selectedRow: " + JSON.stringify(data));
-            // var selectedValue = $('#reassignCCcolumns').val();
-			
-            const newKey = 'CC';
-            const newValue = selectedValue;
-			let assignedHistory;
-			let ccValue = ccData.loginContext
-            let dataNew = ccValue.replace(/^\s+|\s+$/g, "")
+                var selectedValue = $('#setCCcolumnss').val();
+                console.log("selectedRow: " + selectedValue);
+                var modalBody = $(this).closest(".modal-content").find(".modal-body");
+                var assignedLoader = showLoaderCC(modalBody,
+                    "Members Assigned to Analyst!");
+                let data = (myTable.rows('.selected').data().toArray())
 
-            var currentDate = new Date();
+                console.log("selectedRow: " + JSON.stringify(data));
+                // var selectedValue = $('#reassignCCcolumns').val();
+
+                const newKey = 'CC';
+                const newValue = selectedValue;
+                let assignedHistory;
+                let ccValue = ccData.loginContext
+                let dataNew = ccValue.replace(/^\s+|\s+$/g, "")
+
+                var currentDate = new Date();
                 var year = currentDate.getUTCFullYear();
                 let day
                 let month = currentDate.getUTCMonth() + 1
@@ -5265,49 +5297,49 @@
                 }
 
                 let assignDate = date;
-            const newKey1 = 'assigned_date';
-            // const newValue1 = date
-            if (!Array.isArray(data)) {
-                data = [data];
-            }
-            updatedCCArray = data.map(obj => ({
-                ...obj,
-                [newKey]: newValue,
-                ["Status"]: "Assigned",
-                [newKey1]: assignDate
-               
-            }));
-			
-			let loginValue = ccData.loginContext
-            let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
-			assignedHistory = [{
-							"reassignedby": dataNew,
-							"reassignedTo": newValue,
-						    "reassigneddate": assignDate
-							 }]	
-							 
-			data.forEach((element) => {
-              
+                const newKey1 = 'assigned_date';
+                // const newValue1 = date
+                if (!Array.isArray(data)) {
+                    data = [data];
+                }
+                updatedCCArray = data.map(obj => ({
+                    ...obj,
+                    [newKey]: newValue,
+                    ["Status"]: "Assigned",
+                    [newKey1]: assignDate
+
+                }));
+
+                let loginValue = ccData.loginContext
+                let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
+                assignedHistory = [{
+                    "reassignedby": dataNew,
+                    "reassignedTo": newValue,
+                    "reassigneddate": assignDate
+                }]
+
+                data.forEach((element) => {
+
                     let query = {
                         "query": {
                             "bool": {
                                 "must": [
                                     {
-                                    "term": {
-                                        "Patient_": element.Patient_
-                                      }
+                                        "term": {
+                                            "Patient_": element.Patient_
+                                        }
                                     },
                                     {
-                                    "term": {
-                                        "Account": element.Account
-                                      }
+                                        "term": {
+                                            "Account": element.Account
+                                        }
                                     },
                                     {
-                                    "term": {
-                                        "DOS": element.DOS
-                                      }
+                                        "term": {
+                                            "DOS": element.DOS
+                                        }
                                     }
-                            ]
+                                ]
                             }
                         },
                         "script": {
@@ -5326,45 +5358,45 @@
                             "params": {
                                 "Analyst": newValue,
                                 "assigned_date": assignDate,
-								"assigned_by" : loginVal,
-								"modified_on": assignDate,
-                                "Status":"Assigned to Analyst",
-								"assigned_history":assignedHistory
+                                "assigned_by": loginVal,
+                                "modified_on": assignDate,
+                                "Status": "Assigned to Analyst",
+                                "assigned_history": assignedHistory
                             }
                         }
                     }
-                      $.ajax({
-                                headers: ccData.hdr,
-                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_update_by_query",
-                            async: false,
-                                type: 'POST',
-                                data: JSON.stringify(query),
-                                dataType: 'json',
-                                contentType: 'application/json',
-                                success: function (response) {
-                                    hideLoader(assignedLoader);
-                                     setTimeout(function () {
-                                   location.reload();
-                                }, 2000);
-                                },
-                                error: function (error) {
-                                    console.log("ERROR happened >>>> ", error);
-                                    hideLoader(assignedLoader);
-                                    return null;
-                                },
-                                complete: function () {
-                                    hideLoader(assignedLoader);
-                                }
-                            })
-                       
-                
-            })
-			}
+                    $.ajax({
+                        headers: ccData.hdr,
+                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_update_by_query",
+                        async: false,
+                        type: 'POST',
+                        data: JSON.stringify(query),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (response) {
+                            hideLoader(assignedLoader);
+                            setTimeout(function () {
+                                location.reload();
+                            }, 2000);
+                        },
+                        error: function (error) {
+                            console.log("ERROR happened >>>> ", error);
+                            hideLoader(assignedLoader);
+                            return null;
+                        },
+                        complete: function () {
+                            hideLoader(assignedLoader);
+                        }
+                    })
+
+
+                })
+            }
         });
 
 
-		 $('#callerAssignValueButton').on('click', function () {
-		 let data = (myTable.rows('.selected').data().toArray())
+        $('#callerAssignValueButton').on('click', function () {
+            let data = (myTable.rows('.selected').data().toArray())
             if (data.length == 0) {
                 toastr.error(
                     'Select atleast one Member'
@@ -5374,23 +5406,23 @@
                     'Select CC Name'
                 );
             } else {
-			var selectedValue = $('#assigncallercolumns').val();
-			console.log("selectedRow: " + selectedValue);
-            var modalBody = $(this).closest(".modal-content").find(".modal-body");
-            var assignedLoader = showLoaderCC(modalBody,
-                "Members Assigned to Caller!");
-            let data = (myTable.rows('.selected').data().toArray())
-          
-            console.log("selectedRow: " + JSON.stringify(data));
-            // var selectedValue = $('#reassignCCcolumns').val();
-			
-            const newKey = 'CC';
-            const newValue = selectedValue;
-			let assignedHistory;
-			let ccValue = ccData.loginContext
-            let dataNew = ccValue.replace(/^\s+|\s+$/g, "")
+                var selectedValue = $('#assigncallercolumns').val();
+                console.log("selectedRow: " + selectedValue);
+                var modalBody = $(this).closest(".modal-content").find(".modal-body");
+                var assignedLoader = showLoaderCC(modalBody,
+                    "Members Assigned to Caller!");
+                let data = (myTable.rows('.selected').data().toArray())
 
-            var currentDate = new Date();
+                console.log("selectedRow: " + JSON.stringify(data));
+                // var selectedValue = $('#reassignCCcolumns').val();
+
+                const newKey = 'CC';
+                const newValue = selectedValue;
+                let assignedHistory;
+                let ccValue = ccData.loginContext
+                let dataNew = ccValue.replace(/^\s+|\s+$/g, "")
+
+                var currentDate = new Date();
                 var year = currentDate.getUTCFullYear();
                 let day
                 let month = currentDate.getUTCMonth() + 1
@@ -5415,51 +5447,51 @@
                 }
 
                 let assignDate = date;
-            const newKey1 = 'assigned_date';
-            // const newValue1 = date
-            if (!Array.isArray(data)) {
-                data = [data];
-            }
-            updatedCCArray = data.map(obj => ({
-                ...obj,
-                [newKey]: newValue,
-                ["Status"]: "Assigned",
-                [newKey1]: assignDate
-               
-            }));
-			
-			assignedHistory = [{
-							"reassignedby": dataNew,
-							"reassignedTo": newValue,
-						    "reassigneddate": assignDate
-							 }]	
-							 
-			let loginValue = ccData.loginContext
-            let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
+                const newKey1 = 'assigned_date';
+                // const newValue1 = date
+                if (!Array.isArray(data)) {
+                    data = [data];
+                }
+                updatedCCArray = data.map(obj => ({
+                    ...obj,
+                    [newKey]: newValue,
+                    ["Status"]: "Assigned",
+                    [newKey1]: assignDate
 
-				 
-			data.forEach((element) => {
-              
+                }));
+
+                assignedHistory = [{
+                    "reassignedby": dataNew,
+                    "reassignedTo": newValue,
+                    "reassigneddate": assignDate
+                }]
+
+                let loginValue = ccData.loginContext
+                let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
+
+
+                data.forEach((element) => {
+
                     let query = {
                         "query": {
                             "bool": {
                                 "must": [
                                     {
-                                    "term": {
-                                        "Patient_": element.Patient_
-                                      }
+                                        "term": {
+                                            "Patient_": element.Patient_
+                                        }
                                     },
                                     {
-                                    "term": {
-                                        "Account": element.Account
-                                      }
+                                        "term": {
+                                            "Account": element.Account
+                                        }
                                     },
                                     {
-                                    "term": {
-                                        "DOS": element.DOS
-                                      }
+                                        "term": {
+                                            "DOS": element.DOS
+                                        }
                                     }
-                            ]
+                                ]
                             }
                         },
                         "script": {
@@ -5478,45 +5510,45 @@
                             "params": {
                                 "caller": newValue,
                                 "call_assigned_date": assignDate,
-								"assigned_by" : loginVal,
-								"modified_on": assignDate,
-                                "Status":"Assigned to Caller",
-								"assigned_history":assignedHistory
+                                "assigned_by": loginVal,
+                                "modified_on": assignDate,
+                                "Status": "Assigned to Caller",
+                                "assigned_history": assignedHistory
                             }
                         }
                     }
-                      $.ajax({
-                                headers: ccData.hdr,
-                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_update_by_query",
-                            async: false,
-                                type: 'POST',
-                                data: JSON.stringify(query),
-                                dataType: 'json',
-                                contentType: 'application/json',
-                                success: function (response) {
-                                    hideLoader(assignedLoader);
-                                     setTimeout(function () {
-                                   location.reload();
-                                }, 2000);
-                                },
-                                error: function (error) {
-                                    console.log("ERROR happened >>>> ", error);
-                                    hideLoader(assignedLoader);
-                                    return null;
-                                },
-                                complete: function () {
-                                    hideLoader(assignedLoader);
-                                }
-                            })
-                       
-                
-            })
-			}
+                    $.ajax({
+                        headers: ccData.hdr,
+                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_update_by_query",
+                        async: false,
+                        type: 'POST',
+                        data: JSON.stringify(query),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (response) {
+                            hideLoader(assignedLoader);
+                            setTimeout(function () {
+                                location.reload();
+                            }, 2000);
+                        },
+                        error: function (error) {
+                            console.log("ERROR happened >>>> ", error);
+                            hideLoader(assignedLoader);
+                            return null;
+                        },
+                        complete: function () {
+                            hideLoader(assignedLoader);
+                        }
+                    })
+
+
+                })
+            }
         });
 
-		
-		 $('#getReAssignValueButton').on('click', function () {
-		 let data = (myTable.rows('.selected').data().toArray())
+
+        $('#getReAssignValueButton').on('click', function () {
+            let data = (myTable.rows('.selected').data().toArray())
             if (data.length == 0) {
                 toastr.error(
                     'Select atleast one Member'
@@ -5526,23 +5558,23 @@
                     'Select CC Name'
                 );
             } else {
-			var selectedValue = $('#setCCReAssigncolumnss').val();
-			console.log("selectedRow: " + selectedValue);
-            var modalBody = $(this).closest(".modal-content").find(".modal-body");
-            var assignedLoader = showLoaderCC(modalBody,
-                "Members ReAssigned to Analyst!");
-            let data = (myTable.rows('.selected').data().toArray())
-          
-            console.log("selectedRow: " + JSON.stringify(data));
-            // var selectedValue = $('#reassignCCcolumns').val();
-			
-            const newKey = 'CC';
-            const newValue = selectedValue;
-			let assignedHistory;
-			let ccValue = ccData.loginContext
-            let dataNew = ccValue.replace(/^\s+|\s+$/g, "")
+                var selectedValue = $('#setCCReAssigncolumnss').val();
+                console.log("selectedRow: " + selectedValue);
+                var modalBody = $(this).closest(".modal-content").find(".modal-body");
+                var assignedLoader = showLoaderCC(modalBody,
+                    "Members ReAssigned to Analyst!");
+                let data = (myTable.rows('.selected').data().toArray())
 
-            var currentDate = new Date();
+                console.log("selectedRow: " + JSON.stringify(data));
+                // var selectedValue = $('#reassignCCcolumns').val();
+
+                const newKey = 'CC';
+                const newValue = selectedValue;
+                let assignedHistory;
+                let ccValue = ccData.loginContext
+                let dataNew = ccValue.replace(/^\s+|\s+$/g, "")
+
+                var currentDate = new Date();
                 var year = currentDate.getUTCFullYear();
                 let day
                 let month = currentDate.getUTCMonth() + 1
@@ -5567,109 +5599,110 @@
                 }
 
                 let assignDate = date;
-            const newKey1 = 'assigned_date';
-            // const newValue1 = date
-            if (!Array.isArray(data)) {
-                data = [data];
-            }
-            updatedCCArray = data.map(obj => ({
-                ...obj,
-                [newKey]: newValue,
-                ["Status"]: "Assigned",
-                [newKey1]: assignDate
-               
-            }));
-			
-			let loginValue = ccData.loginContext
-            let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
+                const newKey1 = 'assigned_date';
+                // const newValue1 = date
+                if (!Array.isArray(data)) {
+                    data = [data];
+                }
+                updatedCCArray = data.map(obj => ({
+                    ...obj,
+                    [newKey]: newValue,
+                    ["Status"]: "Assigned",
+                    [newKey1]: assignDate
 
-			data.forEach((element) => {
-              
-                    let searchquery ={
-					"query": {
+                }));
+
+                let loginValue = ccData.loginContext
+                let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
+
+                data.forEach((element) => {
+
+                    let searchquery = {
+                        "query": {
                             "bool": {
                                 "must": [
                                     {
-                                    "term": {
-                                        "Patient_": element.Patient_
-                                      }
+                                        "term": {
+                                            "Patient_": element.Patient_
+                                        }
                                     },
                                     {
-                                    "term": {
-                                        "Account": element.Account
-                                      }
+                                        "term": {
+                                            "Account": element.Account
+                                        }
                                     },
                                     {
-                                    "term": {
-                                        "DOS": element.DOS
-                                      }
+                                        "term": {
+                                            "DOS": element.DOS
+                                        }
                                     }
-                            ]
+                                ]
                             }
-                        }}
-						
-						$.ajax({
-                                headers: ccData.hdr,
-                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_search?size=1",
-                            async: false,
-                                type: 'POST',
-                                data: JSON.stringify(searchquery),
-                                dataType: 'json',
-                                contentType: 'application/json',
-                                success: function (response) {
-								if (response.hits && response.hits
-                                            .hits && response.hits.hits
-                                                .length > 0 &&
-                                            response.hits.hits[0]._source ) {
-											let element =response.hits.hits[0]._source;
-												let history = element.assigned_history
-												
-												if (history && (history != null || history !=
-													'' || history != undefined)) {
-													assignedHistory = element[
-														"assigned_history"];
-													assignedHistory.push({
-														"reassignedby": dataNew,
-														"reassignedTo": newValue,
-														"reassigneddate": assignDate
-													});
-												} else {
-													assignedHistory = [{
-														"reassignedby": dataNew,
-														"reassignedTo": newValue,
-														"reassigneddate": assignDate
-													}]
-												}
-												
-												}
-                                  
-								   },
-                                error: function (error) {
-                                    console.log("ERROR happened >>>> ", error);
-                                    return null;
+                        }
+                    }
+
+                    $.ajax({
+                        headers: ccData.hdr,
+                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_search?size=1",
+                        async: false,
+                        type: 'POST',
+                        data: JSON.stringify(searchquery),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (response) {
+                            if (response.hits && response.hits
+                                .hits && response.hits.hits
+                                    .length > 0 &&
+                                response.hits.hits[0]._source) {
+                                let element = response.hits.hits[0]._source;
+                                let history = element.assigned_history
+
+                                if (history && (history != null || history !=
+                                    '' || history != undefined)) {
+                                    assignedHistory = element[
+                                        "assigned_history"];
+                                    assignedHistory.push({
+                                        "reassignedby": dataNew,
+                                        "reassignedTo": newValue,
+                                        "reassigneddate": assignDate
+                                    });
+                                } else {
+                                    assignedHistory = [{
+                                        "reassignedby": dataNew,
+                                        "reassignedTo": newValue,
+                                        "reassigneddate": assignDate
+                                    }]
                                 }
-                            })
-				
+
+                            }
+
+                        },
+                        error: function (error) {
+                            console.log("ERROR happened >>>> ", error);
+                            return null;
+                        }
+                    })
+
                     let query = {
                         "query": {
                             "bool": {
                                 "must": [
                                     {
-                                    "term": {
-                                        "Patient_": element.Patient_
-                                      }
+                                        "term": {
+                                            "Patient_": element.Patient_
+                                        }
                                     },
                                     {
-                                    "term": {
-                                        "Account": element.Account
-                                      }
+                                        "term": {
+                                            "Account": element.Account
+                                        }
                                     },
                                     {
-                                    "term": {
-                                        "DOS": element.DOS
-                                      }
+                                        "term": {
+                                            "DOS": element.DOS
+                                        }
                                     }
-                            ]
+                                ]
                             }
                         },
                         "script": {
@@ -5688,43 +5721,43 @@
                             "params": {
                                 "Analyst": newValue,
                                 "assigned_date": assignDate,
-								"assigned_by" : loginVal,
-								"modified_on": assignDate,
-                                "Status":"Assigned to Analyst",
-								"assigned_history":assignedHistory
+                                "assigned_by": loginVal,
+                                "modified_on": assignDate,
+                                "Status": "Assigned to Analyst",
+                                "assigned_history": assignedHistory
                             }
                         }
                     }
-                      $.ajax({
-                                headers: ccData.hdr,
-                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_update_by_query",
-                            async: false,
-                                type: 'POST',
-                                data: JSON.stringify(query),
-                                dataType: 'json',
-                                contentType: 'application/json',
-                                success: function (response) {
-                                    hideLoader(assignedLoader);
-                                     setTimeout(function () {
-                                   location.reload();
-                                }, 2000);
-                                },
-                                error: function (error) {
-                                    console.log("ERROR happened >>>> ", error);
-                                    hideLoader(assignedLoader);
-                                    return null;
-                                },
-                                complete: function () {
-                                    hideLoader(assignedLoader);
-                                }
-                            })
-                       
-                
-            })
-			}
+                    $.ajax({
+                        headers: ccData.hdr,
+                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_update_by_query",
+                        async: false,
+                        type: 'POST',
+                        data: JSON.stringify(query),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (response) {
+                            hideLoader(assignedLoader);
+                            setTimeout(function () {
+                                location.reload();
+                            }, 2000);
+                        },
+                        error: function (error) {
+                            console.log("ERROR happened >>>> ", error);
+                            hideLoader(assignedLoader);
+                            return null;
+                        },
+                        complete: function () {
+                            hideLoader(assignedLoader);
+                        }
+                    })
+
+
+                })
+            }
         });
 
-	 function showSuccessMessage() {
+        function showSuccessMessage() {
             $('#success-message').fadeIn().delay(2000).fadeOut();
         }
         var $quicksearch = $('#enhanced_col_search_term').keyup(debounce(function () {
@@ -5830,7 +5863,7 @@
                     layoutMode: 'none',
                     filter: function () {
                         return $(this).text().toLowerCase().indexOf(srcTerm
-                                .toLowerCase()) >=
+                            .toLowerCase()) >=
                             0;
                     }
                 });
@@ -5872,15 +5905,15 @@
         });
 
 
-          $(document).ready(function () {
+        $(document).ready(function () {
             $("#setCCcolumnss").change(function () {
 
-                  assignValue = decodeURIComponent($(this).val());
-                  console.log((assignValue, "testassignValue"), "testassignValue")
-              });
-              $("#reassignCCcolumnss").change(function () {
-                  reAssignValue = $(this).val();
-              });
+                assignValue = decodeURIComponent($(this).val());
+                console.log((assignValue, "testassignValue"), "testassignValue")
+            });
+            $("#reassignCCcolumnss").change(function () {
+                reAssignValue = $(this).val();
+            });
             $('#updateStatus').on('click', function () {
                 var selectedRows = [];
                 console.log('selectedRows')
@@ -5892,7 +5925,7 @@
                 // });
                 updateStatus(rowObj);
             });
-			  $('#updatecallerStatus').on('click', function () {
+            $('#updatecallerStatus').on('click', function () {
                 var selectedRows = [];
                 console.log('selectedRows')
                 // $('.select-checkbox class_:checked').each(function () {
@@ -5904,20 +5937,20 @@
                 updateCallStatus(rowObj);
             });
         });
-		
+
 
         function updateStatus(selectedRows) {
-		 const allRowsValid = selectedRows.every((row) => {
+            const allRowsValid = selectedRows.every((row) => {
                 console.log(row, "row");
                 // const decodeObj = decodeURIComponent(row);
                 // console.log(JSON.parse(decodeObj),"decodeObj");
                 const careCordinatorData = row;
-				const uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+                const uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
                 //const uniqueIdentifier = careCordinatorData.memberID_merged;
 
                 const statusId = "status" + uniqueIdentifier;
-                 var dateId = "dateValue" + uniqueIdentifier;
-				
+                var dateId = "dateValue" + uniqueIdentifier;
+
                 const statusElement = $("#" + statusId);
                 const dateElement = $("#" + dateId);
 
@@ -5927,7 +5960,7 @@
                 console.log('statusValue', statusValue)
                 console.log('dateValue', dateValue)
 
-				
+
                 return statusValue && dateValue;
             });
 
@@ -5942,14 +5975,14 @@
             for (let i = 0; i < selectedRows.length; i++) {
                 const decodeObj = decodeURIComponent(selectedRows[i]);
                 var careCordinatorData = selectedRows[i];
-                const uniqueIdentifier = careCordinatorData.Account +moment.utc(careCordinatorData.DOS).format("MMDDYYYY");
+                const uniqueIdentifier = careCordinatorData.Account + moment.utc(careCordinatorData.DOS).format("MMDDYYYY");
 
                 var statusId = "status" + uniqueIdentifier;
                 var dateId = "dateValue" + uniqueIdentifier;
-				var hospitalcontactId = "hospitalcontact" + uniqueIdentifier;
-				var denialstatusId = "denialstatus" + uniqueIdentifier;
-				
-				var currentDate = new Date();
+                var hospitalcontactId = "hospitalcontact" + uniqueIdentifier;
+                var denialstatusId = "denialstatus" + uniqueIdentifier;
+
+                var currentDate = new Date();
                 var year = currentDate.getUTCFullYear();
                 let day
                 let month = currentDate.getUTCMonth() + 1
@@ -5977,71 +6010,71 @@
 
                 var statusElement = $("#" + statusId);
                 var dateElement = $("#" + dateId);
-				var hospitalcontactElement = $("#" + hospitalcontactId);
-				var denialstatusElement = $("#" + denialstatusId);
+                var hospitalcontactElement = $("#" + hospitalcontactId);
+                var denialstatusElement = $("#" + denialstatusId);
 
                 var statusValue = statusElement.val();
                 var dateValue = dateElement.val();
-				var hospitalcontactValue = hospitalcontactElement.val();
+                var hospitalcontactValue = hospitalcontactElement.val();
                 var denialstatusValue = denialstatusElement.val();
-				let loginValue = ccData.loginContext
+                let loginValue = ccData.loginContext
                 let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
-               // if(dateValue == ''){
-				//dateValue = moment().utc().format("YYYY-MM-DD");
-				//}
-				var status;
-				if(incConfMap.tablename == 'analystListing'){
-				status = 'Update by Analyst';
-				}else if(incConfMap.tablename == 'supervisorUpdateListing'){
-				status = 'Update by Supervisor';
-				}
-				
-				var claimstatus;
-				if(statusValue == 'Calling'){
-				claimstatus = 'Awaiting caller Assignment';
-				status = 'Awaiting caller Assignment';
-				}else{
-				claimstatus = 'Done';
-				status = 'Done';
-				}
-				dateValue = moment.utc(dateValue).format("YYYY-MM-DD");
-				
+                // if(dateValue == ''){
+                //dateValue = moment().utc().format("YYYY-MM-DD");
+                //}
+                var status;
+                if (incConfMap.tablename == 'analystListing') {
+                    status = 'Update by Analyst';
+                } else if (incConfMap.tablename == 'supervisorUpdateListing') {
+                    status = 'Update by Supervisor';
+                }
+
+                var claimstatus;
+                if (statusValue == 'Calling') {
+                    claimstatus = 'Awaiting caller Assignment';
+                    status = 'Awaiting caller Assignment';
+                } else {
+                    claimstatus = 'Done';
+                    status = 'Done';
+                }
+                dateValue = moment.utc(dateValue).format("YYYY-MM-DD");
+
                 console.log('careCordinatorData.statusValue', statusValue)
                 console.log('careCordinatorData.dateValue', dateValue)
-				console.log('careCordinatorData.hospitalcontactValue', hospitalcontactValue)
-				console.log('careCordinatorData.denialstatusValue', denialstatusValue)
+                console.log('careCordinatorData.hospitalcontactValue', hospitalcontactValue)
+                console.log('careCordinatorData.denialstatusValue', denialstatusValue)
 
                 careCordinatorData.action_code = statusValue;
                 careCordinatorData.work_date = dateValue;
-				careCordinatorData.comments = hospitalcontactValue;
-				careCordinatorData.denialstatusValue = denialstatusValue;
-				careCordinatorData.claim_status = claimstatus;
-				
-				
-				
+                careCordinatorData.comments = hospitalcontactValue;
+                careCordinatorData.denialstatusValue = denialstatusValue;
+                careCordinatorData.claim_status = claimstatus;
 
-				
-             if (careCordinatorData.Patient_ && careCordinatorData.Account && careCordinatorData.DOS ) {
+
+
+
+
+                if (careCordinatorData.Patient_ && careCordinatorData.Account && careCordinatorData.DOS) {
                     let ccSaveQuery = {
                         "query": {
                             "bool": {
                                 "must": [
                                     {
-                                    "term": {
-                                        "Patient_": careCordinatorData.Patient_
-                                      }
+                                        "term": {
+                                            "Patient_": careCordinatorData.Patient_
+                                        }
                                     },
                                     {
-                                    "term": {
-                                        "Account": careCordinatorData.Account
-                                      }
+                                        "term": {
+                                            "Account": careCordinatorData.Account
+                                        }
                                     },
                                     {
-                                    "term": {
-                                        "DOS": careCordinatorData.DOS
-                                      }
+                                        "term": {
+                                            "DOS": careCordinatorData.DOS
+                                        }
                                     }
-                            ]
+                                ]
                             }
                         }
                     }
@@ -6056,36 +6089,36 @@
                         success: function (res) {
                             let responseDatas = res.hits.hits[0]._id;
                             let oldData = res.hits.hits[0]._source;
-							var newObject;
+                            var newObject;
 
-                           if(incConfMap.tablename == 'analystListing'){
-							 newObject = {
-                                "action_code": careCordinatorData
-                                    .action_code,
-                                "work_date": careCordinatorData
-                                    .work_date,
-                                "comments": careCordinatorData.comments,
-								"denial_status": careCordinatorData.denialstatusValue,
-								"claim_status" : careCordinatorData.claim_status,
-								"Status": status,
-								"modified_on":modifiedon
-                            };
-							}else if(incConfMap.tablename == 'supervisorUpdateListing'){
-							  newObject = {
-                                "action_code": careCordinatorData
-                                    .action_code,
-                                "work_date": careCordinatorData
-                                    .work_date,
-                                "comments": careCordinatorData.comments,
-								"denial_status": careCordinatorData.denialstatusValue,
-								"claim_status" : careCordinatorData.claim_status,
-								"Status": status,
-								"supervisor":loginVal,
-								"modified_on":modifiedon
-                            };
-							}
+                            if (incConfMap.tablename == 'analystListing') {
+                                newObject = {
+                                    "action_code": careCordinatorData
+                                        .action_code,
+                                    "work_date": careCordinatorData
+                                        .work_date,
+                                    "comments": careCordinatorData.comments,
+                                    "denial_status": careCordinatorData.denialstatusValue,
+                                    "claim_status": careCordinatorData.claim_status,
+                                    "Status": status,
+                                    "modified_on": modifiedon
+                                };
+                            } else if (incConfMap.tablename == 'supervisorUpdateListing') {
+                                newObject = {
+                                    "action_code": careCordinatorData
+                                        .action_code,
+                                    "work_date": careCordinatorData
+                                        .work_date,
+                                    "comments": careCordinatorData.comments,
+                                    "denial_status": careCordinatorData.denialstatusValue,
+                                    "claim_status": careCordinatorData.claim_status,
+                                    "Status": status,
+                                    "supervisor": loginVal,
+                                    "modified_on": modifiedon
+                                };
+                            }
 
-                           
+
 
                             var combinedObject = $.extend({}, oldData, newObject);
                             $.ajax({
@@ -6099,7 +6132,7 @@
                                 contentType: 'application/json',
                                 success: function (response) {
                                     // Handle success, if needed
-									toastr.success('Status Updated Successfully');
+                                    toastr.success('Status Updated Successfully');
                                     location.reload();
                                 }
                             });
@@ -6108,19 +6141,19 @@
                 }
             }
         }
-		
-		 function updateCallStatus(selectedRows) {
-		 const allRowsValid = selectedRows.every((row) => {
+
+        function updateCallStatus(selectedRows) {
+            const allRowsValid = selectedRows.every((row) => {
                 console.log(row, "row");
                 // const decodeObj = decodeURIComponent(row);
                 // console.log(JSON.parse(decodeObj),"decodeObj");
                 const careCordinatorData = row;
-				const uniqueIdentifier = row.Account +moment.utc(row.DOS).format("MMDDYYYY");
+                const uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
                 //const uniqueIdentifier = careCordinatorData.memberID_merged;
 
                 const comments = "callercomments" + uniqueIdentifier;
-                 var dateId = "calldateValue" + uniqueIdentifier;
-				
+                var dateId = "calldateValue" + uniqueIdentifier;
+
                 const commentsElement = $("#" + comments);
                 const dateElement = $("#" + dateId);
 
@@ -6130,7 +6163,7 @@
                 console.log('commentsValue', commentsValue)
                 console.log('dateValue', dateValue)
 
-				
+
                 return commentsValue && dateValue;
             });
 
@@ -6145,13 +6178,13 @@
             for (let i = 0; i < selectedRows.length; i++) {
                 const decodeObj = decodeURIComponent(selectedRows[i]);
                 var careCordinatorData = selectedRows[i];
-                const uniqueIdentifier = careCordinatorData.Account +moment.utc(careCordinatorData.DOS).format("MMDDYYYY");
+                const uniqueIdentifier = careCordinatorData.Account + moment.utc(careCordinatorData.DOS).format("MMDDYYYY");
 
                 var dateId = "calldateValue" + uniqueIdentifier;
-				var comments = "callercomments" + uniqueIdentifier;
-			
-				
-				var currentDate = new Date();
+                var comments = "callercomments" + uniqueIdentifier;
+
+
+                var currentDate = new Date();
                 var year = currentDate.getUTCFullYear();
                 let day
                 let month = currentDate.getUTCMonth() + 1
@@ -6178,48 +6211,48 @@
                 let modifiedon = date;
 
                 var dateElement = $("#" + dateId);
-				var callCommentsElement = $("#" + comments);
+                var callCommentsElement = $("#" + comments);
 
                 var dateValue = dateElement.val();
-				var callCommentsValue = callCommentsElement.val();
+                var callCommentsValue = callCommentsElement.val();
                 let loginValue = ccData.loginContext
                 let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
-               // if(dateValue == ''){
-				//dateValue = moment().utc().format("YYYY-MM-DD");
-				//}
-				
-				dateValue = moment.utc(dateValue).format("YYYY-MM-DD");
-				
-                console.log('careCordinatorData.dateValue', dateValue)
-				console.log('careCordinatorData.hospitalcontactValue', callCommentsValue)
-				
-                careCordinatorData.call_date = dateValue;
-				careCordinatorData.caller_comments = callCommentsValue;
-				
-				
+                // if(dateValue == ''){
+                //dateValue = moment().utc().format("YYYY-MM-DD");
+                //}
 
-				
-             if (careCordinatorData.Patient_ && careCordinatorData.Account && careCordinatorData.DOS ) {
+                dateValue = moment.utc(dateValue).format("YYYY-MM-DD");
+
+                console.log('careCordinatorData.dateValue', dateValue)
+                console.log('careCordinatorData.hospitalcontactValue', callCommentsValue)
+
+                careCordinatorData.call_date = dateValue;
+                careCordinatorData.caller_comments = callCommentsValue;
+
+
+
+
+                if (careCordinatorData.Patient_ && careCordinatorData.Account && careCordinatorData.DOS) {
                     let ccSaveQuery = {
                         "query": {
                             "bool": {
                                 "must": [
                                     {
-                                    "term": {
-                                        "Patient_": careCordinatorData.Patient_
-                                      }
+                                        "term": {
+                                            "Patient_": careCordinatorData.Patient_
+                                        }
                                     },
                                     {
-                                    "term": {
-                                        "Account": careCordinatorData.Account
-                                      }
+                                        "term": {
+                                            "Account": careCordinatorData.Account
+                                        }
                                     },
                                     {
-                                    "term": {
-                                        "DOS": careCordinatorData.DOS
-                                      }
+                                        "term": {
+                                            "DOS": careCordinatorData.DOS
+                                        }
                                     }
-                            ]
+                                ]
                             }
                         }
                     }
@@ -6235,15 +6268,15 @@
                             let responseDatas = res.hits.hits[0]._id;
                             let oldData = res.hits.hits[0]._source;
 
-                           
+
 
                             var newObject = {
-                                
+
                                 "call_date": careCordinatorData
                                     .call_date,
                                 "caller_comments": careCordinatorData.caller_comments,
-								"Status": 'Update by Caller',
-								"modified_on":modifiedon
+                                "Status": 'Update by Caller',
+                                "modified_on": modifiedon
                             };
 
                             var combinedObject = $.extend({}, oldData, newObject);
@@ -6258,7 +6291,7 @@
                                 contentType: 'application/json',
                                 success: function (response) {
                                     // Handle success, if needed
-									toastr.success('Status Updated Successfully');
+                                    toastr.success('Status Updated Successfully');
                                     location.reload();
                                 }
                             });
@@ -6267,7 +6300,7 @@
                 }
             }
         }
-   
+
     </script>
 </body>
 
