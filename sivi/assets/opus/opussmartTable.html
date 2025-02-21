@@ -5278,6 +5278,8 @@
                
             }));
 			
+			let loginValue = ccData.loginContext
+            let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
 			assignedHistory = [{
 							"reassignedby": dataNew,
 							"reassignedTo": newValue,
@@ -5313,6 +5315,7 @@
                             "source": `
                                ctx._source.Analyst = params.Analyst;
                                ctx._source.assigned_date = params.assigned_date;
+							    ctx._source.assigned_by = params.assigned_by;
 							   ctx._source.modified_on = params.assigned_date;
 			                   ctx._source.Status = params.Status;
 							   ctx._source.assigned_history = params.assigned_history;
@@ -5323,6 +5326,7 @@
                             "params": {
                                 "Analyst": newValue,
                                 "assigned_date": assignDate,
+								"assigned_by" : loginVal,
 								"modified_on": assignDate,
                                 "Status":"Assigned to Analyst",
 								"assigned_history":assignedHistory
@@ -5430,6 +5434,10 @@
 						    "reassigneddate": assignDate
 							 }]	
 							 
+			let loginValue = ccData.loginContext
+            let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
+
+				 
 			data.forEach((element) => {
               
                     let query = {
@@ -5459,6 +5467,7 @@
                             "source": `
                                ctx._source.caller = params.caller;
                                ctx._source.call_assigned_date = params.call_assigned_date;
+							   ctx._source.assigned_by = params.assigned_by;
 							   ctx._source.modified_on = params.modified_on;
 			                   ctx._source.Status = params.Status;
 							   ctx._source.assigned_history = params.assigned_history;
@@ -5469,6 +5478,7 @@
                             "params": {
                                 "caller": newValue,
                                 "call_assigned_date": assignDate,
+								"assigned_by" : loginVal,
 								"modified_on": assignDate,
                                 "Status":"Assigned to Caller",
 								"assigned_history":assignedHistory
@@ -5569,6 +5579,10 @@
                 [newKey1]: assignDate
                
             }));
+			
+			let loginValue = ccData.loginContext
+            let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
+
 			data.forEach((element) => {
               
                     let searchquery ={
@@ -5664,6 +5678,7 @@
                                ctx._source.Analyst = params.Analyst;
                                ctx._source.assigned_date = params.assigned_date;
 							   ctx._source.modified_on = params.assigned_date;
+							   ctx._source.assigned_by = params.assigned_by;
 			                   ctx._source.Status = params.Status;
 							   ctx._source.assigned_history = params.assigned_history;
 							   
@@ -5673,6 +5688,7 @@
                             "params": {
                                 "Analyst": newValue,
                                 "assigned_date": assignDate,
+								"assigned_by" : loginVal,
 								"modified_on": assignDate,
                                 "Status":"Assigned to Analyst",
 								"assigned_history":assignedHistory
@@ -6040,10 +6056,22 @@
                         success: function (res) {
                             let responseDatas = res.hits.hits[0]._id;
                             let oldData = res.hits.hits[0]._source;
+							var newObject;
 
-                           
-
-                            var newObject = {
+                           if(incConfMap.tablename == 'analystListing'){
+							 newObject = {
+                                "action_code": careCordinatorData
+                                    .action_code,
+                                "work_date": careCordinatorData
+                                    .work_date,
+                                "comments": careCordinatorData.comments,
+								"denial_status": careCordinatorData.denialstatusValue,
+								"claim_status" : careCordinatorData.claim_status,
+								"Status": status,
+								"modified_on":modifiedon
+                            };
+							}else if(incConfMap.tablename == 'supervisorUpdateListing'){
+							  newObject = {
                                 "action_code": careCordinatorData
                                     .action_code,
                                 "work_date": careCordinatorData
@@ -6055,6 +6083,9 @@
 								"supervisor":loginVal,
 								"modified_on":modifiedon
                             };
+							}
+
+                           
 
                             var combinedObject = $.extend({}, oldData, newObject);
                             $.ajax({
@@ -6212,7 +6243,6 @@
                                     .call_date,
                                 "caller_comments": careCordinatorData.caller_comments,
 								"Status": 'Update by Caller',
-								"supervisor":loginVal,
 								"modified_on":modifiedon
                             };
 
