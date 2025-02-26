@@ -3323,6 +3323,8 @@
 
                     $('#updateStatus').hide();
                     $('#updatecallerStatus').hide();
+					$('#updateAuditStatus').hide();
+					
 
                 } else {
                     $("#ccButton").hide();
@@ -3343,6 +3345,7 @@
                     $('#updateStatus').show();
                     $("#assignCaller").hide();
                     $('#updatecallerStatus').hide();
+					$('#updateAuditStatus').hide();
                 }
                 if (ccData.supervisorUpdate) {
                     let assignButon = true
@@ -3357,6 +3360,7 @@
                     var myButton1 = $('#reassignButtton');
                     myButton1.hide();
                     $('#updatecallerStatus').hide();
+					$('#updateAuditStatus').hide();
                 }
 
                 if (ccData.callerSupervisor) {
@@ -3370,6 +3374,7 @@
                     $("#assignCaller").show();
                     $('#updateStatus').hide();
                     $('#updatecallerStatus').hide();
+					$('#updateAuditStatus').hide();
                 }
 
                 if (ccData.callerUpdate) {
@@ -3383,6 +3388,21 @@
                     $("#assignCaller").hide();
                     $('#updateStatus').hide();
                     $('#updatecallerStatus').show();
+					$('#updateAuditStatus').hide();
+                }
+				
+				 if (ccData.auditUpdate) {
+                    let assignButon = true
+                    var $myButton = $('#ccButton');
+                    // $myButton.show().prop("disabled", false);
+                    $("#ccButton").hide();
+                    $("#reassignButtton").hide();
+                    $("#statusUpdateBySupervisor").hide();
+                    $("#backToSupervisorListing").hide();
+                    $("#assignCaller").hide();
+                    $('#updateStatus').hide();
+                    $('#updatecallerStatus').hide();
+					$('#updateAuditStatus').show();
                 }
 
                 dept = conf.departmentName;
@@ -3796,11 +3816,202 @@
                                             //     '<input type="checkbox" class="checkboxforcc"/>';
                                             // return outHTML;
 
+                                        } else if ((configMap.tablename == "auditListing") && configMap.origin && configMap.map360 &&
+                                            propKey === "error_comments") {
+                                            // let uniqueIdentifier1 = row.memberID_merged;
+                                            let selectedRowComments = row.error_comments;
+                                            let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
+                                            if (!ccData.selectedDoneRow && (!selectedRowComments ||
+                                                selectedRowComments == null ||
+                                                selectedRowComments == "" ||
+                                                selectedRowComments == undefined)) {
+                                                outHTML = '<textarea id ="errorcomments' + uniqueIdentifier +
+                                                    '">';
+
+                                            } else if (!ccData.selectedDoneRow) {
+                                                //let uniqueIdentifier = row.memberID_merged;
+                                                outHTML = '<textarea id="errorcomments' + uniqueIdentifier +
+                                                    '">' + (
+                                                        selectedRowComments || '') + '</textarea>';
+                                            } else {
+                                                outHTML = ccData.selectedDoneRow ?
+                                                    selectedRowComments : '';
+                                            }
+                                            setTimeout(function () {
+                                                var textarea = document.getElementById('errorcomments');
+                                                if (textarea) {
+                                                    textarea.addEventListener('keypress', function (event) {
+                                                        var char = String.fromCharCode(event.which);
+                                                        if (char === "'" || char === '"' || char === '\\') {
+                                                            event.preventDefault();
+                                                        }
+                                                    });
+                                                    textarea.addEventListener('input', function (event) {
+                                                        var value = event.target.value;
+                                                        if (value.includes("'") || value.includes('"') || value.includes('\\')) {
+                                                            event.target.value = value.replace(/['"\\]/g, '');
+                                                        }
+                                                    });
+                                                }
+                                            }, 0);
+                                            return outHTML;
+                                        }else if ((configMap.tablename == "auditListing") && configMap.origin && configMap.map360 &&
+                                            propKey === "error_type") {
+
+                                            let outHTML = '';
+
+                                            let selectedRowStatus = row.error_type;
+
+                                            if (!ccData.selectedDoneRow) {
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
+                                                outHTML = '<select id="errortype' + uniqueIdentifier +
+                                                    '">';
+                                                outHTML +=
+                                                    '<option value="" selected>Select a Status</option>';
+
+                                                if (configMap.errorTypeValues) {
+                                                    // for sorting the values in dropdown
+                                                    configMap.errorTypeValues.sort((a, b) =>
+                                                        a.value.trim().localeCompare(b.value
+                                                            .trim()));
+                                                    configMap.errorTypeValues.forEach(
+                                                        option => {
+                                                            let statusValue = option.value;
+                                                            outHTML +=
+                                                                `<option value="${statusValue}" ${statusValue === selectedRowStatus ? 'selected' : ''}>${statusValue}</option>`;
+                                                        });
+                                                }
+
+                                                outHTML += '</select>';
+                                            } else {
+                                                outHTML = ccData.selectedDoneRow ?
+                                                    selectedRowStatus : '';
+                                            }
+
+                                            return outHTML;
+                                        } else if ((configMap.tablename == "auditListing") && configMap.origin && configMap.map360 &&
+                                            propKey === "error_status") {
+
+                                            let outHTML = '';
+
+                                            let selectedRowStatus = row.error_status;
+
+                                            if (!ccData.selectedDoneRow) {
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
+                                                outHTML = '<select id="errorstatus' + uniqueIdentifier +
+                                                    '">';
+                                                outHTML +=
+                                                    '<option value="" selected>Select a Status</option>';
+
+                                                if (configMap.errorStatusValues) {
+                                                    // for sorting the values in dropdown
+                                                    configMap.errorStatusValues.sort((a, b) =>
+                                                        a.value.trim().localeCompare(b.value
+                                                            .trim()));
+                                                    configMap.errorStatusValues.forEach(
+                                                        option => {
+                                                            let statusValue = option.value;
+                                                            outHTML +=
+                                                                `<option value="${statusValue}" ${statusValue === selectedRowStatus ? 'selected' : ''}>${statusValue}</option>`;
+                                                        });
+                                                }
+
+                                                outHTML += '</select>';
+                                            } else {
+                                                outHTML = ccData.selectedDoneRow ?
+                                                    selectedRowStatus : '';
+                                            }
+
+                                            return outHTML;
+                                        } else if ((configMap.tablename == "auditListing") && configMap.origin && configMap.map360 &&
+                                            propKey === "worked_status") {
+
+                                            let outHTML = '';
+
+                                            let selectedRowStatus = row.worked_status;
+
+                                            if (!ccData.selectedDoneRow) {
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
+                                                outHTML = '<select id="workedstatus' + uniqueIdentifier +
+                                                    '">';
+                                                outHTML +=
+                                                    '<option value="" selected>Select a Status</option>';
+
+                                                if (configMap.workedStatusValues) {
+                                                    // for sorting the values in dropdown
+                                                    configMap.workedStatusValues.sort((a, b) =>
+                                                        a.value.trim().localeCompare(b.value
+                                                            .trim()));
+                                                    configMap.workedStatusValues.forEach(
+                                                        option => {
+                                                            let statusValue = option.value;
+                                                            outHTML +=
+                                                                `<option value="${statusValue}" ${statusValue === selectedRowStatus ? 'selected' : ''}>${statusValue}</option>`;
+                                                        });
+                                                }
+
+                                                outHTML += '</select>';
+                                            } else {
+                                                outHTML = ccData.selectedDoneRow ?
+                                                    selectedRowStatus : '';
+                                            }
+
+                                            return outHTML;
+                                        }  else if ((configMap.tablename == "auditListing") && configMap.origin && configMap.map360 &&
+                                            propKey === "audit_date") {
+
+                                            let outHTML = '';
+
+                                            let selectedDate = row.audit_date ||
+                                                moment().utc().format("MM-DD-YYYY");
+
+                                            if (!ccData.selectedDoneRow) {
+                                                let patient = row.Patient_.replace(/[, ]/g, "");
+
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
+
+                                                outHTML =
+                                                    '<div style="display:flex; flex-direction: row;"> <input type="text" style="width: 120px;" placeholder="MM-DD-YYYY" id="auditdateValue' +
+                                                    uniqueIdentifier + '"';
+                                                if (selectedDate) {
+                                                    outHTML += ' value="' + moment.utc(selectedDate)
+                                                        .format("MM-DD-YYYY") + '"';
+                                                }
+                                                outHTML += ' readonly/>';
+                                                outHTML +=
+                                                    `<input type="date" style="width: 19px;" onchange="setauditDateValue(${uniqueIdentifier})" id="date${uniqueIdentifier}" /></div>`;
+
+                                            } else {
+                                                const isValidDate = !isNaN(Date.parse(
+                                                    selectedDate));
+
+                                                if (isValidDate) {
+                                                    // Format the date as MM-DD-YYYY
+                                                    const formattedDate = new Date(row
+                                                        .work_date)
+                                                        .toLocaleDateString('en-US', {
+                                                            month: '2-digit',
+                                                            day: '2-digit',
+                                                            year: 'numeric'
+
+
+
+                                                        }).replace(/\//g, '-');
+                                                    var assignDate = moment.utc(row
+                                                        .work_date).format(
+                                                            "MM-DD-YYYY");
+
+                                                    outHTML = assignDate
+                                                } else {
+                                                    outHTML = '';
+                                                }
+                                            }
+                                            return outHTML;
                                         } else if ((configMap.tablename == "callerUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "caller_comments") {
                                             // let uniqueIdentifier1 = row.memberID_merged;
                                             let selectedRowComments = row.caller_comments;
-                                            let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
+                                            let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
                                             if (!ccData.selectedDoneRow && (!selectedRowComments ||
                                                 selectedRowComments == null ||
                                                 selectedRowComments == "" ||
@@ -3836,6 +4047,40 @@
                                             }, 0);
                                             return outHTML;
                                         } else if ((configMap.tablename == "callerUpdateListing") && configMap.origin && configMap.map360 &&
+                                            propKey === "call_status") {
+
+                                            let outHTML = '';
+
+                                            let selectedRowStatus = row.call_status;
+
+                                            if (!ccData.selectedDoneRow) {
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
+                                                outHTML = '<select id="callstatus' + uniqueIdentifier +
+                                                    '">';
+                                                outHTML +=
+                                                    '<option value="" selected>Select a Status</option>';
+
+                                                if (configMap.callStatusValues) {
+                                                    // for sorting the values in dropdown
+                                                    configMap.callStatusValues.sort((a, b) =>
+                                                        a.value.trim().localeCompare(b.value
+                                                            .trim()));
+                                                    configMap.callStatusValues.forEach(
+                                                        option => {
+                                                            let statusValue = option.value;
+                                                            outHTML +=
+                                                                `<option value="${statusValue}" ${statusValue === selectedRowStatus ? 'selected' : ''}>${statusValue}</option>`;
+                                                        });
+                                                }
+
+                                                outHTML += '</select>';
+                                            } else {
+                                                outHTML = ccData.selectedDoneRow ?
+                                                    selectedRowStatus : '';
+                                            }
+
+                                            return outHTML;
+                                        } else if ((configMap.tablename == "callerUpdateListing") && configMap.origin && configMap.map360 &&
                                             propKey === "call_date") {
 
                                             let outHTML = '';
@@ -3846,8 +4091,8 @@
                                             if (!ccData.selectedDoneRow) {
                                                 let patient = row.Patient_.replace(/[, ]/g, "");
 
-                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
-
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
+												
                                                 outHTML =
                                                     '<div style="display:flex; flex-direction: row;"> <input type="text" style="width: 120px;" placeholder="MM-DD-YYYY" id="calldateValue' +
                                                     uniqueIdentifier + '"';
@@ -3857,7 +4102,7 @@
                                                 }
                                                 outHTML += ' readonly/>';
                                                 outHTML +=
-                                                    `<input type="date" style="width: 19px;" onchange="setDateFieldValue(${uniqueIdentifier})" id="date${uniqueIdentifier}" /></div>`;
+                                                    `<input type="date" style="width: 19px;" onchange="setCallDateValue(${uniqueIdentifier})" id="date${uniqueIdentifier}" /></div>`;
 
                                             } else {
                                                 const isValidDate = !isNaN(Date.parse(
@@ -3889,7 +4134,7 @@
                                             propKey === "comments") {
                                             // let uniqueIdentifier1 = row.memberID_merged;
                                             let selectedRowComments = row.comments;
-                                            let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
+                                            let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
                                             if (!ccData.selectedDoneRow && (!selectedRowComments ||
                                                 selectedRowComments == null ||
                                                 selectedRowComments == "" ||
@@ -3932,7 +4177,7 @@
                                             let selectedRowStatus = row.denial_status;
 
                                             if (!ccData.selectedDoneRow) {
-                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
                                                 outHTML = '<select id="denialstatus' + uniqueIdentifier +
                                                     '">';
                                                 outHTML +=
@@ -3967,7 +4212,7 @@
                                             let selectedRowStatus = row.action_code;
 
                                             if (!ccData.selectedDoneRow) {
-                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
                                                 outHTML = '<select id="status' + uniqueIdentifier +
                                                     '">';
                                                 outHTML +=
@@ -4004,7 +4249,7 @@
                                             if (!ccData.selectedDoneRow) {
                                                 let patient = row.Patient_.replace(/[, ]/g, "");
 
-                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
 
                                                 outHTML =
                                                     '<div style="display:flex; flex-direction: row;"> <input type="text" style="width: 120px;" placeholder="MM-DD-YYYY" id="dateValue' +
@@ -4745,6 +4990,46 @@
             $("#dateValue" + uniqueIdentifier).val(formattedDate);
         }
 
+		 function setCallDateValue(uniqueIdentifier) {
+            console.log(uniqueIdentifier, "ccData")
+            var date = $("#date" + uniqueIdentifier).val();
+            console.log(date, "ccData")
+            // Set the value of the date field
+            // let tt= (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0') + "-" + date.getFullYear();
+            // console.log(tt, "ccData")
+            var inputDate = new Date(date);
+
+            // Convert the date to UTC format using toISOString() method
+            var year = inputDate.getFullYear();
+            var month = (inputDate.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based, so we add 1
+            var day = inputDate.getDate().toString().padStart(2, '0');
+
+            // Format the date as "MM-DD-YYYY"
+            var formattedDate = (date) ? moment.utc(date).format("MM-DD-YYYY") : "";
+            // Set the formatted date value to the target input field
+            $("#calldateValue" + uniqueIdentifier).val(formattedDate);
+        }
+		
+		function setauditDateValue(uniqueIdentifier) {
+            console.log(uniqueIdentifier, "ccData")
+            var date = $("#date" + uniqueIdentifier).val();
+            console.log(date, "ccData")
+            // Set the value of the date field
+            // let tt= (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0') + "-" + date.getFullYear();
+            // console.log(tt, "ccData")
+            var inputDate = new Date(date);
+
+            // Convert the date to UTC format using toISOString() method
+            var year = inputDate.getFullYear();
+            var month = (inputDate.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based, so we add 1
+            var day = inputDate.getDate().toString().padStart(2, '0');
+
+            // Format the date as "MM-DD-YYYY"
+            var formattedDate = (date) ? moment.utc(date).format("MM-DD-YYYY") : "";
+            // Set the formatted date value to the target input field
+            $("#auditdateValue" + uniqueIdentifier).val(formattedDate);
+        }
+		
         function showLoader(modalBody) {
             // Store the original content of the modal body
             var originalContent = modalBody.html();
@@ -4870,6 +5155,11 @@
                     <button id="updatecallerStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
 						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update
                         Status</button>
+						
+					<button id="updateAuditStatus" aria-haspopup="true" aria-expanded="false" class="btn btn-sm btn-primary 
+						cursor-pointer" type="button" style="height: 35px; width: 21%;padding: 2px 10px;margin:0px 8px">Update
+                        Status</button>
+						
 
                     <div class="col-sm-3 text-right text-end">
                         <i id="backToSupervisorListing" aria-haspopup="true" aria-expanded="false"
@@ -5326,7 +5616,7 @@
                                 "must": [
                                     {
                                         "term": {
-                                            "Patient_": element.Patient_
+                                            "CPT": element.CPT
                                         }
                                     },
                                     {
@@ -5478,7 +5768,7 @@
                                 "must": [
                                     {
                                         "term": {
-                                            "Patient_": element.Patient_
+                                            "CPT": element.CPT
                                         }
                                     },
                                     {
@@ -5623,7 +5913,7 @@
                                 "must": [
                                     {
                                         "term": {
-                                            "Patient_": element.Patient_
+                                            "CPT": element.CPT
                                         }
                                     },
                                     {
@@ -5689,7 +5979,7 @@
                                 "must": [
                                     {
                                         "term": {
-                                            "Patient_": element.Patient_
+                                            "CPT": element.CPT
                                         }
                                     },
                                     {
@@ -5936,6 +6226,19 @@
                 // });
                 updateCallStatus(rowObj);
             });
+			
+			 $('#updateAuditStatus').on('click', function () {
+                var selectedRows = [];
+                console.log('selectedRows')
+                // $('.select-checkbox class_:checked').each(function () {
+                console.log('selectedRows', selectedRows)
+                var rowObj = (myTable.rows('.selected').data().toArray());
+                // selectedRows.push(rowObj);
+                console.log('selectedRows', rowObj)
+                // });
+                updateauditStatus(rowObj);
+            });
+			
         });
 
 
@@ -5945,7 +6248,7 @@
                 // const decodeObj = decodeURIComponent(row);
                 // console.log(JSON.parse(decodeObj),"decodeObj");
                 const careCordinatorData = row;
-                const uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
+                const uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
                 //const uniqueIdentifier = careCordinatorData.memberID_merged;
 
                 const statusId = "status" + uniqueIdentifier;
@@ -5986,7 +6289,7 @@
             for (let i = 0; i < selectedRows.length; i++) {
                 const decodeObj = decodeURIComponent(selectedRows[i]);
                 var careCordinatorData = selectedRows[i];
-                const uniqueIdentifier = careCordinatorData.Account + moment.utc(careCordinatorData.DOS).format("MMDDYYYY");
+                const uniqueIdentifier = careCordinatorData.Account + moment.utc(careCordinatorData.DOS).format("MMDDYYYY") + careCordinatorData.CPT;
 
                 var statusId = "status" + uniqueIdentifier;
                 var dateId = "dateValue" + uniqueIdentifier;
@@ -6048,6 +6351,9 @@
                     claimstatus = 'Done';
                     status = 'Done';
                 }
+				
+				
+				
                 dateValue = moment.utc(dateValue).format("YYYY-MM-DD");
 
                 console.log('careCordinatorData.statusValue', statusValue)
@@ -6065,14 +6371,14 @@
 
 
 
-                if (careCordinatorData.Patient_ && careCordinatorData.Account && careCordinatorData.DOS) {
+                if (careCordinatorData.CPT && careCordinatorData.Account && careCordinatorData.DOS) {
                     let ccSaveQuery = {
                         "query": {
                             "bool": {
                                 "must": [
                                     {
                                         "term": {
-                                            "Patient_": careCordinatorData.Patient_
+                                            "CPT": careCordinatorData.CPT
                                         }
                                     },
                                     {
@@ -6091,16 +6397,23 @@
                     }
                     $.ajax({
                         headers: ccData.hdr,
-                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_search?size=10000",
+                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_search?size=1",
                         async: false,
                         type: 'POST',
                         data: JSON.stringify(ccSaveQuery),
                         dataType: 'json',
                         contentType: 'application/json',
                         success: function (res) {
+						
                             let responseDatas = res.hits.hits[0]._id;
                             let oldData = res.hits.hits[0]._source;
                             var newObject;
+							var callstatus;
+							console.log(":::::::::::::::::::::::::oldData.call_status:",oldData.call_status);
+							if(oldData.call_status == 'Done'){
+							 callstatus = 'Inprogress';
+							 
+							}
 
                             if (incConfMap.tablename == 'analystListing') {
                                 newObject = {
@@ -6112,6 +6425,7 @@
                                     "denial_status": careCordinatorData.denialstatusValue,
                                     "claim_status": careCordinatorData.claim_status,
                                     "Status": status,
+									"call_status":callstatus,
                                     "modified_on": modifiedon
                                 };
                             } else if (incConfMap.tablename == 'supervisorUpdateListing') {
@@ -6129,7 +6443,9 @@
                                 };
                             }
 
-
+							
+							console.log("::::::::::::::callstatus:",callstatus);
+                            console.log("::::::::::::::newObject:",newObject);
 
                             var combinedObject = $.extend({}, oldData, newObject);
                             $.ajax({
@@ -6159,29 +6475,34 @@
                 // const decodeObj = decodeURIComponent(row);
                 // console.log(JSON.parse(decodeObj),"decodeObj");
                 const careCordinatorData = row;
-                const uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
+                const uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
                 //const uniqueIdentifier = careCordinatorData.memberID_merged;
 
                 const comments = "callercomments" + uniqueIdentifier;
                 var dateId = "calldateValue" + uniqueIdentifier;
+				const callStatus = "callstatus" + uniqueIdentifier;
+				//callstatus
 
                 const commentsElement = $("#" + comments);
                 const dateElement = $("#" + dateId);
+				const callStatusElement = $("#" + callStatus);
 
                 var commentsValue = commentsElement.val();
                 var dateValue = dateElement.val();
+				 var callstatusValue = callStatusElement.val();
 
                 console.log('commentsValue', commentsValue)
+				console.log('callstatusValue', callstatusValue)
                 console.log('dateValue', dateValue)
 
 
-                return commentsValue && dateValue;
+                return commentsValue && dateValue && callstatusValue;
             });
 
             // If any row is missing values, show an error and exit
             if (!allRowsValid) {
                 toastr.error(
-                    'Please Provide Comments and Call Date for all selected rows.'
+                    'Please Provide Comments,Call Date and Call Status for all selected rows.'
                 );
                 return;
             }
@@ -6189,10 +6510,11 @@
             for (let i = 0; i < selectedRows.length; i++) {
                 const decodeObj = decodeURIComponent(selectedRows[i]);
                 var careCordinatorData = selectedRows[i];
-                const uniqueIdentifier = careCordinatorData.Account + moment.utc(careCordinatorData.DOS).format("MMDDYYYY");
+                const uniqueIdentifier = careCordinatorData.Account + moment.utc(careCordinatorData.DOS).format("MMDDYYYY") + careCordinatorData.CPT;
 
                 var dateId = "calldateValue" + uniqueIdentifier;
                 var comments = "callercomments" + uniqueIdentifier;
+				const callStatus = "callstatus" + uniqueIdentifier;
 
 
                 var currentDate = new Date();
@@ -6223,9 +6545,11 @@
 
                 var dateElement = $("#" + dateId);
                 var callCommentsElement = $("#" + comments);
+				const callStatusElement = $("#" + callStatus);
 
                 var dateValue = dateElement.val();
                 var callCommentsValue = callCommentsElement.val();
+				 var callstatusValue = callStatusElement.val();
                 let loginValue = ccData.loginContext
                 let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
                 // if(dateValue == ''){
@@ -6239,18 +6563,19 @@
 
                 careCordinatorData.call_date = dateValue;
                 careCordinatorData.caller_comments = callCommentsValue;
+				careCordinatorData.call_status = callstatusValue;
 
 
 
 
-                if (careCordinatorData.Patient_ && careCordinatorData.Account && careCordinatorData.DOS) {
+                if (careCordinatorData.CPT && careCordinatorData.Account && careCordinatorData.DOS) {
                     let ccSaveQuery = {
                         "query": {
                             "bool": {
                                 "must": [
                                     {
                                         "term": {
-                                            "Patient_": careCordinatorData.Patient_
+                                            "CPT": careCordinatorData.CPT
                                         }
                                     },
                                     {
@@ -6269,27 +6594,264 @@
                     }
                     $.ajax({
                         headers: ccData.hdr,
-                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_search?size=10000",
+                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_search?size=1",
                         async: false,
                         type: 'POST',
                         data: JSON.stringify(ccSaveQuery),
                         dataType: 'json',
                         contentType: 'application/json',
                         success: function (res) {
+						
+						 if (res.hits && res.hits
+                                .hits && res.hits.hits
+                                    .length > 0 &&
+                                res.hits.hits[0]._source) {
+                                let element = res.hits.hits[0]._source;
+                                let history = element.caller_history
+
+                                if (history && (history != null || history !=
+                                    '' || history != undefined)) {
+                                    callHistory = element[
+                                        "caller_history"];
+                                    callHistory.push({
+                                        "comments": careCordinatorData.caller_comments,
+                                        "call_date":  careCordinatorData.call_date
+                                   
+                                    });
+                                } else {
+                                    callHistory = [{
+                                        "comments": careCordinatorData.caller_comments,
+                                        "call_date":  careCordinatorData.call_date
+                                    }]
+                                }
+
+                            }
                             let responseDatas = res.hits.hits[0]._id;
                             let oldData = res.hits.hits[0]._source;
+                            var newObject;
 
-
-
-                            var newObject = {
+                            if(careCordinatorData.call_status == 'Done'){
+							 newObject = {
 
                                 "call_date": careCordinatorData
                                     .call_date,
                                 "caller_comments": careCordinatorData.caller_comments,
+								"call_status": careCordinatorData.call_status,
                                 "Status": 'Update by Caller',
+								"caller_history":callHistory,
                                 "modified_on": modifiedon
                             };
+							}else{
+						     newObject = {
 
+                                "call_date": careCordinatorData
+                                    .call_date,
+                                "caller_comments": careCordinatorData.caller_comments,
+								"call_status": careCordinatorData.call_status,
+                                "Status": 'Update by Caller',
+                                "modified_on": modifiedon
+                            };  
+							
+							}
+							
+							
+                           
+
+                            var combinedObject = $.extend({}, oldData, newObject);
+                            $.ajax({
+                                headers: ccData.hdr,
+                                url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_doc/" +
+                                    responseDatas,
+                                async: false,
+                                type: 'PUT',
+                                data: JSON.stringify(combinedObject),
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    // Handle success, if needed
+                                    toastr.success('Status Updated Successfully');
+                                    location.reload();
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        }
+
+		
+		 function updateauditStatus(selectedRows) {
+		 console.log("inside audit update")
+            const allRowsValid = selectedRows.every((row) => {
+                console.log(row, "row");
+                // const decodeObj = decodeURIComponent(row);
+                // console.log(JSON.parse(decodeObj),"decodeObj");
+                const careCordinatorData = row;
+                const uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
+                //const uniqueIdentifier = careCordinatorData.memberID_merged;
+
+                const comments = "errorcomments" + uniqueIdentifier;
+                var dateId = "auditdateValue" + uniqueIdentifier;
+				const workedStatus = "workedstatus" + uniqueIdentifier;
+				const errorStatus = "errorstatus" + uniqueIdentifier;
+				const errorType = "errortype" + uniqueIdentifier;
+				//callstatus
+
+                const commentsElement = $("#" + comments);
+                const dateElement = $("#" + dateId);
+				const workedStatusElement = $("#" + workedStatus);
+				const errorStatusElement = $("#" + errorStatus);
+				const errorTypeElement = $("#" + errorType);
+
+                var commentsValue = commentsElement.val();
+                var dateValue = dateElement.val();
+				var workedStatusValue = workedStatusElement.val();
+				var errorStatusValue = errorStatusElement.val();
+				var errorTypeValue = errorTypeElement.val();
+
+                console.log('commentsValue', commentsValue)
+				console.log('workedStatusValue', workedStatusValue)
+				console.log('errorStatusValue', errorStatusValue)
+				console.log('errorTypeValue', errorTypeValue)
+                console.log('dateValue', dateValue)
+
+
+                return commentsValue && dateValue && errorStatusValue && errorTypeValue && workedStatusValue;
+            });
+
+            // If any row is missing values, show an error and exit
+            if (!allRowsValid) {
+                toastr.error(
+                    'Please Provide Comments,Audit Date,Worked Status,Error Status and Error Type for all selected rows.'
+                );
+                return;
+            }
+
+            for (let i = 0; i < selectedRows.length; i++) {
+                const decodeObj = decodeURIComponent(selectedRows[i]);
+                var careCordinatorData = selectedRows[i];
+                const uniqueIdentifier = careCordinatorData.Account + moment.utc(careCordinatorData.DOS).format("MMDDYYYY") + careCordinatorData.CPT;
+
+                const comments = "errorcomments" + uniqueIdentifier;
+                var dateId = "auditdateValue" + uniqueIdentifier;
+				const workedStatus = "workedstatus" + uniqueIdentifier;
+				const errorStatus = "errorstatus" + uniqueIdentifier;
+				const errorType = "errortype" + uniqueIdentifier;
+
+
+                var currentDate = new Date();
+                var year = currentDate.getUTCFullYear();
+                let day
+                let month = currentDate.getUTCMonth() + 1
+                day = currentDate.getUTCDate();
+                let date;
+                var hours = String(currentDate.getHours()).padStart(2, '0');
+                var minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                var seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                if (month < 10 && day < 10) {
+                    date = year + "-" + "0" + month + "-" + "0" + day + "T" + hours + ":" +
+                        minutes + ":" + seconds;
+                } else if (month < 10 && day >= 10) {
+                    date = year + "-" + "0" + month + "-" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else if (day < 10 && month >= 10) {
+                    date = year + "-" + month + "-" + "0" + day + "T" + hours + ":" + minutes +
+                        ":" + seconds;
+                } else {
+                    // console.log(month, "mm.length", mm)
+                    date = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" +
+                        seconds;
+                }
+
+                let modifiedon = date;
+				
+				
+
+                const commentsElement = $("#" + comments);
+                const dateElement = $("#" + dateId);
+				const workedStatusElement = $("#" + workedStatus);
+				const errorStatusElement = $("#" + errorStatus);
+				const errorTypeElement = $("#" + errorType);
+
+                var commentsValue = commentsElement.val();
+                var dateValue = dateElement.val();
+				var workedStatusValue = workedStatusElement.val();
+				var errorStatusValue = errorStatusElement.val();
+				var errorTypeValue = errorTypeElement.val();
+
+                
+                let loginValue = ccData.loginContext
+                let loginVal = loginValue.replace(/^\s+|\s+$/g, "")
+                // if(dateValue == ''){
+                //dateValue = moment().utc().format("YYYY-MM-DD");
+                //}
+
+                dateValue = moment.utc(dateValue).format("YYYY-MM-DD");
+
+                console.log('careCordinatorData.dateValue', dateValue)
+				console.log('careCordinatorData.commentsValue', commentsValue)
+				console.log('careCordinatorData.workedStatusValue', workedStatusValue)
+				console.log('careCordinatorData.errorTypeValue', errorTypeValue)
+				console.log('careCordinatorData.errorStatusValue', errorStatusValue)
+                
+                careCordinatorData.audit_date = dateValue;
+                careCordinatorData.error_comments = commentsValue;
+				careCordinatorData.worked_status = workedStatusValue;
+				careCordinatorData.error_type = errorTypeValue;
+				careCordinatorData.error_status = errorStatusValue;
+				
+
+                if (careCordinatorData.CPT && careCordinatorData.Account && careCordinatorData.DOS) {
+                    let ccSaveQuery = {
+                        "query": {
+                            "bool": {
+                                "must": [
+                                    {
+                                        "term": {
+                                            "CPT": careCordinatorData.CPT
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "Account": careCordinatorData.Account
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "DOS": careCordinatorData.DOS
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                    $.ajax({
+                        headers: ccData.hdr,
+                        url: "https://sqml-dhmp.es.us-west-2.aws.found.io:9243/opus_billing_data/_search?size=1",
+                        async: false,
+                        type: 'POST',
+                        data: JSON.stringify(ccSaveQuery),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (res) {
+				
+                            let responseDatas = res.hits.hits[0]._id;
+                            let oldData = res.hits.hits[0]._source;
+                            
+                             var newObject = {
+
+                               "audit_date": careCordinatorData
+                                    .audit_date,
+                                "error_comments": careCordinatorData.error_comments,
+								"worked_status": careCordinatorData.worked_status,
+                                "Status": 'Update by Audit',
+								"error_type":careCordinatorData.error_type,
+								"error_status":careCordinatorData.error_status,
+								"auditor_name":loginVal,
+                                "modified_on": modifiedon
+                            };
+							
+							
                             var combinedObject = $.extend({}, oldData, newObject);
                             $.ajax({
                                 headers: ccData.hdr,
