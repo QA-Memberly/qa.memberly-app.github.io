@@ -3968,7 +3968,7 @@
                                             if (!ccData.selectedDoneRow) {
                                                 let patient = row.Patient_.replace(/[, ]/g, "");
 
-                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
 
                                                 outHTML =
                                                     '<div style="display:flex; flex-direction: row;"> <input type="text" style="width: 120px;" placeholder="MM-DD-YYYY" id="auditdateValue' +
@@ -3979,7 +3979,7 @@
                                                 }
                                                 outHTML += ' readonly/>';
                                                 outHTML +=
-                                                    `<input type="date" style="width: 19px;" onchange="setauditDateValue(${uniqueIdentifier})" id="date${uniqueIdentifier}" /></div>`;
+                                                    `<input type="date" style="width: 19px;" onchange="setauditDateValue(${uniqueIdentifier})" id="auditdate${uniqueIdentifier}" /></div>`;
 
                                             } else {
                                                 const isValidDate = !isNaN(Date.parse(
@@ -4091,7 +4091,7 @@
                                             if (!ccData.selectedDoneRow) {
                                                 let patient = row.Patient_.replace(/[, ]/g, "");
 
-                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
+                                                let uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
 												
                                                 outHTML =
                                                     '<div style="display:flex; flex-direction: row;"> <input type="text" style="width: 120px;" placeholder="MM-DD-YYYY" id="calldateValue' +
@@ -5012,7 +5012,7 @@
 		
 		function setauditDateValue(uniqueIdentifier) {
             console.log(uniqueIdentifier, "ccData")
-            var date = $("#date" + uniqueIdentifier).val();
+            var date = $("#auditdate" + uniqueIdentifier).val();
             console.log(date, "ccData")
             // Set the value of the date field
             // let tt= (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getDate().toString().padStart(2, '0') + "-" + date.getFullYear();
@@ -6688,10 +6688,12 @@
                 // console.log(JSON.parse(decodeObj),"decodeObj");
                 const careCordinatorData = row;
                 const uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
+				const uniqueIdentifierdate = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
+                
                 //const uniqueIdentifier = careCordinatorData.memberID_merged;
 
                 const comments = "errorcomments" + uniqueIdentifier;
-                var dateId = "auditdateValue" + uniqueIdentifier;
+                var dateId = "auditdateValue" + uniqueIdentifierdate;
 				const workedStatus = "workedstatus" + uniqueIdentifier;
 				const errorStatus = "errorstatus" + uniqueIdentifier;
 				const errorType = "errortype" + uniqueIdentifier;
@@ -6731,9 +6733,10 @@
                 const decodeObj = decodeURIComponent(selectedRows[i]);
                 var careCordinatorData = selectedRows[i];
                 const uniqueIdentifier = careCordinatorData.Account + moment.utc(careCordinatorData.DOS).format("MMDDYYYY") + careCordinatorData.CPT;
-
+                const uniqueIdentifierdate = careCordinatorData.Account + moment.utc(careCordinatorData.DOS).format("MMDDYYYY");
+                
                 const comments = "errorcomments" + uniqueIdentifier;
-                var dateId = "auditdateValue" + uniqueIdentifier;
+                var dateId = "auditdateValue" + uniqueIdentifierdate;
 				const workedStatus = "workedstatus" + uniqueIdentifier;
 				const errorStatus = "errorstatus" + uniqueIdentifier;
 				const errorType = "errortype" + uniqueIdentifier;
@@ -6799,6 +6802,12 @@
 				careCordinatorData.worked_status = workedStatusValue;
 				careCordinatorData.error_type = errorTypeValue;
 				careCordinatorData.error_status = errorStatusValue;
+				let status ;
+				if(careCordinatorData.worked_status == 'Completed'){
+				status = 'Claim Closed';
+				}else{
+				status = 'Update by Audit';
+				}
 				
 
                 if (careCordinatorData.CPT && careCordinatorData.Account && careCordinatorData.DOS) {
@@ -6844,7 +6853,7 @@
                                     .audit_date,
                                 "error_comments": careCordinatorData.error_comments,
 								"worked_status": careCordinatorData.worked_status,
-                                "Status": 'Update by Audit',
+                                "Status": status,
 								"error_type":careCordinatorData.error_type,
 								"error_status":careCordinatorData.error_status,
 								"auditor_name":loginVal,
