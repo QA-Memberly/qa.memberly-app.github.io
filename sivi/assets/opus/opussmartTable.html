@@ -1175,6 +1175,10 @@
                     }
                     // for getting the runtime columns 
                     if (!_.isEmpty(runtimeEntities)) {
+					    if (incConfMap.tablename == 'supervisorUpdateListing' ||incConfMap.tablename == 'callerSupervisorListing' || incConfMap.tablename == 'callerUpdateListing' || incConfMap.tablename == 'auditListing' ) 
+						{
+					    runtimeColumns = runtimeColumns.filter(col => col !== "claim_classification");
+                        }
                         wsDataRequest["runtime_mappings"] = runtimeMappings;
                         wsDataRequest["fields"] = runtimeColumns;
                         console.log("runtimeColumns", runtimeColumns);
@@ -3501,6 +3505,11 @@
         }
 
         function buildColumnTitle(iidx, colKey, label) {
+		    if (colKey === 'claim_classification' && (incConfMap.tablename == 'supervisorUpdateListing' ||incConfMap.tablename == 'callerSupervisorListing' || incConfMap.tablename == 'callerUpdateListing' || incConfMap.tablename == 'auditListing')) {
+				return ''; // Skip processing for 'claim_classification' column.
+			}
+		
+		
             let titleStr =
                 ' '; //This should not be null or empty string.  Some of the fields not in extEngg will result in errors as data-bs-content is set empty.
             let extEnggFiltered = _.last(_.filter(extFieldEngg, fieldDef => {
@@ -3564,6 +3573,7 @@
             }
             outString += '</div></div>';
             return outString;
+			
         }
 
         // Close popovers when clicking outside or on another column's description
@@ -3765,6 +3775,8 @@
                     selColumnsWithruntime.splice(statusColumn + 1, 0, "AD");
                     selColumnsWithruntime.splice(statusColumn + 2, 0, "Category");
                     selColumnsWithruntime.splice(statusColumn + 3, 0, "claim_classification");
+					//selColumnsWithruntime = selColumnsWithruntime.filter(col => col !== "claim_classification");
+
                 } else {
                     selColumnsWithruntime.push("AD");
                 }
@@ -6613,21 +6625,23 @@
                                     .length > 0 &&
                                 res.hits.hits[0]._source) {
                                 let element = res.hits.hits[0]._source;
-                                let history = element.caller_history
+                                let history = element.caller_history_details
 
                                 if (history && (history != null || history !=
                                     '' || history != undefined)) {
                                     callHistory = element[
-                                        "caller_history"];
+                                        "caller_history_details"];
                                     callHistory.push({
                                         "comments": careCordinatorData.caller_comments,
-                                        "call_date":  careCordinatorData.call_date
+                                        "call_date":  careCordinatorData.call_date,
+										"caller": element.caller
                                    
                                     });
                                 } else {
                                     callHistory = [{
                                         "comments": careCordinatorData.caller_comments,
-                                        "call_date":  careCordinatorData.call_date
+                                        "call_date":  careCordinatorData.call_date,
+										"caller": element.caller
                                     }]
                                 }
 
@@ -6644,7 +6658,7 @@
                                 "caller_comments": careCordinatorData.caller_comments,
 								"call_status": careCordinatorData.call_status,
                                 "Status": 'Update by Caller',
-								"caller_history":callHistory,
+								"caller_history_details":callHistory,
                                 "modified_on": modifiedon
                             };
 							}else{
