@@ -6347,6 +6347,8 @@
                 if (statusValue == 'Calling') {
                     claimstatus = 'Awaiting caller Assignment';
                     status = 'Awaiting caller Assignment';
+                }else if (statusValue == 'Recall') {
+                    status = 'Assigned to Caller';
                 } else {
                     claimstatus = 'Done';
                     status = 'Done';
@@ -6476,10 +6478,12 @@
                 // console.log(JSON.parse(decodeObj),"decodeObj");
                 const careCordinatorData = row;
                 const uniqueIdentifier = row.Account + moment.utc(row.DOS).format("MMDDYYYY") + row.CPT;
+				const uniqueIdentifierdate = row.Account + moment.utc(row.DOS).format("MMDDYYYY");
+                
                 //const uniqueIdentifier = careCordinatorData.memberID_merged;
 
                 const comments = "callercomments" + uniqueIdentifier;
-                var dateId = "calldateValue" + uniqueIdentifier;
+                var dateId = "calldateValue" + uniqueIdentifierdate;
 				const callStatus = "callstatus" + uniqueIdentifier;
 				//callstatus
 
@@ -6511,8 +6515,10 @@
                 const decodeObj = decodeURIComponent(selectedRows[i]);
                 var careCordinatorData = selectedRows[i];
                 const uniqueIdentifier = careCordinatorData.Account + moment.utc(careCordinatorData.DOS).format("MMDDYYYY") + careCordinatorData.CPT;
+                const uniqueIdentifierdate = careCordinatorData.Account + moment.utc(careCordinatorData.DOS).format("MMDDYYYY");
 
-                var dateId = "calldateValue" + uniqueIdentifier;
+				
+                var dateId = "calldateValue" + uniqueIdentifierdate;
                 var comments = "callercomments" + uniqueIdentifier;
 				const callStatus = "callstatus" + uniqueIdentifier;
 
