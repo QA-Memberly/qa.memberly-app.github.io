@@ -6467,7 +6467,7 @@
                                 Status = "Pending"
                         } else if (element.PV1_44_asDate != null && (element.PV1_45_asDate ==
                             null || element.PV1_45_asDate == '')) {
-                            TOC_Status = "MEMBER IP"
+                            TOC_Status = ""
                             Status = "Pending"
                         } else if (element.PV1_45_asDate != null && (element.PV1_44_asDate ==
                             null || element.PV1_44_asDate == '')) {
@@ -6478,6 +6478,7 @@
                         }
                         element["TOC_Program_Current_Status"] = TOC_Status;
                         element["Status"] = Status;
+			     element["TOC_Program_Current_Date"] = newValue1;
                         let uuid = element.composite_Key
                         let assignedTo = element.CC;
 
@@ -6959,10 +6960,10 @@
                             "DISPATCH HEALTH",
                             "DISPATCH HEALTH - OUTREACHED",
                             "FIRST ATTEMPT COMPLETED, SECOND ATTEMPT PENDING",
-                            "MEMBER IP",
-                            "MEMBER IP - OUTREACHED",
-                            "MEMBER IP IN SNF", "READMITTED (CM TO FOLLOW)",
-                            "MEMBER IP IN SNF - OUTREACHED",
+                            "",
+                            " - OUTREACHED",
+                            " IN SNF", "READMITTED (CM TO FOLLOW)",
+                            " IN SNF - OUTREACHED",
                             "MEMBER REQUESTED CALL BACK", "READMITTED (CM TO FOLLOW)",
                             "OBSERVATION STAY - REVIEW AND INITIATE PROGRAM (MCR, COMM, EXCH)",
                             "REFERRED OUTREACH PENDING", "PLANNED ADMISSION"
